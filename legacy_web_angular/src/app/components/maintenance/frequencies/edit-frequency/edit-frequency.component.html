@@ -1,0 +1,52 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <section>
+      <form [formGroup]="frequencyForm">
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Semanas del mes</mat-label>
+              <mat-select formControlName="Weeks">
+                <mat-option *ngFor="let week of frequencyWeeks" [value]="week.Key">
+                  {{week.Description}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Descripción</mat-label>
+              <input matInput formControlName="Description" placeholder="Descripción">
+            </mat-form-field>
+          </div>
+          <div class="active-check">
+            <mat-checkbox formControlName="IsActive">Activa</mat-checkbox>
+          </div>
+        </div>
+      </form>
+    </section>
+    <br>
+    <section>
+      <fieldset>
+        <legend>
+          Días de descarga
+        </legend>
+        <div class="row">
+          <mat-checkbox *ngFor="let day of daysOfWeek" (change)="OnDayOfWeekSelected(day)"
+                        [checked]="day.Prop1 === 'Y'">{{day.Description}}</mat-checkbox>
+        </div>
+      </fieldset>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [form]="frequencyForm"
+                        [userPermissions]="permissions"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)"
+                        [isIntoMatTab]="false">
+    </app-action-buttons>
+  </footer>
+</section>

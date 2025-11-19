@@ -1,0 +1,133 @@
+<app-action-buttons [actionButtons]="actionButtons" (onActionButtonClicked)="OnActionButtonClicked($event)"
+                    [form]="searchForm">
+  <mat-tab-group [selectedIndex]="indexSelected"
+                 (selectedIndexChange)="TapChange($event)" class="mobile-tab">
+    <mat-tab label="Crear cierre de cajas">
+      <section class="main-container">
+        <fieldset>
+          <form [formGroup]="closingForm" class="grid-container">
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Moneda</mat-label>
+              <mat-select formControlName="Currency" (selectionChange)="ChangeDocCurrency()">
+                <mat-option *ngFor="let currency of currencies" [value]="currency.Id">
+                  {{currency.Name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="closingForm.controls['Currency'].errors?.['required']">
+                El campo es requerido
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Terminales</mat-label>
+              <mat-select formControlName="Terminal" (selectionChange)="ChangeTerminal()">
+                <mat-option *ngFor="let option of terminalsFiltered" [value]="option.TerminalId">
+                  {{option.Description}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="closingForm.controls['Terminal'].errors?.['required']">
+                El campo es requerido
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Monto efectivo</mat-label>
+              <input type="number" matInput formControlName="CashAmount">
+              <mat-error *ngIf="closingForm.controls['CashAmount'].errors?.['required']">
+                El campo es requerido
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Monto tarjeta manual</mat-label>
+              <input type="number" matInput formControlName="CardAmount">
+              <mat-error *ngIf="closingForm.controls['CardAmount'].errors?.['required']">
+                El campo es requerido
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Monto transferencia</mat-label>
+              <input type="number" matInput formControlName="TransferAmount">
+              <mat-error *ngIf="closingForm.controls['TransferAmount'].errors?.['required']">
+                El campo es requerido
+              </mat-error>
+            </mat-form-field>
+            <div class="flex-search">
+              <button [disabled]="!isPinpad" matTooltip="Consulta totales pinpad" (click)="GetPPTotal()"
+                      type="button"
+                      mat-flat-button color="primary"
+                      class="search">
+                <mat-icon class="icon-display">arrow_forward</mat-icon>
+              </button>
+              <mat-form-field appearance="outline" class="input-group-start col-lg-3 col-md-6 col-sm-12">
+                <mat-label>Total pinpad</mat-label>
+                <input type="number" matInput formControlName="CardAmountPinpad">
+                <mat-error *ngIf="closingForm.controls['CardAmountPinpad'].errors?.['required']">
+                  El campo es requerido
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+        </fieldset>
+      </section>
+    </mat-tab>
+    <mat-tab label="Buscar cierre de cajas">
+      <section class="main-container">
+        <fieldset>
+          <legend>
+            Filtros
+          </legend>
+          <form [formGroup]="searchForm" class="grid-container">
+            <mat-form-field appearance="outline" class="col-lg-4 col-md-6 col-sm-12">
+              <mat-label>Usuario</mat-label>
+              <input matInput type="text" formControlName="User" [matAutocomplete]="auto"/>
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="DisplayFnUser">
+                <mat-option *ngFor="let user of users$ | async" [value]="user">
+                  {{user.Name}} {{user.LastName}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="searchForm.controls['User'].errors?.['required']">
+                El campo es requerido
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-lg-4 col-md-6 col-sm-12">
+              <mat-label>Rango de fechas</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Desde" formControlName="DateFrom">
+                <input matEndDate placeholder="Hasta" formControlName="DateTo">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+              <mat-error *ngIf="searchForm.controls['DateFrom'].errors?.['required']">
+                El campo es requerido
+              </mat-error>
+            </mat-form-field>
+          </form>
+        </fieldset>
+        <section class="main-container">
+          <fieldset>
+            <legend>
+              Resultados
+            </legend>
+            <div class="table-heigth">
+              <cl-table [Id]="closingTableId"
+                        [ShouldPaginateRequest]="shouldPaginateRequest"
+                        [MappedColumns]="docTbMappedColumns"
+                        [Records]="closingReports"
+                        [RecordsCount]="closingReports.length"
+                        [Buttons]="tableButtons"
+                        [BackgroundTransparent]="true"
+                        ScrollHeight="400px">
+              </cl-table>
+            </div>
+          </fieldset>
+        </section>
+      </section>
+    </mat-tab>
+  </mat-tab-group>
+</app-action-buttons>
+<ng-template #report let-data>
+  <pdf-viewer
+    [src]="data"
+    [original-size]="false"
+    [render-text]="true"
+  ></pdf-viewer>
+</ng-template>
+

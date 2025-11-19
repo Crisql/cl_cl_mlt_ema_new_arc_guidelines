@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ 'ROUTE DETAIL.ROUTE DETAIL' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher *ngIf="canSyncRoutes" slot="fixed" (ionRefresh)="OnRefreshRoutes($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+    <ion-list>
+      <ion-item-sliding #slidingRoute *ngFor="let route of routes; index as i" class="item-sliding-options-end item-sliding-options-start">
+        <ion-item (click)="ViewRouteDestinations(route.Route.Id)">
+          <ion-label>
+            <p class="ion-margin-top">
+              {{ route.Route.Name }}
+            </p>
+            <p class="ion-margin-top">
+              <b>{{ 'ROUTES.TYPE' | translate }}</b> {{
+              (route.Route.Type === 1 ? "ADDRESSTYPE.SHIPTO" :
+                      "ADDRESSTYPE.BILLTO") | translate }}
+            </p>
+            <p class="ion-margin-top">
+              <b>{{ 'ROUTES.DOWNLOADDATE' | translate }}</b> {{ route.Route.DownloadDate |
+                    date:'short' }}
+            </p>
+          </ion-label>
+          <ion-icon
+            slot="end"
+            *ngIf="route.Route.Status == 2 || route.Route.Status == 3 || route.Route.Status == 1"
+            [name]="route.Route.Status == 2 ? 'checkmark-done-circle' : route.Route.Status == 1 ? 'checkmark-circle' : 'ban'"
+          >
+          </ion-icon>
+        </ion-item>
+        <ion-item-options side="end" *ngIf="route.Route.Status != 2 && route.Route.Status != 3">
+          <ion-item-option *ngIf="route.Route.Status == 1"
+            color="danger"
+            (click)="OnClickDeactivateRoute(route, slidingRoute)"
+            >{{ 'BUTTONS.DEACTIVATE' | translate }}</ion-item-option
+          >
+          <ion-item-option
+            color="danger"
+            *ngIf="route.Route.Status == 1 || route.Route.Status == 0"
+            (click)="OnClickFinalizeRoute(route.Route, slidingRoute)"
+            >{{ 'BUTTONS.FINALIZE' | translate }}</ion-item-option
+          >
+        </ion-item-options>
+        <ion-item-options side="start" *ngIf="route.Route.Status != 2 && route.Route.Status != 3">
+          <ion-item-option
+            color="primary"
+            (click)="ViewRoutePercent(route, slidingRoute)"
+          >
+            {{ 'BUTTONS.PERCENT' | translate }}
+          </ion-item-option>
+          <ion-item-option
+            color="primary"
+            (click)="OnClickRouteMap(route.Route.Id, slidingRoute)"
+          >
+            {{ 'BUTTONS.MAPS' | translate }}
+          </ion-item-option>
+          <ion-item-option
+            color="primary"
+            *ngIf="route.Route.Status == 0 || route.Route.Status == 4"
+            (click)="OnClickActivateRoute(route, slidingRoute)"
+          >
+            {{ 'BUTTONS.ACTIVATE' | translate }}
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+</ion-content>

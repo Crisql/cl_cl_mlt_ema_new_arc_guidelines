@@ -1,0 +1,17 @@
+<div *ngIf="!isDuplicated">
+  <router-outlet></router-outlet>
+</div>
+<div *ngIf="isDuplicated">
+  <div class="error_message">
+    <h2>Ha ocurrido un error</h2>
+  </div>
+  <div class="error_image">
+    <img src="../assets/img/error_image.png">
+  </div>
+
+  <div class="error_solution">
+    No es posible duplicar la pestaña.
+    <br>
+    Utilice una sola pestaña
+  </div>
+</div>

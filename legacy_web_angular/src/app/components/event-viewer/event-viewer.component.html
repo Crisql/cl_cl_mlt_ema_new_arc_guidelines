@@ -1,0 +1,51 @@
+<section class="main-container">
+  <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      [form]="searchForm"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+
+<section class="main-container mobile-margin">
+  <fieldset>
+    <legend>Filtros</legend>
+    <form [formGroup]="searchForm" class="grid-container">
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+        <mat-label>Rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Desde" formControlName="From">
+          <input matEndDate placeholder="Hasta" formControlName="To">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+        <mat-label>Tipo de evento</mat-label>
+        <mat-select formControlName="Event">
+          <mat-option *ngFor="let event of events" [value]="event.value">
+            {{ EventDescription(event.value) }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+        <mat-label>Buscar:</mat-label>
+        <input placeholder="Detalles " matInput type="text" formControlName="Filter"/>
+      </mat-form-field>
+    </form>
+  </fieldset>
+
+</section>
+
+<section class="main-container top-margin">
+  <fieldset>
+    <legend>Resultados</legend>
+    <cl-table [Id]="logEventsTableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [MappedColumns]="logEventsMappedColumns"
+              [Records]="logEvents"
+              [RecordsCount]="logEvents.length"
+              [ItemsPeerPage]="itemsPeerPage"
+              [HasPaginator]="hasPaginator"
+              [BackgroundTransparent] = "true">
+    </cl-table>
+  </fieldset>
+</section>

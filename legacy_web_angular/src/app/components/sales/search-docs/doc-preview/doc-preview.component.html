@@ -1,0 +1,60 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Previsualización de documento</h2>
+  </header>
+  <main>
+    <section>
+      <form [formGroup]="documentForm" class="grid-container">
+
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+          <mat-label>Nombre de cliente</mat-label>
+          <input readonly matInput placeholder="Nombre de cliente" formControlName="CardName">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+          <mat-label>Empleado de ventas</mat-label>
+          <input readonly matInput placeholder="Empleado de ventas" formControlName="SalesPersonName">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Fecha de creación</mat-label>
+          <input matInput placeholder="Fecha de creación" [matDatepicker]="datepicker" formControlName="DocDate">
+          <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+          <mat-datepicker #datepicker>
+            <mat-datepicker-actions>
+            </mat-datepicker-actions>
+          </mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Total de documento</mat-label>
+          <input readonly matInput placeholder="Total de documento" formControlName="DocTotal">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Número de documento</mat-label>
+          <input readonly matInput placeholder="Número de documento" formControlName="DocNum">
+        </mat-form-field>
+      </form>
+    </section>
+    <section>
+      <cl-table
+        [Id]="tableId"
+        [HasStandardHeaders]="hasStandardHeaders"
+        [ShouldSplitPascal]="shouldSplitPascal"
+        [MappedColumns]="mappedColumns"
+        [Records]="documentLines"
+        [RecordsCount]="documentLines.length"
+        [HasItemsSelection]="hasItemsSelection"
+        [ShouldPaginateRequest]="shouldPaginateRequest"
+        [BackgroundTransparent]="true"
+        ScrollHeight="400px">
+      </cl-table>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

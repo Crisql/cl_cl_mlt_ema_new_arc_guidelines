@@ -1,0 +1,19 @@
+<ion-list>
+  <ion-list>
+    <ion-list-header>
+      {{ "ROUTE DETAIL.AVAILABLEAPPS" | translate }}
+    </ion-list-header>
+    <ion-item
+      button
+      *ngFor="let app of availableMapApps"
+      (click)="OpenNavigationApp(app)"
+    >
+      <ion-thumbnail slot="start">
+        <img [src]="app.Icon" />
+      </ion-thumbnail>
+      <ion-label>
+        <p>{{ app.Name }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-list>

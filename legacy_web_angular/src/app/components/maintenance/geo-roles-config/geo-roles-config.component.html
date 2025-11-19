@@ -1,0 +1,110 @@
+<div class="container">
+  <app-action-buttons [actionButtons]="actionButtons" (onActionButtonClicked)="OnActionButtonClicked($event)">
+    <mat-tab-group
+      [selectedIndex]="index"
+      (selectedIndexChange)="tabChanged($event)" class="mobile-tab">
+      <mat-tab [tabIndex]="0" label="Asignación de geo roles">
+        <div class="margin top container">
+          <div class="form-fields">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Compañía</mat-label>
+              <mat-select
+                [formControl]="company"
+                (selectionChange)="GetGeoRoleByUsers()">
+                <mat-option *ngFor="let comp of companys" [value]="comp.Id">
+                  {{ comp.Name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Usuario</mat-label>
+              <mat-select
+                [formControl]="user"
+                (selectionChange)="GetGeoRoleByUsers()">
+                <mat-option *ngFor="let user of users" [value]="user.Id">
+                  {{ user.Name }} {{ user.LastName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <section class="main-container">
+          <section class="table-container">
+            <fieldset>
+              <legend>
+                Resultado de búsqueda
+              </legend>
+              <cl-table
+                [Id]="geoRoleByUserTableId"
+                [ShouldPaginateRequest]="shouldPaginateRequestCompany"
+                [HasStandardHeaders]="hasStandardHeaders"
+                [ShouldSplitPascal]="shouldSplitPascal"
+                [MappedColumns]="geoRoleByUserMappedColumns"
+                [Records]="geoRolesToShowInTable"
+                [RecordsCount]="geoRolesToShowInTable.length"
+                [HasItemsSelection]="hasItemsSelectionGeoRoleByUser"
+                [ShouldEmitRows]="hasItemsSelectionGeoRoleByUser"
+                [BackgroundTransparent]="true">
+              </cl-table>
+            </fieldset>
+          </section>
+        </section>
+      </mat-tab>
+      <mat-tab [tabIndex]="1" label="Configuraciones del geo rol">
+        <div class="margin-top">
+          <mat-form-field appearance="outline">
+            <mat-label>Geo Rol</mat-label>
+            <mat-select
+              [formControl]="geoRole"
+              (selectionChange)="GetGeoConfigsByGeoRole()">
+              <mat-option *ngFor="let geoRole of geoRoles" [value]="geoRole.Id">
+                {{ geoRole.Name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <section class="main-container">
+          <section class="table-container">
+            <fieldset>
+              <legend>
+                Resultado de búsqueda
+              </legend>
+              <cl-table
+                [Id]="geoConfigsByGeoRoleTableId"
+                [ShouldPaginateRequest]="shouldPaginateRequestGeoRol"
+                [HasStandardHeaders]="hasStandardHeaders"
+                [ShouldSplitPascal]="shouldSplitPascal"
+                [MappedColumns]="geoConfigsByGeoRoleMappedColumns"
+                [Records]="geoConfigsToShowInTable"
+                [RecordsCount]="geoConfigsToShowInTable.length"
+                [ShouldEmitRows]="hasItemsSelectionGeoConfigsByRole"
+                [HasItemsSelection]="hasItemsSelectionGeoConfigsByRole"
+                [BackgroundTransparent]="true">
+              </cl-table>
+            </fieldset>
+          </section>
+        </section>
+      </mat-tab>
+      <mat-tab [tabIndex]="2" label="Geo Roles">
+        <section class="main-container">
+          <section class="table-container">
+            <fieldset class="top-margin">
+              <cl-table
+                [Id]="geoRoleTableId"
+                [ShouldPaginateRequest]="false"
+                [HasStandardHeaders]="hasStandardHeaders"
+                [ShouldSplitPascal]="shouldSplitPascal"
+                [MappedColumns]="mappedColumns"
+                [Records]="geoRoles"
+                [RecordsCount]="geoRoles.length"
+                [HasItemsSelection]="hasItemsSelection"
+                [Buttons]="buttons"
+                [BackgroundTransparent]="true">
+              </cl-table>
+            </fieldset>
+          </section>
+        </section>
+      </mat-tab>
+    </mat-tab-group>
+  </app-action-buttons>
+</div>

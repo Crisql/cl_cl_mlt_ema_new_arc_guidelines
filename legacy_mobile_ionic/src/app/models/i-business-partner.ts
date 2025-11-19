@@ -1,0 +1,37 @@
+export interface IBusinessPartner {
+    CardCode: string;
+    CardName: string;
+    Currency: string;
+    ShipToDef: string;
+    TaxCode: string;
+    CreditLine: string;
+    Balance: string;
+    Phone1: string;
+    Cellular: string;
+    EMail: string;
+    Discount: number;
+    HeaderDiscount: number;
+    PriceListNum: number;
+    PayTermsCode: number;
+    PayTermsGrpCode: number;
+    BPGroup: number;
+    Lat: number;
+    Lng: number;
+    ContactPerson: string;
+    TipoIdentificacion: string;
+    Cedula: string;
+    Provincia: string;
+    Canton: string;
+    Distrito: string;
+    Barrio: string;
+    Direccion: string;
+    SubTipo: string;
+    CashCustomer: number;
+    GroupCode: number;
+    LicTradNum: string;
+    IntrntSite: string;
+    Notes: string;
+    ControlSerie: number;
+    OTCXCondition: string;
+    UpdateDateTime: Date;
+}

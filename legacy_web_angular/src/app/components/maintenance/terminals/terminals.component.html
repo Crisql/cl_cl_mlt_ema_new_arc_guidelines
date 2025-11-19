@@ -1,0 +1,70 @@
+<section class="container">
+  <app-action-buttons [actionButtons]="actionButtons"
+                      (onActionButtonClicked)="newTerminal($event)">
+    <mat-tab-group
+      [selectedIndex]="index"
+      (selectedIndexChange)="tabChanged($event)"
+      class="mobile-tab">
+      <mat-tab [tabIndex]="0" label="Terminales">
+        <fieldset class="top-margin">
+          <cl-table
+            [Id]="tableId"
+            [ShouldPaginateRequest]="shouldPaginateRequestTerminals"
+            [MappedColumns]="tableTerminals"
+            [Records]="terminals"
+            [RecordsCount]="terminals.length"
+            [Buttons]="buttons"
+            [BackgroundTransparent] = "true"
+          ></cl-table>
+        </fieldset>
+
+      </mat-tab>
+      <mat-tab [tabIndex]="1" label="Asignación de terminales">
+        <section class="container top-margin">
+          <form [formGroup]="frmTermsByUser">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Usuario</mat-label>
+              <mat-select formControlName="UserId" (selectionChange)="selectUser()">
+                <mat-option *ngFor="let user of users" [value]="user.Id">
+                  {{ user.Name }} {{ user.LastName }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="frmTermsByUser.controls['UserId'].errors?.['required']">
+                Seleccione el usuario
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Compañía</mat-label>
+              <mat-select formControlName="CompanyId" (selectionChange)="selectUser()">
+                <mat-option *ngFor="let comp of company" [value]="comp.Id">
+                  {{ comp.Name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="frmTermsByUser.controls['CompanyId'].errors?.['required']">
+                Seleccione la compañia
+              </mat-error>
+            </mat-form-field>
+          </form>
+        </section>
+        <fieldset>
+          <legend>
+            Resultado de búsqueda
+          </legend>
+          <cl-table
+            [Id]="tableByUserId"
+            [MappedColumns]="tableTerminalsByUser"
+            [Records]="terminals"
+            [RecordsCount]="terminals.length"
+            [HasStandardHeaders]="false"
+            [ShouldSplitPascal]="false"
+            [ShouldPaginateRequest]="shouldPaginateRequestTerminalsByUsers"
+            [CheckboxColumns]="checkboxColumns"
+            [BackgroundTransparent] = "true"
+          ></cl-table>
+        </fieldset>
+
+      </mat-tab>
+    </mat-tab-group>
+  </app-action-buttons>
+</section>

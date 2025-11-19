@@ -1,0 +1,42 @@
+﻿<section class="content">
+  <h2 mat-dialog-title>Factura electrónica</h2>
+  <main>
+    <form [formGroup]="feForm" class="grid-container">
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Identificación</mat-label>
+        <mat-select matInput formControlName="IdType" [disabled]="feData.EditDocument">
+          <mat-option *ngFor="let type of TypeIdentification" [value]="type.Key">
+            {{type.Description}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="feForm.controls['IdType'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Número cédula</mat-label>
+        <input matInput type="number" [readonly]="feData.EditDocument" formControlName="Identification" (blur)="GetPadron()">
+        <mat-error *ngIf="feForm.controls['Identification'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="Email" [readonly]="feData.EditDocument" >
+        <mat-error *ngIf="feForm.controls['Email'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+        <mat-error *ngIf="feForm.controls['Email'].errors?.['pattern']">
+          Ingrese un correo válido
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons [actionButtons]="actionButtons"
+                        [form]="feForm"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)"
+                        [isIntoMatTab]="false">
+    </app-action-buttons>
+  </footer>
+</section>

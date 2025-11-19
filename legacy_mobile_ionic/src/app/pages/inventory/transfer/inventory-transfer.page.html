@@ -1,0 +1,205 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{"INVENTORY.STOCK TRANSFER" | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-list-header button color="light" (click)="showHeader = !showHeader">
+            {{'INVENTORY.HEADER' | translate}}
+        </ion-list-header>
+
+        <div *ngIf="showHeader">
+            <ion-item button detail (click)="SearchSalesPerson(null)"  *ngIf="!salesPersonSelected">
+                <ion-label>{{ 'BUTTONS.SEARCH PURCHASING MANAGER' | translate }}</ion-label>
+            </ion-item>
+            
+            <ion-item-sliding *ngIf="salesPersonSelected" #slidingSalesPerson class="item-sliding-options-start">
+                <ion-item>
+                    <ion-label> {{salesPersonSelected.SlpName}} </ion-label>
+                </ion-item>
+                <ion-item-options side="start">
+                    <ion-item-option (click)="SearchSalesPerson(slidingSalesPerson)">
+                        {{ 'BUTTONS.SEARCH PURCHASING MANAGER' | translate }}
+                    </ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+                
+
+                <ion-list-header button color="light" (click)="showOriginData = !showOriginData">
+                    {{'INVENTORY.ORIGIN DATA' | translate}}
+                </ion-list-header>
+                <div *ngIf="showOriginData">
+                    <ion-item button detail (click)="SearchWareHouseOrigin(null)" *ngIf="!wareHouseOriginSelected" >
+                        <ion-label>{{ 'BUTTONS.SEARCH WAREHOUSE' | translate }}</ion-label>
+                    </ion-item>
+                    <ion-item-sliding *ngIf="wareHouseOriginSelected" #slidingWarehouseOrigin class="item-sliding-options-start">
+                        <ion-item>
+                            <ion-label> {{wareHouseOriginSelected?.WhsName}} </ion-label>
+                        </ion-item>
+                        <ion-item-options side="start">
+                            <ion-item-option (click)="SearchWareHouseOrigin(slidingWarehouseOrigin)">
+                                {{ 'BUTTONS.SEARCH WAREHOUSE' | translate }}
+                            </ion-item-option>
+                        </ion-item-options>
+                    </ion-item-sliding>
+
+                    <ion-item button detail (click)="SearchBinLocationOrigin(null)" *ngIf="!binLocationOriginSelected" >
+                        <ion-label>{{ 'BUTTONS.SEARCH LOCATION' | translate }}</ion-label>
+                    </ion-item>
+                    <ion-item-sliding *ngIf="binLocationOriginSelected" #slidingWarehouseOrigin class="item-sliding-options-start">
+                        <ion-item>
+                            <ion-label> {{binLocationOriginSelected?.BinCode}} </ion-label>
+                        </ion-item>
+                        <ion-item-options side="start">
+                            <ion-item-option (click)="SearchBinLocationOrigin(slidingWarehouseOrigin)">
+                                {{ 'BUTTONS.SEARCH LOCATION' | translate }}
+                            </ion-item-option>
+                        </ion-item-options>
+                    </ion-item-sliding>
+                </div>
+
+                <ion-list-header button color="light" (click)="showDestinationData = !showDestinationData">
+                    {{'INVENTORY.DESTINATION DATA' | translate}}
+                </ion-list-header>
+                <div *ngIf="showDestinationData">
+                    <ion-item button detail (click)="SearchWareHouseDestination(null)" *ngIf="!wareHouseDestinationSelected">
+                        <ion-label>{{ 'BUTTONS.SEARCH WAREHOUSE' | translate }}</ion-label>
+                    </ion-item>
+                    <ion-item-sliding *ngIf="wareHouseDestinationSelected" #slidingWarehouseDestination class="item-sliding-options-start">
+                        <ion-item>
+                            <ion-label> {{wareHouseDestinationSelected?.WhsName}} </ion-label>
+                        </ion-item>
+                        <ion-item-options side="start">
+                            <ion-item-option (click)="SearchWareHouseDestination(slidingWarehouseDestination)">
+                                {{ 'BUTTONS.SEARCH WAREHOUSE' | translate }}
+                            </ion-item-option>
+                        </ion-item-options>
+                    </ion-item-sliding>
+
+                    <ion-item button detail (click)="SearchBinLocationDestination(null)" *ngIf="!binLocationDestinationSelected" >
+                        <ion-label>{{ 'BUTTONS.SEARCH LOCATION' | translate }}</ion-label>
+                    </ion-item>
+                    <ion-item-sliding *ngIf="binLocationDestinationSelected" #slidingWarehouseOrigin class="item-sliding-options-start">
+                        <ion-item>
+                            <ion-label> {{binLocationDestinationSelected?.BinCode}} </ion-label>
+                        </ion-item>
+                        <ion-item-options side="start">
+                            <ion-item-option (click)="SearchBinLocationDestination(slidingWarehouseOrigin)">
+                                {{ 'BUTTONS.SEARCH LOCATION' | translate }}
+                            </ion-item-option>
+                        </ion-item-options>
+                    </ion-item-sliding>
+                </div>
+
+                <ion-list-header button color="light" (click)="showDateFields = !showDateFields">
+                    {{'INVENTORY.DATE FIELDS' | translate}}
+                </ion-list-header>
+
+                <div *ngIf="showDateFields">
+                    <ion-item>
+                        <ion-label slot="start">
+                            {{ 'INVENTORY.ACCOUNTING DATE' | translate }}
+                        </ion-label>
+                        <ion-button
+                                disabled="{{VerifyPermission('M_Inventory_StockTransfer_ChangeDocDate')}}"
+                                fill="clear"
+                                color="primary"
+                                (click)="ShowDatePicker('DocDate')"
+                        >
+                            {{docDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label slot="start">
+                            {{ 'INVENTORY.DATE OF DOCUMENT' | translate }}
+                        </ion-label>
+                        <ion-button
+                                fill="clear"
+                                color="primary"
+                                disabled="{{VerifyPermission('M_Inventory_StockTransfer_ChangeTaxDate')}}"
+                                (click)="ShowDatePicker('TaxDate')"
+                        >
+                            {{taxDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                </div>
+
+                <ion-item lines="none">
+                    <ion-input rows="3" [(ngModel)]="comments" placeholder="{{'BUTTONS.WRITE' | translate}}">
+                    </ion-input>
+                </ion-item>
+
+                <app-udf-presentation [udfs]="udfs" [udfsValues]="udfsValues"></app-udf-presentation>
+                
+        </div>
+        <ion-list-header color="light">
+            <ion-label> {{'INVENTORY.TRANSFER LINES' | translate}} </ion-label>
+            <ion-button fill="clear" *ngIf="isBatchedItems"
+                        (click)="OpenDialogLotes()">
+                <ion-icon slot="icon-only" name="albums-outline"></ion-icon>
+            </ion-button>
+            
+            <ion-button fill="clear" (click)="SearchItems()" [disabled]="isSelectItemDisabled">
+                <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+            </ion-button>
+        </ion-list-header>
+
+        <ion-item lines="none" *ngIf="!itemsTransferSelected || itemsTransferSelected.length === 0">
+            <ion-label class="form-control-error">
+                {{'BILLING.NOLINES' | translate}}
+            </ion-label>
+        </ion-item>
+
+        <ng-container *ngFor="let item of itemsTransferSelected; let i = index">
+
+            <ion-item-sliding #slidingItem
+                              class="item-sliding-options-end item-sliding-options-start">
+
+                <ion-item-options side="start">
+                    <ion-item-option (click)="ModifyDocumentLine(i, item, slidingItem)">
+                        {{ 'BUTTONS.EDIT' | translate }}
+                    </ion-item-option>
+                </ion-item-options>
+
+                <ion-item (click)="ShowLineDetails(item)"   lines="none">
+                    <ion-label>
+                        <p>{{item.ItemCode}} {{item.ItemDescription}}</p>
+                        <div class="line-def-details-container">
+                            <span>{{'INVENTORY.QUANTITY' | translate}}. {{item.Quantity}}</span> |
+                            <span>{{'INVENTORY.AVAILABLE' | translate}}. {{item.Stock}}</span>
+                        </div>
+                    </ion-label>
+                </ion-item>
+
+                <ion-item-options side="end">
+                    <ion-item-option color="danger" (click)="RemoveDocumentLine(i, item, slidingItem)">
+                        {{ 'BUTTONS.REMOVE' | translate }}
+                    </ion-item-option>
+                </ion-item-options>
+
+            </ion-item-sliding>
+        </ng-container>
+    </ion-list>
+
+    <ion-row>
+        <ion-col size="6">
+
+            <ion-button  class="custom-outline-button" fill="outline" expand="block" (click)="RefreshData()">{{ 'BUTTONS.CANCEL' | translate
+                }}
+            </ion-button>
+        </ion-col>
+
+        <ion-col size="6">
+            <ion-button class="custom-button" fill="solid" expand="block" (click)="SaveChanges()"
+                        [disabled]="(!itemsTransferSelected || itemsTransferSelected.length === 0 || !salesPersonSelected)">
+                {{(isEditionMode ? 'BUTTONS.UPDATE' : 'BUTTONS.CREATE' ) | translate }}</ion-button>
+        </ion-col>
+    </ion-row>
+</ion-content>

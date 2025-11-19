@@ -1,0 +1,139 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+
+/* Core CSS required for Ionic components to work properly */
+
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+.background-selected {
+    background-color: #dedede !important;
+}
+
+.form-control-error {
+    font-size: smaller;
+}
+
+.item-sliding-options-start {
+    border-left: 2px solid var(--ion-color-primary);
+}
+
+.item-sliding-options-end {
+    border-right: 2px solid var(--ion-color-danger);
+}
+
+.item-border-bottom {
+    border-bottom: 1px solid #dedede !important;
+}
+
+.alert-wrapper {
+    padding: 10px 0 12px 0 !important;
+    .alert-title {
+        text-align: center !important;
+        .icon-center {
+            text-align: center !important;
+        }
+        ion-icon {
+            font-size: 46px;
+        }
+    }
+    .alert-message {
+        text-align: center !important;
+    }
+    button {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+        margin: auto !important;
+    }
+}
+
+.action-sheet-button {
+    padding: 10px !important;
+    margin: 6px !important;
+    font-size: 12px !important;
+}
+
+.chart {
+    min-height: 40vh !important;
+}
+
+.wh-selected
+{
+    color: #3880ff !important;
+}
+
+.bin-selected 
+{
+    color: #3880ff !important;
+}
+
+.grecaptcha-badge {
+    visibility: hidden;
+}
+
+/* only show recaptcha badge on needed pages */
+body.recaptcha .grecaptcha-badge {
+    visibility: visible;
+}
+
+// DETAILS FOR DOCUMENT LINES DETAILS MODAL
+.line-details-table {
+    border-collapse: collapse;
+}
+
+.line-details-table td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.line-details-table td {
+    border: none;
+    padding: 5px;
+}
+
+
+// Creates Clavisco Color 
+:root {
+    --ion-color-clavisco: #1980bd;
+    --ion-color-clavisco-rgb: 25,128,189;
+    --ion-color-clavisco-contrast: #000000;
+    --ion-color-clavisco-contrast-rgb: 0,0,0;
+    --ion-color-clavisco-shade: #1671a6;
+    --ion-color-clavisco-tint: #308dc4;
+}
+
+.ion-color-clavisco {
+    --ion-color-base: var(--ion-color-clavisco);
+    --ion-color-base-rgb: var(--ion-color-clavisco-rgb);
+    --ion-color-contrast: var(--ion-color-clavisco-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-clavisco-contrast-rgb);
+    --ion-color-shade: var(--ion-color-clavisco-shade);
+    --ion-color-tint: var(--ion-color-clavisco-tint);
+}
+
+.show-scanner {
+    opacity: 0;
+    pointer-events: none;
+}

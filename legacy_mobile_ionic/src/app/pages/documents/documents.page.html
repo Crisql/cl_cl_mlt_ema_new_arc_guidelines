@@ -1,0 +1,407 @@
+<ion-header [ngClass]="{ 'show-scanner': showScanner}">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            <ion-icon class="icon Blink" name="clvs-dot-blanket" *ngIf="hasSomeBlanketAgreement"
+                      (click)="DisplayGlobalAgreementText()"
+                      style="color: #3880ff; width: 8px; margin: auto; margin-right: 8px;"></ion-icon>
+            <span class="text">{{pageTitle}}</span>
+        </ion-title>
+        <ion-buttons slot="end" *ngIf="!showPriceListButton">
+            <ion-button fill="clear" (click)="OpenSelectDocCurrencyPopover($event)" [disabled]="VerifyPermission('M_Sales_Documents_ChangeCurrency')">
+                {{ docCurrency }}
+            </ion-button>
+
+            <ion-button fill="clear" (click)="OpenPriceListPopover($event)">
+                <ion-icon slot="end" name="ellipsis-vertical"></ion-icon>
+            </ion-button>
+            
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content scroll-y="true" [ngClass]="{ 'show-scanner': showScanner}" class="scrollable-content">
+    <ion-list class="scrollable-content">
+        <ion-list-header button color="light" (click)="showHeader = !showHeader">
+            {{'BILLING.HEADER' | translate}}
+        </ion-list-header>
+        <div *ngIf="showHeader">
+            <ion-item button detail (click)="SearchCustomer(null)" *ngIf="SearchCustomerBtn">
+                <ion-label>{{ 'BUTTONS.SEARCH CUSTOMER' | translate }}</ion-label>
+            </ion-item>
+            <ion-item-sliding *ngIf="!SearchCustomerBtn" #slidingCustomer class="item-sliding-options-start">
+                <ion-item>
+                    <ion-label> {{customer.CardCode}} </ion-label>
+                    <ion-input type="text" [formControl]="cardNameFormControl"  
+                        [readonly]="(customer.CashCustomer == false)">
+                    </ion-input>
+                </ion-item>
+                <ion-item-options side="start">
+                    <ion-item-option (click)="SearchCustomer(slidingCustomer)">
+                        {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+                    </ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+            <ion-item lines="none">
+                <ion-input rows="3" [(ngModel)]="comments" placeholder="{{'BUTTONS.WRITE' | translate}}"
+                    [readonly]="VerifyPermission('M_Sales_Documents_EditComments')">
+                </ion-input>
+            </ion-item>
+            <ion-item-divider></ion-item-divider>
+            <ion-item lines="none">
+                <ion-textarea rows="3" [(ngModel)]="numAtCard" placeholder="{{'BUTTONS.REFERENCE' | translate}}"
+                    [readonly]="VerifyPermission('M_Sales_Documents_EditRefNumber')">
+                </ion-textarea>
+            </ion-item>
+            
+             <!--  Date fields-->
+            <ion-list-header color="light">
+                <ion-label>{{'BILLING.DATE FIELDS' | translate}}</ion-label>
+
+                <ion-button fill="clear" (click)="showDateFields = !showDateFields" >
+                    <ion-icon class="defaultDisplay" name="add-circle-outline" *ngIf="!showDateFields"></ion-icon>
+                    <ion-icon class="defaultDisplay" name="remove-circle-outline"
+                              *ngIf="showDateFields"></ion-icon>
+                </ion-button>
+               
+            </ion-list-header>
+            
+            <div *ngIf="showDateFields">
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ 'BILLING.ACCOUNTING DATE' | translate }}
+                    </ion-label>
+                    <ion-button
+                            fill="clear"
+                            color="primary"
+                            disabled="{{canChangeDocDate}}"
+                            (click)="ShowDatePicker('DocDate')"
+                    >
+                        {{docDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                    </ion-button>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ docDueDateLabel }}
+                    </ion-label>
+                    <ion-button
+                            fill="clear"
+                            color="primary"
+                            disabled="{{canChangeDocDueDate}}"
+                            (click)="ShowDatePicker('DueDate')"
+                    >
+                        {{dueDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                    </ion-button>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ 'BILLING.DATE OF DOCUMENT' | translate }}
+                    </ion-label>
+                    <ion-button
+                            fill="clear"
+                            color="primary"
+                            disabled="{{canChangeTaxDate}}"
+                            (click)="ShowDatePicker('TaxDate')"
+                    >
+                        {{taxDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                    </ion-button>
+                </ion-item>
+
+            </div>
+
+            <!--  Payment options-->
+            <ion-item-group *ngIf="(documentType === 5 || documentTypeReserve === 15 )&& VerifyPermission('Sales_Documents_BillWithDownPayments')==false">
+                <ion-list-header color="light">
+                    <ion-label>{{'DOWNPAYMENT.OPTIONS' | translate}}</ion-label>
+                    <ion-button fill="clear" (click)="TogglePayForm()">
+                        <ion-icon class="defaultDisplay" name="add-circle-outline" *ngIf="!isDownpaymentFormToggled"></ion-icon>
+                        <ion-icon class="defaultDisplay" name="remove-circle-outline" *ngIf="isDownpaymentFormToggled"></ion-icon>
+                    </ion-button>
+                </ion-list-header>
+                <ion-item *ngIf="isDownpaymentFormToggled">
+                    <ion-label>{{'DOWNPAYMENT.PAYOPT' | translate}}</ion-label>
+                    <ion-checkbox slot="start"  [(ngModel)]="isDownpayment"></ion-checkbox>
+                </ion-item>
+            </ion-item-group>
+
+            <!--  Electronic invoice-->
+            <ion-item-group *ngIf=" documentType !== 10 && documentType !== 12 && customer">
+
+                <ion-list-header color="light">
+                    <ion-label>{{'BILLING.FE' | translate}}</ion-label>
+                    <ion-button fill="clear" (click)="ToggleFeForm()" [disabled] = "customer.CashCustomer == false" >
+                        <ion-icon class="defaultDisplay" name="add-circle-outline" *ngIf="!isFeFormToggled"></ion-icon>
+                        <ion-icon class="defaultDisplay" name="remove-circle-outline"
+                            *ngIf="isFeFormToggled"></ion-icon>
+                    </ion-button>
+                </ion-list-header>
+                <form [formGroup]="feForm" *ngIf="isFeFormToggled" class="defaultDisplay">
+                    <ion-item>
+                        <ion-label position="stacked">{{'BILLING.IDTYPE' | translate}}</ion-label>
+                        <ion-select formControlName="IdType" (ionChange)="OnChangeFEIdType()">
+                            <ion-select-option *ngFor="let option of feIdentificationType"
+                                [value]="option.Id">{{TranslateIdTypes(option)}}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">{{'BILLING.IDNUMBER' | translate}}</ion-label>
+                        <ion-input type="text" inputmode="numeric" pattern="[0-9]*" formControlName="Identification"
+                            (change)="OnFEIdentificationChange()"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">{{'BILLING.FEEMAIL' | translate}}</ion-label>
+                        <ion-input type="email" formControlName="Email" (ionChange)="RefreshInvoiceType()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-label position="stacked">{{'BILLING.FEOBS' | translate}}</ion-label>
+                        <ion-input type="text" formControlName="ObservacionFE"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">{{'BILLING.INVOICE TYPE' | translate}}</ion-label>
+                        <ion-select formControlName="TipoDocE">
+                            <ion-select-option *ngFor="let option of invoiceTypes"
+                                [value]="option.Key">{{TranslateDocFETypes(option)}}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </form>
+            </ion-item-group>
+            
+            <!--  UDFs-->
+            <app-udf-presentation [udfs]="udfs" [udfsValues]="udfsValues"></app-udf-presentation>
+
+            <!--  Attachments-->
+            <app-attachment-files *ngIf="isVisibleAttachSeccion"
+                [attachmentFiles]="attachmentFiles"
+                [documentAttachment]="documentAttachment"
+                >
+            </app-attachment-files>
+
+        </div>
+
+         <!--  Document Lines-->
+            <ion-list-header color="light">
+                <ion-label> {{'BILLING.LINES' | translate}} </ion-label>
+                <ion-button fill="clear" *ngIf="batchedItems.length > 0 && GetDocumentTypeName().includes('invoice')"
+                            (click)="RaiseBatchingProcess()" [disabled]="!SearchProductBtn || !duplicateHasCustomer">
+                    <ion-icon slot="icon-only" name="albums-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" (click)="SearchProduct()" [disabled]="!SearchProductBtn || !duplicateHasCustomer">
+                    <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+                </ion-button>
+
+                <app-scanner
+                        [isDisabled]="(!SearchProductBtn || !duplicateHasCustomer)"
+                        [data]="GenerateProductSearchInputData()" 
+                        [productsSelected]="documentLines.slice()"
+                        (scanStatus)="IsOpenScanner($event)"
+                        (scannedItem)="ScannedItem($event)"
+                ></app-scanner>
+
+            </ion-list-header>
+
+
+            <ion-item lines="none" *ngIf="!documentLines || documentLines.length === 0">
+                <ion-label class="form-control-error">
+                    {{'BILLING.NOLINES' | translate}}
+                </ion-label>
+            </ion-item>
+
+
+            <ng-container *ngFor="let item of documentLines; let i = index">
+
+                <ion-item-sliding #slidingItem
+                                  class="item-sliding-options-end item-sliding-options-start">
+
+                    <ion-item-options side="start" *ngIf="!LineIsClose(item)">
+                        <ion-item-option (click)="ModifyDocumentLine(i, item, slidingItem)">
+                            {{ 'BUTTONS.EDIT' | translate }}
+                        </ion-item-option>
+                        <ion-item-option *ngIf="item.havePromotion" (click)="ViewPromoInfo(item, slidingItem)">
+                            {{ 'BUTTONS.PROMOTION' | translate }}
+                        </ion-item-option>
+                    </ion-item-options>
+
+                    <ion-item (click)="ShowLineDetails(item)" lines="none"
+                              [ngClass]="{'item-haspromotion':item.havePromotion, 'item-hasnopromotion': !item.havePromotion, 'line-closed': item.LineStatus === 1, 'light-red':ShouldApplyColor(item)}">
+                        <ion-label>
+                            <p [ngClass]="item.ExcededQtyAvailable ? 'text-red' : ''">{{item.ItemCode}} {{item.ItemName}}</p>
+                            <div *ngIf="item.SerialNumber">
+                                <ion-badge color="light">Serie: {{item.SerialNumber}}</ion-badge>
+                            </div>
+                            <div *ngIf="item.BinCode">
+                                <ion-badge color="light">Ubicación: {{ item.BinCode }}</ion-badge>
+                            </div>
+                            <div class="line-def-details-container">
+                                <span>{{'BILLING.QUANTITY' | translate}}. {{item.Quantity}}</span> |
+                                <span>{{'BILLING.PRICE' | translate}}. {{item.UnitPrice | number:'1.2-2'}}</span> |
+                                <span>{{'BILLING.LINETOTAL' | translate}}. {{item.Total | number:'1.2-2'}}</span>
+                            </div>
+
+                            <ng-container *ngIf="item.BillOfMaterial && item.BillOfMaterial.length">
+                                <div style="padding: 3px 0; display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                                    <p>{{'BILLING.BILL OF MATERIAL' | translate}}</p>
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <ion-icon *ngIf="!item.IsBillOfMaterialsOpen" name="chevron-down-outline" (click)="ToggleBillOfMaterial($event, item)"></ion-icon>
+                                        <ion-icon *ngIf="item.IsBillOfMaterialsOpen" name="chevron-up-outline" (click)="ToggleBillOfMaterial($event, item)"></ion-icon>
+                                    </div>
+                                </div>
+                                <ion-item-sliding #slidingBillOfMaterial
+                                                  *ngFor="let billOfMaterial of item.BillOfMaterial; let j = index" [ngClass]="{'bill-of-materials-open': item.IsBillOfMaterialsOpen, 'bill-of-materials-close': !item.IsBillOfMaterialsOpen}">
+                                    <ion-item lines="none">
+                                        <ion-label>
+                                            <p>{{billOfMaterial.ItemCode}} {{billOfMaterial.ItemName}}</p>
+                                            <div class="line-def-details-container">
+                                                <span>{{'BILLING.QUANTITY' | translate}}. {{billOfMaterial.Quantity}}</span>
+                                            </div>
+                                        </ion-label>
+                                    </ion-item>
+                                </ion-item-sliding>
+                            </ng-container>
+                        </ion-label>
+                    </ion-item>
+
+
+                    <ion-item-options side="end" *ngIf="!LineIsClose(item)">
+                        <ion-item-option color="danger" (click)="RemoveDocumentLine(i, item, slidingItem)">
+                            {{ 'BUTTONS.REMOVE' | translate }}
+                        </ion-item-option>
+                    </ion-item-options>
+
+                </ion-item-sliding>
+
+
+
+            </ng-container>
+
+            <ion-list-header color="light">
+                <ion-label> {{'BILLING.TOTALS' | translate}} </ion-label>
+                <ion-button fill="clear" [disabled]="!canCalculateFreight" (click)="CalculateFreight()" *ngIf="hasFreight">
+                    {{'BILLING.FREIGHT' | translate}}
+                    <ion-icon slot="icon-only" name="calculator-outline"></ion-icon>
+                </ion-button>
+            </ion-list-header>
+
+            <ion-item>
+                <ion-label slot="start">
+                    {{ 'BILLING.SUBTOTAL' | translate }}:
+                </ion-label>
+                <ion-label>
+                    {{ GetCurrency(docCurrency).Symbol }}{{ subTotal | number:TO_FIXED_TOTALDOCUMENT}}
+                </ion-label>
+            </ion-item>
+
+            <ion-item>
+                <ion-label slot="start">
+                    {{ 'BILLING.DISCOUNT' | translate }}:
+                </ion-label>
+                <ion-label>
+                    {{ GetCurrency(docCurrency).Symbol }}{{ discount | number:TO_FIXED_TOTALDOCUMENT}}
+                </ion-label>
+            </ion-item>
+
+            <ion-item>
+                <ion-label slot="start"> {{ 'BILLING.TAX' | translate }}: </ion-label>
+                <ion-label>
+                    {{ GetCurrency(docCurrency).Symbol }}{{ tax | number:TO_FIXED_TOTALDOCUMENT}}
+                </ion-label>
+            </ion-item>
+
+            <ng-container *ngIf="documentType === 17 || documentType === 18">
+                <ion-item class="ion-align-items-start">
+                    <ion-grid class="ion-no-padding">
+                        <ion-row>
+                            <ion-col size="6">
+                                <ion-label class="ion-text-start" >
+                                    {{ 'BILLING.DOWN PAYMENT' | translate }} (%)
+                                </ion-label>
+                                <ion-input
+                                        type="number"
+                                        [formControl]="downPaymentPercentage"
+                                        (ionChange)="UpdateTotals()"
+                                        (focusout)="AssignDownPaymentPercentage()"
+                                        [disabled]="VerifyPermission('M_Sales_Documents_ChangeDownPaymentPercentage')">
+                                </ion-input>
+                            </ion-col>
+                            <ion-col size="6" >
+                                <ion-label class="margin-down-payment">
+                                    {{ GetCurrency(docCurrency).Symbol }}{{ totalDiscountDownPayment | number:TO_FIXED_TOTALDOCUMENT }}
+                                </ion-label>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
+            </ng-container>
+        
+            <ion-item>
+                <ion-label slot="start"> {{ 'BILLING.TOTAL' | translate }}: </ion-label>
+                <ion-label>
+                    {{ GetCurrency(docCurrency).Symbol }}{{ total | number:TO_FIXED_TOTALDOCUMENT}}
+                </ion-label>
+            </ion-item>
+
+            <ng-container *ngIf="documentType === 5 && (appliedAmount > 0 || totalDownpayment > 0)">
+                <ion-item>
+                    <ion-label slot="start"> {{ 'BILLING.APPLIED AMOUNT' | translate }}: </ion-label>
+                    <ion-label>
+                        {{ GetCurrency(paymentCurrency).Symbol }}{{ appliedAmount + totalDownpayment | number:TO_FIXED_TOTALDOCUMENT}}
+                    </ion-label>
+                </ion-item>
+            </ng-container>
+        
+            <ion-row *ngIf="documentType !== 5 && documentTypeReserve !== 15 && documentType !== 17" >
+                <ion-col [size]="colSize">
+
+                    <ion-button  class="custom-outline-button" fill="outline" expand="block" (click)="ResetData(true)">{{ 'BUTTONS.CANCEL' | translate
+                        }}
+                    </ion-button>
+                </ion-col>
+
+                <ion-col [size]="colSize" *ngIf="(!isEditionMode || isActionCopyTo || isActionDuplicate) && ![10,12,18].includes(documentType) && canCreateDraft && !isActionDraft">
+                    <ion-button class="custom-button" fill="solid" expand="block" (click)="CreateDocument(true,false)"
+                                [disabled]="DisableCreationButton()">{{ 'BUTTONS.C_DRAFT' | translate }}</ion-button>
+                </ion-col>
+                <ion-col [size]="colSize" *ngIf="![10,12,18].includes(documentType) && canCreateDraft && isActionDraft">
+                    <ion-button class="custom-button" fill="solid" expand="block" (click)="CreateDocument(true,true)"
+                                [disabled]="DisableCreationButton()">{{ 'BUTTONS.U_DRAFT' | translate }}</ion-button>
+                </ion-col>
+
+                <ion-col [size]="colSize" *ngIf="!isEditionMode || isActionCopyTo || isActionDuplicate">
+                    <ion-button class="custom-button" fill="solid" expand="block" (click)="CreateDocument(false,false)"
+                                [disabled]="DisableCreationButton()">{{ 'BUTTONS.CREATE' | translate }}</ion-button>
+                </ion-col>
+
+                <ion-col [size]="colSize" *ngIf="isEditionMode && !isActionCopyTo && !isActionDuplicate">
+                    <ion-button class="custom-button" fill="solid" expand="block" (click)="UpdateDocument()"
+                                [disabled]="DisableCreationButton()">{{ 'BUTTONS.UPDATE' | translate }}</ion-button>
+                </ion-col>
+                
+            </ion-row>
+
+            <ion-row *ngIf="documentType === 5 || documentTypeReserve === 15 || documentType === 17">
+                <ion-col size="4">
+                    <ion-button class="custom-button" fill="outline" expand="block" (click)="ResetData(true)">{{ 'BUTTONS.CANCEL' | translate
+                        }}
+                    </ion-button>
+                </ion-col>
+
+                <ion-col size="4">
+                    <ion-button class="custom-button" fill="solid" expand="block" (click)="OpenPaymentModal()"
+                                [disabled]="!documentLines || documentLines.length === 0">{{ 'BUTTONS.PAYM' | translate }}</ion-button>
+                </ion-col>
+
+                <ion-col size="4">
+                    <ion-button class="custom-button" fill="solid" expand="block" (click)="CreateInvWithPayment()"
+                                [disabled]="DisableCreationButton()">
+                        {{ 'BUTTONS.CREATE' | translate }}
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+        </ion-list>
+</ion-content>
+    

@@ -1,0 +1,575 @@
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: atlassian/default-image:3
+pipelines:
+  branches:
+    clv_development:
+      - step:
+          name: 'Deploy'
+          deployment: clv_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development
+            - npm run build-development
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    clv_staging:
+      - step:
+          name: 'Deploy'
+          deployment: Staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging
+            - npm run build-staging
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    clv_master:
+      - step:
+          name: 'Deploy'
+          deployment: clv_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master
+            - npm run build-master
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    ams_development:
+      - step:
+          name: 'Deploy'
+          deployment: ams_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-ams
+            - npm run build-development-ams
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    ams_staging:
+      - step:
+          name: 'Deploy'
+          deployment: ams_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-ams
+            - npm run build-staging-ams
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    ams_master:
+      - step:
+          name: 'Deploy'
+          deployment: ams_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-ams
+            - npm run build-master-ams
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    crm_development:
+      - step:
+          name: 'Deploy'
+          deployment: crm_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-crm
+            - npm run build-development-crm
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    crm_staging:
+      - step:
+          name: 'Deploy'
+          deployment: crm_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-crm
+            - npm run build-staging-crm
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    crm_master:
+      - step:
+          name: 'Deploy'
+          deployment: crm_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-crm
+            - npm run build-master-crm
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    tcr_development:
+      - step:
+          name: 'Deploy'
+          deployment: tcr_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-tcr
+            - npm run build-development-tcr
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    tcr_staging:
+      - step:
+          name: 'Deploy'
+          deployment: tcr_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-tcr
+            - npm run build-staging-tcr
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    tcr_master:
+      - step:
+          name: 'Deploy'
+          deployment: tcr_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-tcr
+            - npm run build-master-tcr
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"  
+    thu_development:
+      - step:
+          name: 'Deploy'
+          deployment: thu_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-thu
+            - npm run build-development-thu
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    thu_staging:
+      - step:
+          name: 'Deploy'
+          deployment: thu_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-thu
+            - npm run build-staging-thu
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    thu_master:
+      - step:
+          name: 'Deploy'
+          deployment: thu_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-thu
+            - npm run build-master-thu
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    zsw_development:
+      - step:
+          name: 'Deploy'
+          deployment: zsw_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-zsw
+            - npm run build-development-zsw
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    zsw_staging:
+      - step:
+          name: 'Deploy'
+          deployment: zsw_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-zsw
+            - npm run build-staging-zsw
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    zsw_master:
+      - step:
+          name: 'Deploy'
+          deployment: zsw_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-zsw
+            - npm run build-master-zsw
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    idc_development:
+      - step:
+          name: 'Deploy'
+          deployment: idc_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-idc
+            - npm run build-development-idc
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    idc_staging:
+      - step:
+          name: 'Deploy'
+          deployment: idc_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-idc
+            - npm run build-staging-idc
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    idc_master:
+      - step:
+          name: 'Deploy'
+          deployment: idc_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-idc
+            - npm run build-master-idc
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    mpt_staging:
+      - step:
+          name: 'Deploy'
+          deployment: mpt_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging_mpt
+            - npm run build-staging_mpt
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    mpt_development:
+      - step:
+          name: 'Deploy'
+          deployment: mpt_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development_mpt
+            - npm run build-development_mpt
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    mpt_master:
+      - step:
+          name: 'Deploy'
+          deployment: mpt_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-prod-mpt
+            - npm run build-master_mpt
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    gga_development:
+      - step:
+          name: 'Deploy'
+          deployment: gga_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-gap
+            - npm run build-development-gap
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    gga_staging:
+      - step:
+          name: 'Deploy'
+          deployment: gga_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-gap
+            - npm run build-staging-gap
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    gga_master:
+      - step:
+          name: 'Deploy'
+          deployment: gga_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-gap
+            - npm run build-master-gap
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    nvm_development:
+      - step:
+          name: 'Deploy'
+          deployment: nvm_development
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-development-nvm
+            - npm run build-development-nvm
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    nvm_staging:
+      - step:
+          name: 'Deploy'
+          deployment: nvm_staging
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-staging-nvm
+            - npm run build-staging-nvm
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    nvm_master:
+      - step:
+          name: 'Deploy'
+          deployment: nvm_master
+          caches:
+            - node
+          script:
+            - echo "Deploying to -> $FTP_SERVER"
+            - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+            - apt-get update
+            - apt-get install -y google-chrome-stable xvfb
+            - npm cache clean -f && nvm install v16.13.1 && nvm use v16.13.1
+            - npm install --legacy-peer-deps
+            - npm run test-master-nvm
+            - npm run build-master-nvm
+            - apt-get update && apt-get install lftp
+            - lftp -u $FTP_USER,$FTP_PASSWORD -e " set ssl:verify-certificate no; set ftp:ssl-allow true; set ftp:ssl-force true;set ftp:ssl-protect-data true; set ftp:ssl-protect-list true; set ftp:ssl-protect-fxp true; mirror --delete-first --parallel=100 -R --transfer-all dist/$BITBUCKET_REPO_SLUG .;quit" $FTP_SERVER
+            - echo "Deployment finished"
+    

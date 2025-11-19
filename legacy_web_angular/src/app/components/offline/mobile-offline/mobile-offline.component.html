@@ -1,0 +1,61 @@
+<section class="main-container">
+  <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      [form]="searchForm"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+
+<section class="main-container mobile-margin">
+  <fieldset>
+    <legend>Filtros</legend>
+    <form [formGroup]="searchForm" class="grid-container">
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-4 col-sm-12">
+        <mat-label>Rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Desde" formControlName="From">
+          <input matEndDate placeholder="Hasta" formControlName="To">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-4 col-sm-12">
+        <mat-label>Estado del documento</mat-label>
+        <mat-select formControlName="Status">
+          <mat-option *ngFor="let status of documentSyncStatus" [value]="status.value">
+            {{ DocumentStatusDescription(status.value) }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-4 col-sm-12">
+        <mat-label>Tipo de documento</mat-label>
+        <mat-select formControlName="Type">
+          <mat-option *ngFor="let type of documentSyncTypes" [value]="type.value">
+            {{ DocumentTypeDescription(type.value) }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-12 col-sm-12">
+        <mat-label>Buscar:</mat-label>
+        <input placeholder="detalles del error" matInput type="text" formControlName="Filter"/>
+      </mat-form-field>
+    </form>
+  </fieldset>
+
+</section>
+
+<section class="main-container h-space">
+  <fieldset>
+    <legend>Resultados</legend>
+    <cl-table [Id]="documentsTableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [MappedColumns]="documentsMappedColumns"
+              [Records]="syncDocuments"
+              [Buttons]="buttons"
+              [RecordsCount]="syncDocuments.length"
+              [ItemsPeerPage]="itemsPeerPage"
+              [HasPaginator]="hasPaginator"
+              [BackgroundTransparent] = "true">
+    </cl-table>
+  </fieldset>
+</section>
+

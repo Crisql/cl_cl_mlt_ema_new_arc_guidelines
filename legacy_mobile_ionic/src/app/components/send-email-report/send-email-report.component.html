@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "REPORTS.NEWEMAIL" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="onClickAccept()">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list [formGroup]="emailForm">
+    <ion-item>
+      <ion-label>
+        {{ "REPORTS.TO" | translate }}
+      </ion-label>
+      <ion-input
+        type="email"
+        placeholder="@"
+        formControlName="To"
+        (keyup.enter)="onKeyUpAddRecipient()"
+      ></ion-input>
+    </ion-item>
+    <div>
+      <ion-chip
+        *ngFor="let recipient of recipients; index as i"
+        (click)="onClickDeleteRecipient(i)"
+      >
+        <ion-label>{{ recipient }}</ion-label>
+        <ion-icon name="close"></ion-icon>
+      </ion-chip>
+    </div>
+
+    <ion-item>
+      <ion-label position="stacked">{{
+        "REPORTS.HEADER" | translate
+      }}</ion-label>
+      <ion-textarea
+        placeholder="..."
+        formControlName="Header"
+        rows="3"
+      ></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">{{ "REPORTS.BODY" | translate }}</ion-label>
+      <ion-textarea
+        placeholder="..."
+        formControlName="Body"
+        rows="3"
+      ></ion-textarea>
+    </ion-item>
+  </ion-list>
+</ion-content>

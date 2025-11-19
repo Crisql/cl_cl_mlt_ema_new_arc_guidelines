@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "BATCHES.TITLE" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="Dismiss()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="Continue()">
+                <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-card *ngFor="let item of batchedItems; let i = index">
+        <ion-card-header>
+            <ion-card-subtitle>{{ "BATCHES.WAREHOUSE" | translate }}: {{item.FromNameWhsCode}}</ion-card-subtitle>
+            <ion-card-title>{{item.ItemCode}} - {{item.ItemDescription}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item lines="none">
+                <ion-label>{{ "BATCHES.REQUESTED QUANTITY" | translate }}</ion-label>
+                <ion-badge slot="end">{{item.Quantity}}</ion-badge>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-label>{{ "BATCHES.APPLIED QUANTITY" | translate }}</ion-label>
+                <ion-badge slot="end" color="{{GetTotalApplied(item) != item.Quantity ? 'danger': 'success'}}">{{GetTotalApplied(item)}}</ion-badge>
+            </ion-item>
+            <br>
+            <ion-title>{{ "BATCHES.AVAILABLE BATCHES" | translate }}</ion-title>
+
+            <ion-item-group>
+                <ion-card ion-item *ngFor="let batch of item?.Batches; let c = index" style="box-shadow: none !important;">
+                    <ion-card-header style="display: flex">
+                        <ion-card-title style="font-size: 14px; text-decoration: underline;" (click)="SetQuantityDifference(item, batch)">{{batch.DistNumber}}</ion-card-title>
+                        <ion-icon *ngIf="batch.Locations && batch.Locations>0" name="cube-outline" class="ion-padding-start location-icon" size=""></ion-icon>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-label>{{ "BATCHES.AVAILABLE" | translate }}: {{batch.Disponible}}</ion-label>
+                        <ion-item>
+                            <ion-input type="number" id="input_{{c}}_{{i}}" [(ngModel)]="batch.Quantity" (ionChange)="ChangeData(batch, item)" [disabled]="batch.Locations && batch.Locations.length > 0"></ion-input>
+                            <ion-icon size="large" class="Applied" name="checkmark-circle-outline" slot="end"></ion-icon>
+                        </ion-item>
+                    </ion-card-content>
+                </ion-card>
+            </ion-item-group>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

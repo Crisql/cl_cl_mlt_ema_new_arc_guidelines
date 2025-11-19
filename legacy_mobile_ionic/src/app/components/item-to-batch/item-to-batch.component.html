@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "BATCHES.TITLE" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="Dismiss()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="Continue()">
+                <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-card *ngFor="let item of itemsToBatch; let i = index">
+        <ion-card-header>
+            <ion-card-subtitle>{{ "BATCHES.WAREHOUSE" | translate }}: {{GetWarehouseName(item.WhsCode)}}</ion-card-subtitle>
+            <ion-card-title>{{item.ItemCode}} - {{item.ItemName}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item lines="none">
+                <ion-label>{{ "BATCHES.REQUESTED QUANTITY" | translate }}</ion-label>
+                <ion-badge slot="end">{{item.Quantity}}</ion-badge>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-label>{{ "BATCHES.APPLIED QUANTITY" | translate }}</ion-label>
+                <ion-badge slot="end" color="{{GetTotalApplied(i) != item.Quantity ? 'danger': 'success'}}">{{GetTotalApplied(i)}}</ion-badge>
+            </ion-item>
+            <br>
+            <ion-title>{{ "BATCHES.AVAILABLE BATCHES" | translate }}</ion-title>
+
+            <ion-item-group>
+                <ion-card ion-item *ngFor="let batch of item.Batches; let c = index" style="box-shadow: none !important;">
+                    <ion-card-header style="display: flex">
+                        <ion-card-title style="font-size: 14px; text-decoration: underline;" (click)="SetQuantityDifference(item, batch.BatchNumber, c, i)">{{batch.BatchNumber}}</ion-card-title>
+                        <ion-icon *ngIf="HasBinAllocations(batch.BatchNumber)" name="cube-outline" class="ion-padding-start location-icon" size=""></ion-icon>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-label>{{ "BATCHES.AVAILABLE" | translate }}: {{batch.Quantity}}</ion-label>
+                        <ion-item>
+                            <ion-input id="input_{{c}}_{{i}}" [disabled]="HasBinAllocations(batch.BatchNumber)"></ion-input>
+                            <ion-icon size="large" class="Applied" name="checkmark-circle-outline" slot="end" (click)="SetQuantityDifference(item, batch.BatchNumber, c, i, true)"></ion-icon>
+                        </ion-item>
+                    </ion-card-content>
+                </ion-card>
+            </ion-item-group>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

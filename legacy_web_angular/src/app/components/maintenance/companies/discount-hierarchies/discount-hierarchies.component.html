@@ -1,0 +1,25 @@
+  <fieldset>
+    <legend>Jerarquía de descuentos</legend>
+    <div class="row">
+      <div class="column-3">
+        <div class="row-1">
+          <div class="column-3">
+            <div
+              cdkDropList
+              class="example-list"
+              (cdkDropListDropped)="OnDropHierarchyDiscount($event)">
+              <div
+                class="discount-hierarchy-box"
+                *ngFor="let discount of discountHierarchies"
+                [cdkDragData]="discount"
+                cdkDrag>
+                <span>{{discount.Hierarchy}}</span>
+                <span>{{discount.Description}}</span>
+                <mat-checkbox [checked]="discount.IsActive" (change)="OnActivateHierarchyDiscount(discount)"></mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </fieldset>

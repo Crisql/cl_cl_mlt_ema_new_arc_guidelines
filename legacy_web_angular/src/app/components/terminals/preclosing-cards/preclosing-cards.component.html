@@ -1,0 +1,61 @@
+<app-action-buttons [form]="searchForm" [actionButtons]="actionButtons" [isIntoMatTab]="false" [form]="searchForm"
+                    (onActionButtonClicked)="OnActionButtonClicked($event)">
+  <div class="doc-margin">
+    <fieldset class="main-container container">
+      <legend>
+        Filtros
+      </legend>
+      <form [formGroup]="searchForm">
+        <section class="row">
+          <mat-form-field appearance="outline" class="flex-formfield">
+            <mat-label>Tipo de transacción</mat-label>
+            <mat-select formControlName="TransactionType">
+              <mat-option *ngFor="let docType of TransactionType"
+                          [value]="docType.Key">{{docType.Description}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-formfield">
+            <mat-label>Terminales</mat-label>
+            <mat-select formControlName="Terminal">
+              <mat-option *ngFor="let terminal of terminals" [value]="terminal">{{terminal.Description}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-formfield">
+            <mat-label>Rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Desde" formControlName="DateFrom">
+              <input matEndDate placeholder="Hasta" formControlName="DateTo">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </section>
+      </form>
+    </fieldset>
+  </div>
+
+
+  <fieldset class="mt-1">
+    <legend>
+      Resultados
+    </legend>
+    <div class="overflow">
+      <cl-table [Id]="documentsTableId"
+                [ShouldPaginateRequest]="shouldPaginateRequest"
+                [HasStandardHeaders]="hasStandardHeaders"
+                [ShouldSplitPascal]="shouldSplitPascal"
+                [MappedColumns]="docTbMappedColumns"
+                [Records]="documents"
+                [RecordsCount]="documents.length"
+                [HasItemsSelection]="hasItemsSelection"
+                [Buttons]="buttons"
+                [BackgroundTransparent]="true">
+      </cl-table>
+    </div>
+
+  </fieldset>
+
+
+</app-action-buttons>

@@ -1,0 +1,28 @@
+<section>
+  <h2 mat-dialog-title>{{modalTitle}}</h2>
+  <section mat-dialog-content>
+    <form class="form" [formGroup]="marginForm">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Tabla</mat-label>
+        <input readonly matInput placeholder="" formControlName="Table">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Descripción</mat-label>
+        <input readonly matInput placeholder="" formControlName="Description">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Margen %</mat-label>
+        <input matInput placeholder="" type="number" formControlName="Margin">
+      </mat-form-field>
+    </form>
+  </section>
+  <section mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" [disabled]="marginForm.invalid"
+            (click)="Save()">
+      <mat-icon>save</mat-icon> Crear
+    </button>
+    <button mat-flat-button [mat-dialog-close]="false">
+      <mat-icon class="material-symbols-outlined">cancel</mat-icon> Cancelar
+    </button>
+  </section>
+</section>

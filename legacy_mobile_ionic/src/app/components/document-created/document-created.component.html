@@ -1,0 +1,48 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title class="ion-text-wrap">{{ title }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <ion-row>
+        <ion-col size="12">
+            <div *ngIf="data.IsInvoice">
+                <p>
+                    <b>{{ "DOCUMENTCREATED.DOCNUM" | translate }}: </b>{{ data.DocNum }}
+                </p>
+                <p>
+                    <b>{{ "DOCUMENTCREATED.KEY" | translate }}: </b>{{ data.FEKey }}
+                </p>
+                <p>
+                    <b>{{ "DOCUMENTCREATED.CONSECUTIVE" | translate }}: </b>
+                    {{ data.ConsecutiveNumber }}
+                </p>
+            </div>
+            <div *ngIf="!data.IsInvoice">
+                <p>
+                    <b>{{ "DOCUMENTCREATED.DOCNUM" | translate }}: </b> {{ data.DocNum }}
+                </p>
+            </div>
+            <p *ngIf="data.AdditionalInformation">
+                <strong>{{ data.AdditionalInformation }}</strong>
+            </p>
+        </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col size="6">
+            <ion-button [disabled]="!data.AllowPrint" fill="solid" expand="block" color="primary" (click)="printDocument()">
+                {{ print }}
+            </ion-button>
+        </ion-col>
+        <ion-col size="6">
+            <ion-button fill="solid" expand="block" color="primary" (click)="onClickPreview()">
+                {{ preview }}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+</ion-content>

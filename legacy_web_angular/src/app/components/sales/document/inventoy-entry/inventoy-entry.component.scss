@@ -1,0 +1,40 @@
+.margin-btn{
+  margin-left: 5px;
+}
+.justify-conten{
+  justify-content: flex-end;
+}
+
+.mb-1 {
+  margin-bottom: 10px;
+}
+.mt-1 {
+  margin-top: 10px;
+
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+
+/*Region totales*/
+.flex-container {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  flex-wrap: wrap;
+  margin-right: 5px ;
+}
+
+
+.total {
+  font-size: 1.3rem;
+  font-weight: 600;
+  height: 50px;
+}
+
+.container {
+  overflow-y: auto;
+  max-height: 350px;
+}

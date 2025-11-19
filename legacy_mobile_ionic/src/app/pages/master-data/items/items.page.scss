@@ -1,0 +1,130 @@
+.search-collapsed,
+.search-expanded {
+  transition: all 0.3s ease;
+}
+
+ion-content {
+  [hidden-when-search] {
+    transition: opacity 0.2s;
+    opacity: var(--search-opacity, 1);
+  }
+}
+
+
+.form-hide {
+  display: none;
+  transition: all 0.3s ease;
+}
+
+ion-searchbar {
+  transition: width 0.3s ease;
+}
+
+.inactive-code {
+  opacity: 0.7;
+
+  ion-label {
+    text-decoration: line-through;
+  }
+}
+
+ion-buttons {
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}
+
+
+.alert-danger {
+  .alert-button[role='destructive'] {
+    color: var(--ion-color-danger);
+  }
+}
+
+.viewport {
+    height: 100vh; /* ajusta según tu diseño */
+    width: 100%;
+}
+
+.field-required::after{
+    content: " *";
+    color: red;
+}
+
+.field-invalid{
+    color: red;
+}
+
+
+.search-scanner-container {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Espacio entre searchbar y botón */
+}
+
+.searchbar-flex {
+  flex: 1; /* Ocupa todo el espacio disponible */
+}
+
+.scanner-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.barcode-actions {
+  margin-left: 2rem;
+}
+
+.barcode-list {
+  ion-item {
+    --padding-start: 16px;
+    --padding-end: 8px;
+    --min-height: 72px;
+    
+    .barcode-text {
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: var(--ion-color-dark);
+      margin-bottom: 4px;
+    }
+    
+    .free-text {
+      font-size: 0.9rem;
+      color: var(--ion-color-medium);
+      margin-top: 0;
+    }
+    
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      
+      ion-button {
+        --padding-start: 12px;
+        --padding-end: 12px;
+        --border-radius: 6px;
+        margin: 0 4px;
+        height: 36px;
+        
+        ion-icon {
+          font-size: 1.1rem;
+        }
+        
+        span {
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+      }
+      
+      .edit-btn {
+        --background-hover: rgba(var(--ion-color-primary-rgb), 0.08);
+        color: var(--ion-color-primary);
+      }
+      
+      .delete-btn {
+        --background-hover: rgba(var(--ion-color-danger-rgb), 0.08);
+      }
+    }
+  }
+}

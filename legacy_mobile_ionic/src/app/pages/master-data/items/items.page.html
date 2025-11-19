@@ -1,0 +1,156 @@
+<ion-header [ngClass]="{ 'show-scanner': showScanner}">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-buttons>
+
+    <ion-title>{{ 'ITEM MD.ARTICLES' | translate }}</ion-title>
+
+    <!--Global action buttons-->
+    <ion-buttons slot="end">
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [ngClass]="{ 'show-scanner': showScanner}">
+
+  <ion-segment [(ngModel)]="segmentValue">
+    <ion-segment-button value="searchItem" (click)="FilterItems(searchTerm)">
+      <ion-label>{{ 'ITEM MD.SEARCH ITEM' | translate }}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="createItem" (click)="InitItems()">
+      <ion-label>{{ editionMode ? ('ITEM MD.EDIT ARTICLE' | translate) : ('ITEM MD.CREATE ARTICLE' | translate)
+        }}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="segmentValue">
+
+    <div *ngSwitchCase="'searchItem'">
+
+      <div class="search-scanner-container">
+        <ion-searchbar class="searchbar-flex" (ionInput)="OnSearchInput($event)" name="searchTerm"
+          [placeholder]="'ITEM MD.SEARCH PLACEHOLDER' | translate">
+        </ion-searchbar>
+
+        <app-simple-scanner class="scanner-button" (scanStatus)="IsOpenScanner($event)"
+          (scannedValue)="ScannedItem($event)">
+        </app-simple-scanner>
+      </div>
+
+      <cdk-virtual-scroll-viewport itemSize="47" class="viewport" minBufferPx="900" maxBufferPx="1350"
+        (scrolledIndexChange)="OnScroll($event)">
+        <ion-list>
+          <ion-item *cdkVirtualFor="let item of items" (click)="OnSelectItem(item.ItemCode)" detail="true">
+            {{ item.ItemCode }} {{ item.ItemName }}
+            
+          </ion-item>
+        </ion-list>
+      </cdk-virtual-scroll-viewport>
+    </div>
+
+    <div *ngSwitchCase="'createItem'">
+      <form [formGroup]="itemForm">
+        <ion-item-group>
+          <ion-item-divider color="light">
+            <ion-label>{{ 'ITEM MD.ITEM DATA' | translate }}</ion-label>
+            <ion-button slot="end" *ngIf="editionMode" (click)="OpenInventoryModal()" fill="clear">
+              <ion-icon name="cube-outline"></ion-icon>
+            </ion-button>
+          </ion-item-divider>
+
+          <ion-item *ngIf="!isSerial && !editionMode">
+            <ion-label position="stacked">{{ 'ITEM MD.ITEM CODE' | translate }}</ion-label>
+            <ion-input formControlName="ItemCode" type="text" class="field-required"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{ 'ITEM MD.ITEM NAME' | translate }}</ion-label>
+            <ion-input formControlName="ItemName" type="text" class="field-required"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{ 'ITEM MD.FOREIGN NAME' | translate }}</ion-label>
+            <ion-input formControlName="ForeignName" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{ 'ITEM MD.TAX' | translate }}</ion-label>
+            <ion-select formControlName="U_IVA" (ionChange)="OnTaxChange()">
+              <ion-select-option *ngFor="let tax of taxes" [value]="tax.TaxRate">{{ tax.TaxCode }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{ 'ITEM MD.PRICE LIST' | translate }}</ion-label>
+            <ion-select [formControl]="price" (ionChange)="GetItemPrices($event)">
+              <ion-select-option *ngFor="let priceList of priceLists" [value]="priceList">{{ priceList.ListName
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{ 'ITEM MD.UNIT PRICE' | translate }}</ion-label>
+            <ion-input type="number" formControlName="UnitPrice" (ionInput)="UpdatePrice($event.target.value)"
+              [readonly]="VerifyPermission('M_MasterData_Items_ChangePriceListPrice')"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{ 'ITEM MD.PRICE WITH TAX' | translate }}</ion-label>
+            <ion-input type="number" formControlName="PriceImp" (ionInput)="UpdatePriceImp($event)"
+              [readonly]="VerifyPermission('M_MasterData_Items_ChangePriceListPrice')"></ion-input>
+          </ion-item>
+        </ion-item-group>
+        <app-udf-presentation [udfs]="udfs" [udfsValues]="udfsValues">
+        </app-udf-presentation>
+        <ion-item-group>
+          <ion-list-header color="light">
+            <ion-label>{{ 'ITEM MD.BARCODES' | translate }}</ion-label>
+            <app-simple-scanner class="scanner-button" (scanStatus)="IsOpenScanner($event)"
+              (scannedValue)="ScannedItem($event)">
+            </app-simple-scanner>
+            <ion-button (click)="AddBarcode()">
+              <ion-icon name="barcode-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="ToggleBarcode()" class="barcode-actions">
+              <ion-icon class="defaultDisplay" name="add-circle-outline" *ngIf="!isBarcodeToggled"></ion-icon>
+              <ion-icon class="defaultDisplay" name="remove-circle-outline" *ngIf="isBarcodeToggled"></ion-icon>
+            </ion-button>
+          </ion-list-header>
+          <ng-container *ngIf="isBarcodeToggled">
+            <ion-list lines="full" class="barcode-list">
+              <ion-item *ngFor="let barcode of barcodes" class="barcode-item">
+                <ion-label class="ion-text-wrap">
+                  <h2 class="barcode-text">{{ barcode.Barcode }}</h2>
+                  <p class="free-text" *ngIf="barcode.FreeText">{{ barcode.FreeText }}</p>
+                </ion-label>
+                <ion-buttons slot="end" class="action-buttons">
+
+                  <ion-button (click)="EditBarcode(barcode)" fill="clear" class="edit-btn">
+                    <ion-icon name="create-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button (click)="DeleteBarcode(barcode)" fill="clear" color="danger" class="delete-btn">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-button>
+
+                </ion-buttons>
+              </ion-item>
+            </ion-list>
+          </ng-container>
+        </ion-item-group>
+      </form>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="segmentValue === 'createItem'" [ngClass]="{ 'show-scanner': showScanner}">
+  <ion-row>
+    <ion-col size="6">
+      <ion-button fill="outline" expand="block" (click)="ResetData()">
+        {{ editionMode ? ('ITEM MD.CANCEL' | translate) : ('ITEM MD.CANCEL' | translate) }}
+      </ion-button>
+    </ion-col>
+
+    <ion-col size="6">
+      <ion-button fill="solid" expand="block" (click)="SaveChanges()">
+        {{ editionMode ? ('ITEM MD.UPDATE' | translate) : ('ITEM MD.CREATE' | translate) }}
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

@@ -1,0 +1,82 @@
+trigger:
+  branches:
+    include:
+      - clv_development
+      - clv_staging
+      - clv_master
+      - ams_development
+      - ams_staging
+      - ams_master
+      - crm_development
+      - crm_staging
+      - crm_master
+      - tcr_development
+      - tcr_staging
+      - tcr_master
+      - thu_development
+      - thu_staging
+      - thu_master 
+      - zsw_development
+      - zsw_staging
+      - zsw_master 
+      - idc_development
+      - idc_staging
+      - idc_master 
+      - gap_development
+      - gap_staging
+      - gap_master 
+      - nvm_development
+      - nvm_staging
+      - nvm_master
+
+pr: none
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+- group: ${{variables['Build.SourceBranchName']}}
+- name: buildPlatform
+  value: 'x64'
+- name: buildConfiguration
+  value: ${{variables['Build.SourceBranchName']}}
+- name: projectPath
+  value: 'CLMLTEMA.API\CLMLTEMA.API.csproj'
+- name: publishDir
+  value: '$(Build.ArtifactStagingDirectory)\published'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: 'CLMLTEMA.sln'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(projectPath)'
+    msbuildArgs: >
+      /p:DeployOnBuild=true 
+      /p:DeployDefaultTarget=WebPublish 
+      /p:WebPublishMethod=FileSystem 
+      /p:SkipInvalidConfigurations=true 
+      /p:publishUrl=$(build.artifactstagingdirectory)\website 
+      /p:TransformWebConfigEnabled=true
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: FtpUpload@2
+  inputs:
+    credentialsOption: 'inputs'
+    serverUrl: '$(FTP_SERVER)'
+    username: '$(FTP_USER)'
+    password: '$(FTP_PASSWORD)'
+    rootDirectory: '$(build.artifactstagingdirectory)\website'
+    remoteDirectory: '/'
+    preservePaths: true
+    filePatterns: '**'
+    clean: true
+    enableSsl: true
+    passive: true
+    trustSSL: true
+    timeout: 1800

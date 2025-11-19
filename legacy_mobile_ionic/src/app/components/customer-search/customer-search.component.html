@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "SEARCH CUSTOMER.SEARCH CUSTOMER" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="Dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-item>
+    <ion-searchbar
+      (ionInput)="OnSearchInput($event)"
+      placeholder="{{ 'SEARCH CUSTOMER.SEARCH CUSTOMER2' | translate }}"
+    ></ion-searchbar>
+  </ion-item>
+</ion-header>
+<ion-content>
+
+  <cdk-virtual-scroll-viewport itemSize="60" minBufferPx="900" maxBufferPx="1350" class="viewport" (scrolledIndexChange)="OnScroll($event)">
+    <div
+     *cdkVirtualFor="let customer of filteredCustomers;"
+      class="customer-container ion-padding-start ion-padding-top ion-padding-bottom"
+      (click)="Dismiss(customer)"
+    >
+      <div class="item-border-bottom">
+        {{ customer.CardCode }} {{ customer.CardName }}
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+
+</ion-content>

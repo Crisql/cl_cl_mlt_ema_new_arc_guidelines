@@ -1,0 +1,43 @@
+<section class="main-container">
+  <app-action-buttons #actionButtonsComp [actionButtons]="actionButtons"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)"></app-action-buttons>
+
+  <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedIndexChange)="OnTabIndexChange($event)" class="mobile-tab">
+    <!-- USUARIOS -->
+    <mat-tab label="Usuarios">
+      <section class="table-container">
+        <fieldset class="top-margin">
+          <cl-table [Id]="userTableId" [ShouldPaginateRequest]="false" [HasStandardHeaders]="hasStandardHeaders"
+                    [ShouldSplitPascal]="shouldSplitPascal" [MappedColumns]="userMappedColumns" [Records]="users"
+                    [RecordsCount]="users.length" [HasItemsSelection]="hasItemsSelection" [Buttons]="buttonsUser"
+                    [BackgroundTransparent]="true">
+
+          </cl-table>
+        </fieldset>
+
+      </section>
+    </mat-tab>
+
+    <!-- ASIGNACION DE USUARIOS -->
+    <mat-tab label="Asignación de usuarios">
+      <section class="table-container">
+        <fieldset class="top-margin">
+          <cl-table [Id]="userAssignTableId"
+                    [ShouldPaginateRequest]="shouldPaginateRequest"
+                    [HasStandardHeaders]="hasStandardHeaders"
+                    [ShouldSplitPascal]="shouldSplitPascal"
+                    [MappedColumns]="userAssignMappedColumns"
+                    [Records]="usersAssigns"
+                    [RecordsCount]="usersAssigns.length"
+                    [HasItemsSelection]="hasItemsSelection"
+                    [Buttons]="buttonsAssignUser"
+                    [BackgroundTransparent]="true">
+          </cl-table>
+        </fieldset>
+
+      </section>
+    </mat-tab>
+
+  </mat-tab-group>
+
+</section>

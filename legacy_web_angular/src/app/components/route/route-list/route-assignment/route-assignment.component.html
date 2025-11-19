@@ -1,0 +1,44 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Asignación de usuarios a ruta</h2>
+  </header>
+  <main>
+    <div cdkDropListGroup>
+      <div class="example-container">
+        <h3>Disponibles</h3>
+
+        <div
+          cdkDropList
+          [cdkDropListData]="availableUsers"
+          class="example-list"
+          (cdkDropListDropped)="OnRouteUsersChange($event, 'unassign')">
+          <div class="example-box" *ngFor="let item of availableUsers" cdkDrag matTooltip="{{item.Email}}"
+               matTooltipPosition="right">
+            {{item.Name}} {{item.LastName}}
+          </div>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <h3>Asignados</h3>
+
+        <div
+          cdkDropList
+          [cdkDropListData]="assignedUsers"
+          class="example-list"
+          (cdkDropListDropped)="OnRouteUsersChange($event, 'assign')">
+          <div class="example-box" *ngFor="let item of assignedUsers" cdkDrag matTooltip="{{item.Email}}"
+               matTooltipPosition="left">
+            {{item.Name}} {{item.LastName}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnClickActionButton($event)">
+    </app-action-buttons>
+  </footer>
+</section>

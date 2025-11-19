@@ -1,0 +1,27 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{"EVENTVIEWER.EVENTVIEWER" | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-card *ngFor="let log of logs">
+        <ion-card-header>
+            <ion-icon [name]="GetLogIcon(log)"></ion-icon>
+            {{ "EVENTVIEWER."+GetLogEvent(log) | translate}} - {{ log.Date | date: 'dd/MM/yyyy hh:mm:ss a' }}
+        </ion-card-header>
+        <ion-card-content>
+            <p>
+                {{ log.Detail }}
+            </p>
+            <ion-badge>{{ log.View }}</ion-badge>
+        </ion-card-content>
+    </ion-card>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="SyncLogsMobile()" color="primary" [disabled]="network.type === 'none'">
+            <ion-icon name="cloud-upload"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

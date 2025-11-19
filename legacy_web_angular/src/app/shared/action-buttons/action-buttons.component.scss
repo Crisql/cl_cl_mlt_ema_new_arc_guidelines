@@ -1,0 +1,59 @@
+.action-buttons-main-container {
+  position: relative;
+}
+
+
+.actions-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: row;
+  //padding: 5px 10px;
+}
+
+
+.actions-container button {
+  margin-right: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  z-index: 100;
+  margin-bottom: 4px;
+  line-height: 30px;
+  font-size: 12px;
+}
+
+.into-mat-tap {
+  position: absolute;
+  //right: 10px;
+  padding: 0;
+}
+
+.actions-container:last-child {
+  margin-right: 0;
+}
+
+.btn-container {
+  padding-left: 25px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.border {
+  border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+@media screen and (max-width: 600px) {
+  .into-mat-tap {
+    position: fixed;
+    right: 10px;
+    padding: 0;
+    background-color: #fafafa !important;
+    z-index: 9998;
+    padding-top: 5px;
+  }
+  .border {
+    border-bottom: none;
+  }
+}
+

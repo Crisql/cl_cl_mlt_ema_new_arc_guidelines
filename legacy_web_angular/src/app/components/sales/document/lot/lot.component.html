@@ -1,0 +1,49 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Selección de lotes</h2>
+  </header>
+  <main>
+    <section class="info-batch-insert">
+      <div fxLayout="row">
+        <span fxFlex>Cantidad solicitada: <strong>{{QtySolicitada}}</strong></span>
+        <span fxFlex>Cantidad aplicada :  <strong>{{QtyAplicada}}</strong></span>
+      </div>
+    </section>
+    <section [ngClass]="{'hiddenComponent' : displayLocations}">
+      <cl-table
+        [Id]="BatchtableId"
+        [HasStandardHeaders]="hasStandardHeaders"
+        [ShouldSplitPascal]="shouldSplitPascal"
+        [MappedColumns]="mappedColumns"
+        [Records]="lotesList"
+        [RecordsCount]="lotesList.length"
+        [HasItemsSelection]="hasItemsSelection"
+        [Buttons]="buttons"
+        [ShouldPaginateRequest]="false"
+        [BackgroundTransparent]="true"
+        ScrollHeight="400px">
+      </cl-table>
+    </section>
+    <section [ngClass]="{'hiddenComponent' : !displayLocations}">
+      <cl-table
+        [Id]="LocationTableId"
+        [HasStandardHeaders]="hasStandardHeaders"
+        [ShouldSplitPascal]="shouldSplitPascal"
+        [MappedColumns]="mappedLocationColumns"
+        [Records]="locationlist"
+        [RecordsCount]="locationlist.length"
+        [HasItemsSelection]="hasItemsSelection"
+        [ShouldPaginateRequest]="false"
+        [BackgroundTransparent]="true"
+        ScrollHeight="400px">
+      </cl-table>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>
+

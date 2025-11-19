@@ -1,0 +1,26 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Selección de compañía</h2>
+  </header>
+  <main>
+    <cl-table [Id]="tableId"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="mappedColumns"
+              [Records]="companies"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [RecordsCount]="companies.length"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="buttons"
+              [BackgroundTransparent]="true"
+              ScrollHeight="400px"
+    ></cl-table>
+  </main>
+<footer>
+  <ng-container *ngIf="data">
+    <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                        (onActionButtonClicked)="onActionButtonClicked($event)">
+    </app-action-buttons>
+  </ng-container>
+</footer>
+</section>

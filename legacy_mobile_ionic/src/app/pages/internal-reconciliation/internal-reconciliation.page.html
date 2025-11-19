@@ -1,0 +1,194 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{"RECONCILIATION.INTERNAL RECONCILIATION" | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-segment [(ngModel)]="currentSegment" class="fixed-segment">
+        <ion-segment-button value="search">
+            <ion-label>{{ "BUTTONS.BUSQUEDA" | translate }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="docList">
+            <ion-label>{{ "SEARCHDOCUMENTLIST.SEARCHDOCUMENTLIST" | translate }}</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <div [ngSwitch]="currentSegment">
+        <div *ngSwitchCase="'search'">
+
+            <ion-list>
+                <ion-item button detail (click)="SearchBusinessPartner(null)"  *ngIf="!businessPartnerSelected">
+                    <ion-label>{{ 'BUTTONS.SEARCH CUSTOMER' | translate }}</ion-label>
+                </ion-item>
+
+                <ion-item-sliding *ngIf="businessPartnerSelected" #slidingBusinessPartner class="item-sliding-options-start">
+                    <ion-item>
+                        <ion-label> {{businessPartnerSelected.CardCode}} -  {{businessPartnerSelected.CardName}}</ion-label>
+                    </ion-item>
+                    <ion-item-options side="start">
+                        <ion-item-option (click)="SearchBusinessPartner(slidingBusinessPartner)">
+                            {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+
+                <ion-item>
+                    <ion-label position="stacked"
+                    >{{ 'RECONCILIATION.CURRENCY' | translate }}</ion-label
+                    >
+                    <ion-select [(ngModel)]="currencySelected">
+                        <ion-select-option *ngFor="let option of currencyList" [value]="option.Id">
+                            {{ option.Name | translate }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ 'RECONCILIATION.STARTDATE' | translate }}
+                    </ion-label>
+                    <ion-button
+                            fill="clear"
+                            color="primary"
+                            (click)="ShowDatePicker('StartDate')"
+                    >
+                        {{startDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                    </ion-button>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ 'RECONCILIATION.ENDDATE' | translate }}
+                    </ion-label>
+                    <ion-button
+                            fill="clear"
+                            color="primary"
+                            (click)="ShowDatePicker('EndDate')"
+                    >
+                        {{endDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </ion-list>
+
+            <ion-row>
+                <ion-col size="12">
+                    <ion-button
+                            [disabled]="!businessPartnerSelected"
+                            fill="solid"
+                            expand="block"
+                            color="primary"
+                            (click)="SearchDoc()"
+                    >
+                        {{ 'BUTTONS.SEARCH' | translate }}
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+        </div>
+
+        <div *ngSwitchCase="'docList'">
+            <ion-grid class="totals-grid">
+                <ion-row>
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'RECONCILIATION.TOTAL INVOICE' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{GetConversionSymbol()}} {{totalInvoice | number:TO_FIXED_TOTALDOCUMENT}}</ion-text>
+                        </div>
+                    </ion-col>
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'RECONCILIATION.TOTAL CREDIT NOTE' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{GetConversionSymbol()}} {{totalCreditNote | number:TO_FIXED_TOTALDOCUMENT}}</ion-text>
+                        </div>
+                    </ion-col>
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'RECONCILIATION.TOTAL RECONCILIATION' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{GetConversionSymbol()}} {{totalReconciliation | number:TO_FIXED_TOTALDOCUMENT}}</ion-text>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <ion-row class="button-row">
+                <ion-col size="6">
+                    <ion-button expand="block" (click)="RefreshData()" color="light">{{'BUTTONS.CANCEL' | translate}}</ion-button>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-button expand="block" (click)="Reconciliation()" color="primary">{{'BUTTONS.RECONCILE' | translate}}</ion-button>
+                </ion-col>
+            </ion-row>
+
+            <ion-segment [(ngModel)]="currentDoc">
+                <ion-segment-button value="invoices">
+                    <ion-label>{{ "RECONCILIATION.INVOICE" | translate }}</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="creditNotes">
+                    <ion-label>{{ "RECONCILIATION.CREDIT NOTES" | translate }}</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+                
+            
+
+            <div [ngSwitch]="currentDoc">
+                <div *ngSwitchCase="'invoices'">
+                    <ng-container *ngFor="let doc of invoiceList; let i = index">
+                        <ion-item-sliding #slidingDoc
+                                          class="item-sliding-options-start">
+
+                            <ion-item-options side="start">
+                                <ion-item-option (click)="ModifyDocumentLine('invoice' ,i, doc, slidingDoc)">
+                                    {{ 'BUTTONS.EDIT' | translate }}
+                                </ion-item-option>
+                            </ion-item-options>
+
+                            <ion-item>
+                                <ion-checkbox slot="start" [checked]="doc.Assigned" (ionChange)="OnSelectDoc(doc, i, 'invoice')"></ion-checkbox>
+                                <ion-label>
+                                    <p>{{ 'RECONCILIATION.CLIENT' | translate }}: {{doc.CardCode}} - {{doc.CardName}}</p>
+                                    <p>{{ 'RECONCILIATION.TOTAL' | translate }}: {{GetConversionSymbol()}} {{doc.TotalShow}} | {{ 'RECONCILIATION.BALANCE' | translate }}: {{GetConversionSymbol()}} {{doc.SaldoShow}}</p>
+                                    <p>{{ 'RECONCILIATION.PAY' | translate }}: {{GetConversionSymbol()}} {{doc.Pago}}</p>
+                                </ion-label>
+                            </ion-item>
+                        </ion-item-sliding>
+                    </ng-container>
+                    
+                    <ion-infinite-scroll (ionInfinite)="SearchMoreDocuments($event, controllerInvoices)">
+                        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+                    </ion-infinite-scroll>
+                </div>
+
+                <div *ngSwitchCase="'creditNotes'">
+                    <ng-container *ngFor="let doc of creditNotesList; let i = index">
+                        <ion-item-sliding #slidingDoc
+                                          class="item-sliding-options-start">
+
+                            <ion-item-options side="start">
+                                <ion-item-option (click)="ModifyDocumentLine('creditNote' ,i, doc, slidingDoc)">
+                                    {{ 'BUTTONS.EDIT' | translate }}
+                                </ion-item-option>
+                            </ion-item-options>
+
+                            <ion-item>
+                                <ion-checkbox slot="start"  [checked]="doc.Assigned" (ionChange)="OnSelectDoc(doc, i, 'creditNote')"></ion-checkbox>
+                                <ion-label>
+                                    <p>{{ 'RECONCILIATION.CLIENT' | translate }}: {{doc.CardCode}} - {{doc.CardName}}</p>
+                                    <p>{{ 'RECONCILIATION.TOTAL' | translate }}: {{GetConversionSymbol()}} {{doc.TotalShow}} | {{ 'RECONCILIATION.BALANCE' | translate }}: {{GetConversionSymbol()}} {{doc.SaldoShow}}</p>
+                                    <p>{{ 'RECONCILIATION.PAY' | translate }}: {{GetConversionSymbol()}} {{doc.Pago}}</p>
+                                </ion-label>
+                            </ion-item>
+                        </ion-item-sliding>
+                    </ng-container>
+                    
+                    <ion-infinite-scroll (ionInfinite)="SearchMoreDocuments($event, controllerCreditNotes)">
+                        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+                    </ion-infinite-scroll>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ion-content>

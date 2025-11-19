@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ 'CONFIGURATION.LENGUAGE' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="language" (ionChange)="OnLangChange($event)">
+      <ion-item>
+        <ion-label>{{ 'CONFIGURATION.IDIOMS.SPANISH' | translate }}</ion-label>
+        <ion-radio slot="start" color="primary" value="es"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'CONFIGURATION.IDIOMS.ENGLISH' | translate }}</ion-label>
+        <ion-radio slot="start" color="primary" value="en"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-content>

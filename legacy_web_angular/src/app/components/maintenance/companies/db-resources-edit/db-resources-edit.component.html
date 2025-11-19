@@ -1,0 +1,53 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <form class="grid-container" [formGroup]="dbResourcesForm">
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+        <mat-label>Código</mat-label>
+        <input readonly matInput placeholder="" formControlName="Code">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+        <mat-label>Descripción</mat-label>
+        <input readonly matInput placeholder="" formControlName="Description">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+        <mat-label>Objeto</mat-label>
+        <input matInput placeholder="" formControlName="DBObject">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="Type" [disabled]="true">
+          <mat-option *ngFor="let type of dbResourceTypes" [value]="type.Type">{{type.Type}}
+            - {{type.Description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+        <mat-label>Cadena de consulta</mat-label>
+        <input matInput placeholder="" formControlName="QueryString">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+        <mat-label>Tamaño de página</mat-label>
+        <input type="number" matInput placeholder="" formControlName="PageSize">
+      </mat-form-field>
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <mat-checkbox class="example-margin" formControlName="IsActive">Activo</mat-checkbox>
+      </div>
+
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons [form]="dbResourcesForm"
+                        [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

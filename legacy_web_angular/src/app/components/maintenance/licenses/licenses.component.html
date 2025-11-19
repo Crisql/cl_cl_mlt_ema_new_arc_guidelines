@@ -1,0 +1,25 @@
+<section class="main-container">
+  <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="true"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+    <mat-tab-group class="mobile-tab">
+      <mat-tab label="Licencias">
+        <fieldset class="top-margin">
+          <cl-table [Id]="tableId"
+                    [ShouldPaginateRequest]="false"
+                    [HasStandardHeaders]="hasStandardHeaders"
+                    [ShouldSplitPascal]="shouldSplitPascal"
+                    [MappedColumns]="tableMappedColumns"
+                    [Records]="licenses"
+                    [RecordsCount]="licenses.length"
+                    [HasItemsSelection]="hasItemsSelection"
+                    [Buttons]="buttons"
+                    [BackgroundTransparent]="true"
+                    ScrollHeight="400px">
+          </cl-table>
+        </fieldset>
+
+      </mat-tab>
+    </mat-tab-group>
+  </app-action-buttons>
+
+</section>

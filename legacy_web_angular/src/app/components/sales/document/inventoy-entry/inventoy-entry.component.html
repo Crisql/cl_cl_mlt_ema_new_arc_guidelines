@@ -1,0 +1,92 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Ajuste de inventario</h2>
+  </header>
+  <main>
+    <section class="container">
+      <fieldset>
+        <legend>
+          Artículos
+        </legend>
+        <cl-table
+          [Id]="InventorytableId"
+          [HasStandardHeaders]="hasStandardHeaders"
+          [ShouldSplitPascal]="shouldSplitPascal"
+          [MappedColumns]="lineMappedColumns"
+          [Records]="lines"
+          [ShouldPaginateRequest]="shouldPaginateRequest"
+          [RecordsCount]="lines.length"
+          [HasItemsSelection]="hasItemsSelection"
+          [BackgroundTransparent]="true"
+          [DropdownColumns]="dropdownColumns"
+          [DropdownDiffBy]="dropdownDiffBy"
+          [DropdownDiffList]="dropdownDiffList"
+          ScrollHeight="400px">
+        </cl-table>
+
+        <div class="grid-container mt-1">
+          <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+            <mat-label>Comentario</mat-label>
+            <input matInput min="1" [formControl]="Comments">
+          </mat-form-field>
+        </div>
+
+      </fieldset>
+
+      <fieldset class="top-margin udf-fieldset">
+        <mat-tab-group>
+          <mat-tab *ngIf="isVisible" label="Udfs">
+            <cl-dynamics-udfs-presentation
+              [Id]="UdfsId"
+              [ApiUrl]="ApiUrl"
+              [UdfsCategory]="DBODataEndPoint"
+              [UdfsGroup]="'null'"
+            >
+            </cl-dynamics-udfs-presentation>
+          </mat-tab>
+
+          <mat-tab label="Adjuntos">
+
+            <div style="display: flex; justify-content: flex-end; align-content: center; padding: 5px;">
+              <button mat-flat-button color="primary" (click)="attach_file.click()">
+                <mat-icon>
+                  attach_file
+                </mat-icon>
+                Adjuntar
+              </button>
+            </div>
+
+            <input multiple style="display: none;" #attach_file type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xls,.ppt,.xlsx,.pptx" (change)="OnAttachFile($event)">
+            <cl-table [Id]="attachmentTableId"
+                      [ShouldPaginateRequest]="false"
+                      [HasStandardHeaders]="true"
+                      [ShouldSplitPascal]="false"
+                      [MappedColumns]="attachmentLineMappedColumns"
+                      [Records]="documentAttachment.Attachments2_Lines"
+                      [RecordsCount]="documentAttachment.Attachments2_Lines.length"
+                      [Buttons]="attachmentTableButtons"
+                      [ItemsPeerPage]="5"
+                      [PageSizeOptions]="[5, 10, 20]"
+                      [BackgroundTransparent]="true"
+                      ScrollHeight="400px">
+            </cl-table>
+          </mat-tab>
+        </mat-tab-group>
+      </fieldset>
+
+    </section>
+
+    <div class="flex-container mt-1">
+      <span class="total"> Total {{GetSymbol()}} {{ Total | number: TO_FIXED_TOTALDOCUMENT}}</span>
+    </div>
+
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>
+
+

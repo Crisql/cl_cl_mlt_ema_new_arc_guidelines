@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "SEARCH PRODUCT.SEARCH PRODUCT" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="Dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="SaveItemsSelected()">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-item>
+    <ion-searchbar
+      (ionInput)="OnSearchInput($event)"
+      placeholder="{{ 'SEARCH PRODUCT.SEARCH PRODUCT2' | translate }}"
+    ></ion-searchbar>
+  </ion-item>
+</ion-header>
+<ion-content>
+  <cdk-virtual-scroll-viewport itemSize="75" minBufferPx="900" maxBufferPx="1350" class="viewport" (scrolledIndexChange)="OnScroll($event)">
+      <div
+              *cdkVirtualFor="let product of filteredProducts;"
+              class="grid-container ion-padding ion-no-margin item-border-bottom"
+              [ngClass]="{ 'background-selected': product.State }"
+      >
+          <div class="product-grid">
+              <div (click)="SelectItem(product)" class="product-data">
+                  <div>{{ product.ItemCode }} {{ product.ItemName }}</div>
+                  <div *ngIf="product.SerialNumber">
+                      <ion-badge color="light">
+                          {{ 'SEARCH PRODUCT.SERIAL' | translate }}: {{ product.SerialNumber }}
+                      </ion-badge>
+                  </div>
+                  <div *ngIf="product.BinCode">
+                      <ion-badge color="light">
+                          {{ 'SEARCH PRODUCT.ALLOCATION' | translate }}: {{ product.BinCode }}
+                      </ion-badge>
+                  </div>
+              </div>
+              <div>
+                  <ion-input
+                          type="number"
+                          [(ngModel)]="product.Quantity"
+                          (ionChange)="OnQuantityChange($event.target.value, product)"
+                          class="product-quantity"
+                  >
+                  </ion-input>
+              </div>
+          </div>
+      </div>
+  </cdk-virtual-scroll-viewport>
+</ion-content>

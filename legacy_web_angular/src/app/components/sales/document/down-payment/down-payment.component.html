@@ -1,0 +1,68 @@
+<div class="justify-conten" fxLayout="row">
+  <app-action-buttons [isIntoMatTab]="false"
+                      [actionButtons]="actionButtons"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</div>
+
+<div fxLayout="row margin-bottom">
+  <span
+    class="margin-left"><strong>Cliente: </strong>{{this.data.Document?.CardCode}} {{this.data.Document?.CardName}}</span>
+  <span class="margin-left"><strong>Moneda: </strong>{{this.data.Document?.DocCurrency}}</span>
+</div>
+
+<div fxLayout="row margin-bottom margin-top">
+  <span
+    class="margin-left"><strong>Subtotal factura: </strong>{{this.data.Subtotal | number: TO_FIXED_TOTALDOCUMENT}}</span>
+  <span
+    class="margin-left"><strong>Impuesto factura: </strong>{{this.data.Impuesto | number: TO_FIXED_TOTALDOCUMENT}}</span>
+  <span
+    class="margin-left"><strong>Total factura: </strong>{{this.data.DocTotal | number: TO_FIXED_TOTALDOCUMENT}}</span>
+  <span class="margin-left"><strong>Total anticipos: </strong>{{this.downPaymentTotal | number: TO_FIXED_TOTALDOCUMENT}}</span>
+</div>
+
+<fieldset class="main-container">
+  <legend>
+    Filtros
+  </legend>
+  <form [formGroup]="searchForm">
+    <section class="row">
+      <mat-form-field appearance="outline" class="flex-formfield ">
+        <mat-label>Número de documento</mat-label>
+        <input matInput type="number" formControlName="DocNum">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="flex-formfield mat-margin-left">
+        <mat-label>Rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Desde" formControlName="DateFrom">
+          <input matEndDate placeholder="Hasta" formControlName="DateTo">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+    </section>
+  </form>
+</fieldset>
+
+<fieldset class="main-container">
+  <legend>
+    Anticipos
+  </legend>
+  <section>
+    <cl-table
+      [Id]="downPaymentTableId"
+      [HasStandardHeaders]="hasStandardHeaders"
+      [ShouldSplitPascal]="shouldSplitPascal"
+      [MappedColumns]="mappedColumns"
+      [Records]="downPayment"
+      [CheckboxColumns]="checkboxColumns"
+      [RecordsCount]="downPayment.length"
+      [HasItemsSelection]="hasItemsSelection"
+      [ShouldPaginateRequest]="shouldPaginateRequest"
+      [BackgroundTransparent]="true"
+      ScrollHeight="560px">
+    </cl-table>
+
+  </section>
+</fieldset>
+

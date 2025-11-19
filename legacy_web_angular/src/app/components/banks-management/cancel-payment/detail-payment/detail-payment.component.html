@@ -1,0 +1,56 @@
+﻿<section class="content">
+  <header>
+    <h2 mat-dialog-title>Detalle del pago</h2>
+  </header>
+  <main>
+    <section>
+      <form [formGroup]="docForm" class="grid-container">
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12" >
+          <mat-label>Número de factura</mat-label>
+          <input type="number" matInput readonly formControlName="DocNumOinv"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+          <mat-label>Número de pago</mat-label>
+          <input type="number" matInput readonly formControlName="DocNumPay"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+          <mat-label>Monto efectivo</mat-label>
+          <input type="number" matInput readonly formControlName="CashSum"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+          <mat-label>Monto efectivo dólares</mat-label>
+          <input type="number" matInput readonly formControlName="CashSumFC"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+          <mat-label>Monto transferencia</mat-label>
+          <input type="number" matInput readonly formControlName="TrsfrSum"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+          <mat-label>Monto transferencia dólares</mat-label>
+          <input type="number" matInput readonly formControlName="TrsfrSumFC"/>
+        </mat-form-field>
+      </form>
+    </section>
+
+    <section>
+      <cl-table [Id]="docTableId"
+                [MappedColumns]="docTbMappedColumns"
+                [Records]="crediVouchers"
+                [RecordsCount]="crediVouchers.length"
+                [HasItemsSelection]="false"
+                [ShouldEmitRows]="false"
+                [HasPaginator]="false"
+                [ShouldPaginateRequest]="shouldPaginateRequest"
+                [BackgroundTransparent] = "true"
+                ScrollHeight="400px">
+      </cl-table>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                        (onActionButtonClicked)="onActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>
+
+

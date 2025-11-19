@@ -1,0 +1,13 @@
+repositories{
+  jcenter()
+  maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+   compile 'com.github.chrisbanes.photoview:library:1.2.2'
+   compile 'com.squareup.picasso:picasso:2.71828'
+}
+
+android {
+
+}

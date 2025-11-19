@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="dialog-title">
+    <mat-icon class="icon-display">
+      {{alertIcon}}
+    </mat-icon>
+    <h2 class="doc-top head-title">
+      {{title}}
+    </h2>
+  </div>
+
+  <div class="dialog-content num">
+    <mat-divider></mat-divider>
+
+    <p class="doc-top"><strong>DocNum:</strong> {{data?.DocNum}}</p>
+    <p><strong>DocEntry:</strong> {{data?.DocEntry}}</p>
+    <ng-container *ngIf="data?.Title === 'Factura' || data?.Title === 'Pago recibido' || data?.Title === 'Pago proveedor'">
+      <p class="doc-bottom"><strong>NumFE:</strong> {{data?.NumFE}}</p>
+      <div class="row doc-bottom">
+        <div class="column">
+          <fieldset>
+            <legend>Vuelto</legend>
+            <div class="row change">
+              <div class="column">
+                <p class="label">Colones:</p>
+                <p class="doc-bottom">
+                  ₡{{data?.CashChange}}
+                </p>
+                <p class="label">Dólares:</p>
+                <p>
+                  ${{data?.CashChangeFC}}
+                </p>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </ng-container>
+    <div class=" date doc-bottom">
+      <span class="date-pad ">{{currentDate | date:'dd-MM-yyyy'}}</span>
+      <span class="date-pad ">{{currentDate | date:'hh:mm a'}}</span>
+    </div>
+    <div class="row">
+      <button mat-flat-button class="material-symbols-outlined w-1"
+              style="background-color: #0082C0; color: white;"
+              (click)="Acept()">
+        <mat-icon>check_circle</mat-icon>
+        Aceptar
+      </button>
+      <button mat-stroked-button class="material-symbols-outlined w-1"
+              style="border: solid 1px #E0E0E0 !important"
+              (click)="Print()">
+        <mat-icon>print</mat-icon>
+        Imprimir
+      </button>
+    </div>
+
+  </div>
+
+
+</div>

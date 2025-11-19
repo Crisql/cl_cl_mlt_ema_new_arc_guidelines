@@ -1,0 +1,114 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <form class="grid-container" [formGroup]="userForm">
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Compañía</mat-label>
+          <mat-select formControlName="CompanyId" (selectionChange)="ChangeCompany()">
+            <mat-option *ngFor="let company of companies" [value]="company.Id">{{company.Name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls['CompanyId'].errors?.['required']">
+            Campo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Licencia</mat-label>
+          <mat-select formControlName="LicenseId" (selectionChange)="ChangeLicense()">
+            <mat-option *ngFor="let license of licenses" [value]="license.Id">{{license.User}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls['LicenseId'].errors?.['required']">
+            Campo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Almacén</mat-label>
+          <mat-select formControlName="WhsCode">
+            <mat-option *ngFor="let warehouse of warehouses"
+                        [value]="warehouse.WhsCode">{{warehouse.WhsName}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls['WhsCode'].errors?.['required']">
+            Campo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Vendedor</mat-label>
+          <mat-select formControlName="SlpCode">
+            <mat-option *ngFor="let salesPerson of salesPersons"
+                        [value]="salesPerson.SlpCode">{{salesPerson.SlpName}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls['SlpCode'].errors?.['required']">
+            Campo requerido
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Descuento</mat-label>
+          <input matInput placeholder="" formControlName="Discount">
+          <mat-error
+            *ngIf="userForm.controls['Discount'].errors?.['min'] || userForm.controls['Discount'].errors?.['max']">
+            Descuento 0 al 100
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Usuario</mat-label>
+          <mat-select [disabled]="isEditUserAssing" formControlName="UserId">
+            <mat-option *ngFor="let user of users" [value]="user.Id">{{user.Email}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls['UserId'].errors?.['required']">
+            Campo requerido
+          </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Centro de costos</mat-label>
+          <input matInput placeholder="" formControlName="CenterCost">
+        </mat-form-field>
+
+      <div class="col-lg-4 col-md-12 col-sm-12 flex">
+        <mat-form-field appearance="outline" class="input-group" style="margin-bottom: -1em">
+          <mat-label>Socio negocio ventas</mat-label>
+          <input matInput placeholder="Código socio negocio ventas" formControlName="SellerName">
+        </mat-form-field>
+        <button matTooltip="Buscar socios de negocio de ventas"
+                type="button"
+                mat-flat-button color="primary"
+                class="e-bill"
+                (click)="ShowSalesBusinessPartnerSearchModal()">
+            <mat-icon class="icon-display">search</mat-icon>
+          </button>
+      </div>
+
+      <div class="col-lg-4 col-md-12 col-sm-12 flex">
+        <mat-form-field appearance="outline" class="input-group" style="margin-bottom: -1em">
+          <mat-label>Socio negocio compras</mat-label>
+          <input matInput placeholder="Código socio negocio compras" formControlName="BuyerName">
+        </mat-form-field>
+        <button matTooltip="Buscar socios de negocio de compras"
+                type="button"
+                mat-flat-button color="primary"
+                class="e-bill"
+                (click)="ShowPurchasingPartnerSearchModal()">
+          <mat-icon class="icon-display">search</mat-icon>
+        </button>
+      </div>
+
+      <div class="col-lg-4 col-md-12 col-sm-12">
+        <mat-checkbox class="example-margin" formControlName="IsActive">Activo</mat-checkbox>
+      </div>
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+     [form]="userForm"
+    [actionButtons]="actionButtons"
+    (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

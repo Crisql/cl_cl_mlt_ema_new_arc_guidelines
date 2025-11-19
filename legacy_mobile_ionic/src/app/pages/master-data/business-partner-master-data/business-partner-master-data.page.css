@@ -1,0 +1,8 @@
+.field-required::after{
+    content: " *";
+    color: red;
+}
+
+.field-invalid{
+    color: red;
+}

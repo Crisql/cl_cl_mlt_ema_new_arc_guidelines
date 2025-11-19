@@ -1,0 +1,16 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{"PRINCIPAL.HOME" | translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list *ngFor="let chart of charts">
+        <ion-item>
+            <canvas #canva id="chart.label" class="chart" style="height: 40vh; width: 90vw"></canvas>
+        </ion-item>
+    </ion-list>
+</ion-content>

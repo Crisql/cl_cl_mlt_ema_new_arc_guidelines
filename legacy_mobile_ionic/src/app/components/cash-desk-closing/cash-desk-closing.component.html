@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "CASH DESK CLOSING.TITLE" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="Dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="searchForm">
+    <ion-list>
+      <ion-item>
+        <ion-label>{{ "CASH DESK CLOSING.FROM DATE" | translate }}</ion-label>
+        <ion-datetime formControlName="From" displayFormat="DDDD MMM D, YYYY"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ "CASH DESK CLOSING.TO DATE" | translate }}</ion-label>
+        <ion-datetime formControlName="To" displayFormat="DDDD MMM D, YYYY"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ "CASH DESK CLOSING.USER KEY" | translate }}</ion-label>
+        <ion-select formControlName="Key" (ionChange)="GetCashDeskClousingUsers()">
+          <ng-container *ngFor="let user of users">
+            <ion-select-option [value]="user.Email">
+              {{user.Licencia}}
+            </ion-select-option>
+          </ng-container>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </form>
+
+  <ng-container *ngIf="cashclosing && cashclosing.length > 0">
+    <ng-container *ngFor="let item of cashclosing; let i as index">
+      <ion-item>
+      <ion-label>
+          <p><strong>{{ "CASH DESK CLOSING.USER KEY" | translate }}: </strong> {{item.CreatedBy}}</p>
+          <p><strong>{{ "CASH DESK CLOSING.DATE" | translate }}: </strong> {{item.CreatedDate  | date:'dd/MM/yyyy'}}</p>
+        </ion-label>
+        <ion-button slot="end" color="primary" fill="clear" (click)="SelectUser(item)">
+          <ion-icon name="print" size="medium"></ion-icon>
+        </ion-button>     
+      </ion-item>
+    </ng-container>
+  </ng-container>
+
+
+</ion-content>

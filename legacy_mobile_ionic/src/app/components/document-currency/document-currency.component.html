@@ -1,0 +1,10 @@
+<ion-list>
+    <ion-list>
+        <ion-list-header>
+            {{ 'PRICELIST.AVAILABLE' | translate }}
+        </ion-list-header>
+        <ion-item *ngFor="let priceList of priceListInfo">
+            <ion-label class="popover-font" [color]="(data.listNum === priceList.ListNum) ? 'primary':'dark'" (click)="PriceListSelected(priceList)">{{priceList.PrimCurr}} - {{priceList.ListName}}</ion-label>
+        </ion-item>
+    </ion-list>
+</ion-list>

@@ -1,0 +1,22 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Comentario para proceso de autorización</h2>
+  </header>
+  <main>
+    <form [formGroup]="authorizarionForm" class="grid-container">
+      <mat-form-field class="col-lg-12 col-md-12 col-sm-12 mt-4" appearance="outline">
+        <mat-label>Comentarios</mat-label>
+        <input matInput placeholder="Comentarios" formControlName="Remarks">
+        <mat-checkbox matSuffix formControlName="AbleRemarks" class="checkbox-remarks"
+                      (change)="OnChangeAbleRemarks(authorizarionForm.value.AbleRemarks)"></mat-checkbox>
+      </mat-form-field>
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons [actionButtons]="actionButtons"
+                        [form]="authorizarionForm"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)"
+                        [isIntoMatTab]="false">
+    </app-action-buttons>
+  </footer>
+</section>

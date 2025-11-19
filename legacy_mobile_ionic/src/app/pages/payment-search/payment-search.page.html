@@ -1,0 +1,134 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{"INCOMMINGPAYMENT.SEARCHPAYMENTS" | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment
+    [(ngModel)]="currentSegment"
+    (ionChange)="OnSegmentChange($event)"
+  >
+    <ion-segment-button value="search">
+      <ion-label>{{ "BUTTONS.BUSQUEDA" | translate }}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="docList">
+      <ion-label>
+        {{ "SEARCHDOCUMENTLIST.SEARCHDOCUMENTLIST" | translate }}
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="currentSegment">
+    <div *ngSwitchCase="'search'">
+      <ion-row *ngIf="!formControls.BusinessPartner.value">
+        <ion-col size="12">
+          <ion-button
+            fill="solid"
+            expand="block"
+            color="primary"
+            (click)="OnClickSearchBusinessPartner(null)"
+          >
+            {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-list [formGroup]="searchForm">
+        <ion-item-sliding
+          *ngIf="formControls.BusinessPartner.value"
+          #slidingCustomer
+          class="item-sliding-options-start"
+        >
+          <ion-item>
+            <ion-label> {{formControls.BusinessPartner.value}} </ion-label>
+          </ion-item>
+
+          <ion-item-options side="start">
+            <ion-item-option
+              color="primary"
+              (click)="OnClickSearchBusinessPartner(slidingCustomer)"
+            >
+              {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item>
+          <ion-label slot="start">
+            {{ 'CREATEPAYMENT.STARTDATE' | translate }}
+          </ion-label>
+          <ion-button fill="clear" color="primary" (click)="OnClickDateFrom()">
+            {{formControls.DateFrom.value | date: 'dd/MM/yyyy'}}<ion-icon
+              name="calendar"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <ion-item>
+          <ion-label slot="start">
+            {{ 'CREATEPAYMENT.ENDDATE' | translate }}
+          </ion-label>
+          <ion-button fill="clear" color="primary" (click)="OnClickDateTo()">
+            {{formControls.DateTo.value | date: 'dd/MM/yyyy'}}<ion-icon
+              name="calendar"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-button
+            fill="solid"
+            expand="block"
+            color="primary"
+            (click)="OnClickSearchPayments()"
+          >
+            {{ 'BUTTONS.SEARCH' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div *ngSwitchCase="'docList'">
+      <ion-list>
+        <ion-item *ngIf="!payments.length">
+          <span style="text-align: center;
+          width: 100%;
+          color: gray;
+          font-size: .9rem;">{{ "INCOMMINGPAYMENT.NOPAYMENTSFOUND" | translate }}</span>
+        </ion-item>
+        <ion-item-sliding *ngFor="let payment of payments; let i = index">
+          <ion-item>
+            <ion-label>
+              <p> {{ 'SEARCHDOCUMENTLIST.CARDNAME' | translate }} : {{businessPartner.CardCode}} {{businessPartner.CardName}}</p>
+              <p> {{ 'SEARCHDOCUMENTLIST.DOCNUMOINV' | translate }} : {{payment.DocNumOinv}}</p>
+              <p> {{ 'SEARCHDOCUMENTLIST.DOCNUMORCT' | translate }} : {{ payment.DocNumPay }}</p>
+              <p style="font-size: .78rem;">
+                {{ 'SEARCHDOCUMENTLIST.DOCDATE' | translate }}: {{
+                payment.DocDate | date:'short'}}
+              </p>
+              <p style="font-size: .78rem;">
+                {{ 'SEARCHDOCUMENTLIST.TOTAL' | translate }}
+                : {{GetSymbol(payment.DocCurrency)}}  {{ GetTotal(payment.DocCurrency, payment.DocTotal, payment.DocTotalFC) | number: '1.2-2'}}
+              </p>
+            </ion-label>
+            <ion-button
+              slot="end"
+              color="primary"
+              fill="clear"
+              (click)="OnClickPrintPayment(payment)">
+              <ion-icon name="print-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-item-sliding>
+      </ion-list>
+        <ion-infinite-scroll (ionInfinite)="GetMorePayments($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+    </div>
+  </div>
+</ion-content>

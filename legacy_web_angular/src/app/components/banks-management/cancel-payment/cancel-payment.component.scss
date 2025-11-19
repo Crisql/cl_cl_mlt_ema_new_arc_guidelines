@@ -1,0 +1,14 @@
+
+.section{
+  margin-bottom: 20px;
+}
+@media screen and (max-width: 600px) {
+  .multi-bottoms {
+    flex-direction: column;
+    padding-top: 10px;
+    position: fixed;
+    background-color: #fafafa !important;
+    z-index: 9996;
+    width: 100%;
+  }
+}

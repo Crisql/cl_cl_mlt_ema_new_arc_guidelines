@@ -1,0 +1,87 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <form autocomplete="off" class="grid-container" [formGroup]="userForm">
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="" formControlName="Name" id="FF-Name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Apellido</mat-label>
+        <input matInput placeholder="" formControlName="LastName" id="FF-LastName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Correo</mat-label>
+        <input matInput placeholder="" type="text" autocomplete="off" spellcheck="false" name="FF-EmailForm"
+               formControlName="Email" id="FF-EmailForm">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="passwordInputType" placeholder="" autocomplete="new-password" name="FF-Password"
+               formControlName="Password" id="FF-Password">
+        <mat-error *ngIf="userForm.controls['Password'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+        <mat-error
+          *ngIf="userForm.controls['Password'].errors?.['minLength'] || userForm.controls['Password'].errors?.['maxLength']">
+          Debe contener al menos 8 a 150 caracteres
+        </mat-error>
+        <button mat-icon-button matSuffix (click)="ChangePasswordInputType()" id="FF-VisibilityBtnPassword">
+          <mat-icon>{{passwordBtnVisibilityIcon}}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <mat-checkbox class="example-margin animation" formControlName="UseScheduling" id="FF-UseScheduling">Utiliza
+          calendarización
+        </mat-checkbox>
+      </div>
+
+      <ng-container *ngIf="!!userForm.get('UseScheduling')?.value">
+        <div [@slideIn] class="col-lg-12 col-md-12 col-sm-12">
+          <div class="grid-container">
+            <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+              <mat-label>Correo de calendarización</mat-label>
+              <input matInput placeholder="" autocomplete="nope" formControlName="SchedulingEmail"
+                     id="FF-SchedulingEmail">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+              <mat-label>Tipo de correo</mat-label>
+              <mat-select formControlName="EmailType" id="FF-EmailType">
+                <mat-option *ngFor="let type of emailsTypes" [value]="type.Key">
+                  {{type.Description}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+              <mat-label>Contraseña correo</mat-label>
+              <input matInput [type]="emailPasswordInputType" placeholder="" autocomplete="nope"
+                     formControlName="EmailPassword" id="FF-EmailPassword">
+              <button mat-icon-button matSuffix (click)="ChangeEmailPasswordInputType()">
+                <mat-icon>{{emailPasswordBtnVisibilityIcon}}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <mat-checkbox class="example-margin" formControlName="IsActive" id="FF-IsActive">Activo</mat-checkbox>
+      </div>
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons [form]="userForm"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)"
+                        [isIntoMatTab]="false">
+    </app-action-buttons>
+  </footer>
+</section>

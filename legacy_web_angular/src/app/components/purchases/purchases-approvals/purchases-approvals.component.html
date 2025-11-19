@@ -1,0 +1,55 @@
+<app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false" [form]="searchForm"
+                    (onActionButtonClicked)="OnActionButtonClicked($event)">
+  <fieldset class="main-container container">
+    <legend>
+      Filtros
+    </legend>
+    <form [formGroup]="searchForm">
+      <section class="row">
+        <mat-form-field appearance="outline" class="flex-formfield">
+          <mat-label>Número de borrador</mat-label>
+          <input matInput type="number"  formControlName="DraftEntry">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="flex-formfield ">
+          <mat-label>Estado de aprobación</mat-label>
+          <mat-select formControlName="ApprovalStatus">
+            <mat-option *ngFor="let state of approvalStates" [value]="state.Key">{{state.Description}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="flex-formfield ">
+          <mat-label>Rango de fechas</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Desde" formControlName="DateFrom">
+            <input matEndDate placeholder="Hasta" formControlName="DateTo">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="flex-formfield ">
+          <mat-label>Tipo de documento</mat-label>
+          <mat-select formControlName="DocType" (selectionChange)="OnChangeDocumentType($event)">
+            <mat-option *ngFor="let docType of documentTypes" [value]="docType.Key">{{docType.Description}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+    </form>
+  </fieldset>
+  <fieldset class="mt-1">
+    <legend>
+      Resultados
+    </legend>
+    <cl-table [Id]="documentsTableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="docTbMappedColumns"
+              [Records]="documents"
+              [DropdownColumns]="dropdownColumns"
+              [DropdownList]="dropdownList"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="buttons"
+              [BackgroundTransparent]="true">
+    </cl-table>
+  </fieldset>
+</app-action-buttons>
+

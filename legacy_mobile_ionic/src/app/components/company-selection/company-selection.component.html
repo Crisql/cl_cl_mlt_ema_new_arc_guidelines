@@ -1,0 +1,24 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title> Selección compañía</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <div class="select-icon">
+        <ion-icon name="search" color="clavisco" size="large"></ion-icon>
+    </div>
+    <div class="select-info">
+        <h4 text-center>Elija la compañía</h4>
+    </div>
+    <ion-list [inset]="true">
+        <ion-item [button]="true" *ngFor="let company of companies" (click)="OnClickCompany(company)">
+            <ion-icon color="clavisco" slot="start" name="list-circle" size="large"></ion-icon>
+            <ion-label>{{ company.Name }}</ion-label>
+            <ion-note slot="end">
+                <ion-icon color="medium" name="chevron-forward">
+                </ion-icon>
+            </ion-note>
+        </ion-item>
+    </ion-list>
+</ion-content>
+

@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{'SEARCHDOCUMENTLIST.SEARCHDOCUMENTLIST' | translate}}</ion-title>
+        <ion-toggle slot="end" [(ngModel)]="showAllDocuments" (click)="ShowCommittedDocuments()"></ion-toggle>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card *ngFor="let offlineDocument of documents.slice().reverse()" class="doc-container">
+        <ion-row >
+            <ion-col size="10" class="doc-title-container">
+                <h2 class="doc-title">{{offlineDocument.Id + '. ' + GetDocTitle(offlineDocument) }}</h2>
+                <p class="doc-date">{{GetRawDocumentPropertyValue(offlineDocument.RawDocument, "DocDate") | date:"M/d/yy, h:mm a"}}</p>
+            </ion-col>
+            <ion-col size="2" class="doc-transaction-status-container">
+                <ion-button fill="clear" (click)="ShowDocumentInformation(offlineDocument)">
+                    <ion-icon *ngIf="offlineDocument.TransactionStatus === 'N'" [color]="'primary'" [name]="'cloud-offline-outline'" style="zoom:1.7;"></ion-icon>
+                    <ion-icon *ngIf="offlineDocument.TransactionStatus === 'Q'" [color]="'primary'" [name]="'cloud-done-outline'" style="zoom:1.7;"></ion-icon>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+        <ion-card-content>
+            <ion-row>
+                <ion-col size="4"> {{'BILLING.CUSTOMER' | translate}} </ion-col>
+                <ion-col size="8" class="ion-text-end">
+                    {{GetRawDocumentPropertyValue(offlineDocument.RawDocument, "CardCode")}}
+                </ion-col>
+                <ion-col size="4"> {{'BILLING.TOTAL' | translate}} </ion-col>
+                <ion-col size="8" class="ion-text-end">
+                    {{GetRawDocumentPropertyValue(offlineDocument.RawDocument, "DocCurrency")}} {{ offlineDocument.DocumentTotal | number:toFixedTotalDocument }}
+                </ion-col>
+            </ion-row>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="RefreshLocalDocumentsTransactionStatus()" color="primary" [disabled]="network.type === 'none'">
+            <ion-icon name="cloud-upload"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

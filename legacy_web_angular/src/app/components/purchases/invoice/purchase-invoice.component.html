@@ -1,0 +1,310 @@
+<section class="multi-bottoms">
+  <app-action-buttons [form]="documentForm"
+                      [isIntoMatTab]="false"
+                      [actionButtons]="actionButtons"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+<section class="main-container container mobile-margin">
+  <fieldset>
+    <legend>Encabezado</legend>
+    <form [formGroup]="documentForm" class="grid-container">
+      <ng-container *ngIf="!displayTypeInvoice">
+      <div class="col-lg-4 col-lt-lg-4 col-gt-md-4 col-md-4 col-gt-sm-4 col-sm-12">
+        <div class="flex">
+          <mat-form-field appearance="outline" class="input-group" style="margin-bottom: -1em">
+            <mat-label>Tipo factura</mat-label>
+            <mat-select formControlName="TypeDocE">
+              <mat-option *ngFor="let option of typeDocE" [value]="option.Name">
+                {{option.Description}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="documentForm.controls['TypeDocE'].errors?.['required']">
+              El campo es requerido
+            </mat-error>
+          </mat-form-field>
+          <button matTooltip="Factura electrónica"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill"
+                  [disabled]="!isCashCustomer"
+                  (click)="OpenDialogFE()">
+            <mat-icon>receipt</mat-icon>
+          </button>
+        </div>
+      </div>
+      </ng-container>
+
+
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-lt-lg-4 col-gt-md-4 col-md-4 col-gt-sm-4 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Código de proveedor</mat-label>
+        <input readonly type="text" matInput formControlName="CardCode">
+        <mat-error *ngIf="documentForm.controls['CardCode'].errors?.['CardCode']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="col-lg-4 col-lt-lg-4 col-gt-md-4 col-md-4 col-gt-sm-4 col-sm-12">
+        <div class="flex">
+          <mat-form-field appearance="outline" class="input-group" style="margin-bottom: -1em">
+            <mat-label>Nombre del proveedor</mat-label>
+            <input readonly placeholder="Buscar proveedor" type="text"  formControlName="CardName" type="text" matInput>
+            <mat-error *ngIf="documentForm.controls['CardName'].errors?.['required']">
+              Campo requerido
+            </mat-error>
+          </mat-form-field>
+          <button matTooltip="Buscar proveedores"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill-search"
+                  (click)="ShowModalSearchBusinnesPartner()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-lt-lg-3 col-gt-md-3 col-md-3 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Moneda</mat-label>
+        <mat-select matInput formControlName="DocCurrency" (selectionChange)="SelectCurrency($event.value)">
+          <mat-option *ngFor="let curr of currencies" [value]="curr.Id">
+            {{curr.Name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['DocCurrency'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-lt-lg-3 col-gt-md-3 col-md-3 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Términos de pago</mat-label>
+        <mat-select formControlName="PaymentGroupCode">
+          <mat-option *ngFor="let option of payTerms" [value]="option.GroupNum">
+            {{option.PymntGroup}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['PaymentGroupCode'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-lt-lg-3 col-gt-md-3 col-md-3 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Lista de precios</mat-label>
+        <mat-select formControlName="PriceList"
+                    (selectionChange)="SelectPriceList($event.value)"
+                    [disabled]="(this.lines && this.lines.length > 0) || !canChangePriceList">
+          <mat-option *ngFor="let option of priceLists" [value]="option.ListNum">
+            {{option.ListName}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['PriceList'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-lt-lg-3 col-gt-md-3 col-md-3 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Vendedores</mat-label>
+        <mat-select formControlName="SalesPersonCode">
+          <mat-option *ngFor="let option of salesPerson" [value]="option.SlpCode">
+            {{option.SlpName}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['SalesPersonCode'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-gt-md-4 col-lt-lg-4 col-md-4 col-sm-12">
+        <mat-label>Fecha de contabilización</mat-label>
+        <input matInput [matDatepicker]="pickerDocDate" formControlName="DocDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerDocDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDocDate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-gt-md-4 col-lt-lg-4 col-md-4 col-sm-12">
+        <mat-label>Fecha de vencimiento</mat-label>
+        <input matInput [matDatepicker]="pickerDocDueDate" formControlName="DocDueDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerDocDueDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDocDueDate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-gt-md-4 col-lt-lg-4 col-md-4 col-sm-12">
+        <mat-label>Fecha del documento</mat-label>
+        <input matInput [matDatepicker]="pickerTaxDate" formControlName="TaxDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerTaxDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerTaxDate></mat-datepicker>
+      </mat-form-field>
+      <mat-checkbox class="col-lg-2 col-lt-lg-2 col-gt-md-2 col-md-2 col-sm-12" [formControl]="IsPartialPay">
+        Pago parcial
+      </mat-checkbox>
+      <mat-form-field appearance="outline" class="col-lg-7 col-lt-lg-7 col-gt-md-7  col-md-7 col-sm-12" *ngIf="IsPartialPay.value"
+                      style="margin-bottom: -1em" >
+        <mat-label>Monto pago parcial</mat-label>
+        <input matInput type="number" min="0" formControlName="PartialAmount">
+        <mat-error *ngIf="documentForm.controls['PartialAmount'].errors?.['min']">
+          Cantidad permitida mayor a 0
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-12 col-gt-md-12 col-md-12 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Comentario</mat-label>
+        <input matInput formControlName="Comments"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-1 col-lt-lg-1 col-gt-md-1  col-md-1 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" min="1" formControlName="Quantity">
+        <mat-error *ngIf="documentForm.controls['Quantity'].errors?.['min']">
+          Cantidad permitida mayor a 0
+        </mat-error>
+        <mat-error *ngIf="documentForm.controls['Quantity'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="col-lg-11 col-lt-lg-11 col-gt-md-11 col-md-11 col-sm-12">
+        <app-item [display]="false" [items]="items" (onItemSelected)="OnSelectItem($event)"
+                  (refresh)="GetItems()"></app-item>
+      </div>
+
+    </form>
+  </fieldset>
+</section>
+
+  <fieldset class="top-margin udf-fieldset" *ngIf="isVisible || this.IsVisibleAttachTable">
+    <mat-tab-group>
+      <mat-tab *ngIf="isVisible" label="Udfs">
+        <cl-dynamics-udfs-presentation
+          [Id]="UdfsId"
+          [ApiUrl]="ApiUrl"
+          [UdfsCategory]="DBODataEndPoint"
+          [UdfsGroup]="'null'"
+        >
+        </cl-dynamics-udfs-presentation>
+      </mat-tab>
+
+      <mat-tab label="Adjuntos" *ngIf="this.IsVisibleAttachTable">
+
+        <div style="display: flex; justify-content: flex-end; align-content: center; padding: 5px;">
+          <button mat-flat-button color="primary" (click)="attach_file.click()">
+            <mat-icon>
+              attach_file
+            </mat-icon>
+            Adjuntar
+          </button>
+        </div>
+
+        <input multiple style="display: none;" #attach_file type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xls,.ppt,.xlsx,.pptx" (change)="OnAttachFile($event)">
+        <cl-table [Id]="attachmentTableId"
+                  [ShouldPaginateRequest]="false"
+                  [HasStandardHeaders]="true"
+                  [ShouldSplitPascal]="false"
+                  [MappedColumns]="attachmentLineMappedColumns"
+                  [Records]="documentAttachment.Attachments2_Lines"
+                  [RecordsCount]="documentAttachment.Attachments2_Lines.length"
+                  [Buttons]="attachmentTableButtons"
+                  [ItemsPeerPage]="5"
+                  [PageSizeOptions]="[5, 10, 20]"
+                  [BackgroundTransparent]="true"
+                  ScrollHeight="400px">
+        </cl-table>
+      </mat-tab>
+    </mat-tab-group>
+  </fieldset>
+
+<section class="main-container container mt-1">
+  <fieldset>
+    <legend>Documento</legend>
+
+      <cl-table [Id]="lineTableId"
+                [ShouldPaginateRequest]="shouldPaginateRequest"
+                [HasStandardHeaders]="hasStandardHeaders"
+                [ShouldSplitPascal]="shouldSplitPascal"
+                [MappedColumns]="lineMappedColumns"
+                [Records]="lines"
+                [RecordsCount]="lines.length"
+                [DropdownColumns]="dropdownColumns"
+                [DropdownList]="dropdownList"
+                [HasItemsSelection]="hasItemsSelection"
+                [Buttons]="buttonsTable"
+                [CheckboxColumns]="checkboxColumns"
+                [DropdownDiffBy]="dropdownDiffBy"
+                [DropdownDiffList]="dropdownDiffList"
+                [DisableDragAndDrop]="disableDragAndDrop"
+                [BackgroundTransparent]="true">
+      </cl-table>
+
+    <section>
+      <div class="flex-container">
+        <div class="total-area">
+          <div class="flex-items">
+            <table class="table-totales">
+              <tr>
+                <td class="bg-subtotal">Subtotal</td>
+                <td class="bg-montos">
+                <span>
+                  {{GetSymbol()}} {{ DisplaySubtotal()  | number: TO_FIXED_TOTALDOCUMENT}}
+                </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-subtotal">Descuento</td>
+                <td class="bg-montos">
+                <span>
+                  {{GetSymbol()}} {{ DisplayDiscount() | number: TO_FIXED_TOTALDOCUMENT}}
+                </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-subtotal">Impuesto</td>
+                <td class="bg-montos">
+                <span>
+                  {{GetSymbol()}} {{ DisplayTaxes() | number: TO_FIXED_TOTALDOCUMENT}}
+                </span>
+                </td>
+              </tr>
+              <tr *ngIf="retentionProcessEnabled">
+                <td class="bg-subtotal">Retención</td>
+                <td class="bg-montos total-retention-container">
+              <span>
+                  {{ GetSymbol() }} {{ DisplayRetention() | number: TO_FIXED_TOTALDOCUMENT }}
+                </span>
+                  <button matTooltip="Total de Retenciones" type="button" mat-flat-button color="primary"
+                          class="btn-info-retention" (click)="ShowInformationModalForCurrentRetentions()">
+                    <mat-icon class="icon-retention">info</mat-icon>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="controllerToSendRequest === 'PurchaseDownPayments'">
+                <td class="bg-subtotal">Anticipo
+                  <span class="span-downPaymentPercentage">
+              <input [readOnly]="!isPermissionChangeDowntPercentage" class="DownPaymentPercentage"
+                     (change)="GetTotals()"
+                     [formControl]="DownPaymentPercentage" type="number" max="100" min="0">
+              %
+              </span>
+                </td>
+                <td class="bg-montos">
+                  <span>{{GetSymbol()}} {{ DisplayDownPayments() | number: TO_FIXED_TOTALDOCUMENT}}</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="flex-items total-align">
+            <div class="label-total">
+              <label>Total</label>
+            </div>
+            <div class="div-total">
+          <span class="hover-content">
+                <span class="conversion-tooltip">
+                  {{GetConversionSymbol()}} {{DisplayTotal(1) | number: TO_FIXED_TOTALDOCUMENT}}
+                </span>
+                        {{GetSymbol()}} {{DisplayTotal(2) | number: TO_FIXED_TOTALDOCUMENT}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </fieldset>
+</section>
+

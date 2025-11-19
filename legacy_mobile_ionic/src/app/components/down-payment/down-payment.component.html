@@ -1,0 +1,151 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "DOWNPAYMENT.ADD PAYM" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear"
+                        (click)="CloseModal()">
+                <ion-icon slot="icon-only"
+                          name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear"
+                        (click)="CreatePayment()">
+                <ion-icon slot="icon-only"
+                          name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-segment [(ngModel)]="currentSegment" class="fixed-segment">
+        <ion-segment-button value="search">
+            <ion-label>{{ "BUTTONS.BUSQUEDA" | translate }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="docList">
+            <ion-label>{{ "SEARCHDOCUMENTLIST.SEARCHDOCUMENTLIST" | translate }}</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <div [ngSwitch]="currentSegment">
+        <div *ngSwitchCase="'search'">
+            <ion-list>
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ 'DOWNPAYMENT.DOC NUMBER' | translate }}
+                    </ion-label>
+                    <ion-input [(ngModel)]="docNumber" type="number" placeholder="{{'DOWNPAYMENT.DOC NUMBER' | translate }}"></ion-input>
+                </ion-item>
+                
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ 'DOWNPAYMENT.STARTDATE' | translate }}
+                    </ion-label>
+                    <ion-button
+                            fill="clear"
+                            color="primary"
+                            (click)="ShowDatePicker('StartDate')"
+                    >
+                        {{startDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                    </ion-button>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label slot="start">
+                        {{ 'DOWNPAYMENT.ENDDATE' | translate }}
+                    </ion-label>
+                    <ion-button
+                            fill="clear"
+                            color="primary"
+                            (click)="ShowDatePicker('EndDate')"
+                    >
+                        {{endDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </ion-list>
+
+            <ion-row>
+                <ion-col size="12">
+                    <ion-button
+                            fill="solid"
+                            expand="block"
+                            color="primary"
+                            (click)="SearchDoc()"
+                    >
+                        {{ 'BUTTONS.SEARCH' | translate }}
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+        </div>
+
+        <div *ngSwitchCase="'docList'">
+            <ion-grid class="totals-grid">
+                <ion-row>
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'DOWNPAYMENT.CLIENT' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{this.cardCode}}</ion-text>
+                        </div>
+                    </ion-col> 
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'DOWNPAYMENT.CURRENCY' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text"> {{this.currency}}</ion-text>
+                        </div>
+                    </ion-col> 
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'DOWNPAYMENT.TOTAL INVOICE' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{GetConversionSymbol()}} {{totalInvoice | number:TO_FIXED_TOTALDOCUMENT}}</ion-text>
+                        </div>
+                    </ion-col>
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'DOWNPAYMENT.TOTAL TAX' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{GetConversionSymbol()}} {{totalTaxInvoice | number:TO_FIXED_TOTALDOCUMENT}}</ion-text>
+                        </div>
+                    </ion-col>
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'DOWNPAYMENT.SUBTOTAL INVOICE' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{GetConversionSymbol()}} {{subTotalInvoice | number:TO_FIXED_TOTALDOCUMENT}}</ion-text>
+                        </div>
+                    </ion-col>
+                    <ion-col size="4">
+                        <div class="label-value-container">
+                            <ion-label class="label-text">{{ 'DOWNPAYMENT.TOTAL DOWN PAYMENT' | translate }}</ion-label>
+                            <ion-text color="primary" class="value-text">{{GetConversionSymbol()}} {{totalDownPayment | number:TO_FIXED_TOTALDOCUMENT}}</ion-text>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <ion-segment [(ngModel)]="currentDoc">
+                <ion-segment-button value="invoices">
+                    <ion-label>{{ "DOWNPAYMENT.INVOICE" | translate }}</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+
+
+
+            <div [ngSwitch]="currentDoc">
+                <div *ngSwitchCase="'invoices'">
+                    <ng-container *ngFor="let doc of invoiceList; let i = index">
+                        <ion-item>
+                            <ion-checkbox slot="start"  [(ngModel)]="doc.Assigned" (ionChange)="OnSelectDoc($event,doc, i, 'invoice')"></ion-checkbox>
+                            <ion-label>
+                                <p>{{ 'DOWNPAYMENT.CLIENT' | translate }}: {{doc.CardCode}} - {{doc.CardName}}</p>
+                                <p>{{ 'DOWNPAYMENT.DOC NUMBER' | translate }}: {{doc.DocNum}}</p>
+                                <p>{{ 'DOWNPAYMENT.TOTAL' | translate }}: {{GetConversionSymbol()}} {{doc.DocTotal}} | {{ 'DOWNPAYMENT.BALANCE' | translate }}: {{GetConversionSymbol()}} {{doc.Saldo}}</p>
+                                <p>{{ 'DOWNPAYMENT.PAY' | translate }}: {{GetConversionSymbol()}} {{doc.Pago}}</p>
+                            </ion-label>
+                        </ion-item>
+                    </ng-container>
+
+                    <ion-infinite-scroll (ionInfinite)="SearchMoreDocuments($event)">
+                        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+                    </ion-infinite-scroll>
+                </div>
+            </div>
+        </div>
+    </div>
+</ion-content>

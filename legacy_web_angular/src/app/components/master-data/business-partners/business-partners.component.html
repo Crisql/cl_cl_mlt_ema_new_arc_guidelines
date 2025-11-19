@@ -1,0 +1,454 @@
+<div class="main-container">
+  <div class="main-header">
+    <div>
+      <app-action-buttons [form]="businessPartnersForm" class="column-2" [actionButtons]="actionButtons"
+                          [isIntoMatTab]="true" (onActionButtonClicked)="OnActionButtonClicked($event)">
+        <mat-tab-group (selectedIndexChange)="TabChange($event)" [selectedIndex]="TabIndex"  [ngClass]="{
+    'tab-group-reduced': TabIndex === 2,
+    'tab-group-normal': TabIndex !== 2
+  }" class="mobile-tab">
+          <mat-tab label="Edición/Creación de socios de negocio">
+            <form [formGroup]="opcionesMenuForm">
+              <mat-radio-group aria-label="Select an option" (change)="OpcionMenu($event.value)"
+                               formControlName="Opcion">
+                <mat-radio-button value="2" class="create-partner">Buscar socio de negocio</mat-radio-button>
+                <mat-radio-button value="1" class="create-partner">Crear socio de negocio</mat-radio-button>
+              </mat-radio-group>
+            </form>
+            <fieldset class="first-content" *ngIf="opcionesMenuForm.controls['Opcion'].value !== '1'">
+              <legend>
+                Búsqueda
+              </legend>
+              <div class="flex">
+                <mat-form-field class="w-100 input-group" appearance="outline">
+                  <input readonly placeholder="Buscar socio de negocio" [formControl]="businessPartnerFormControl" type="text"
+                         matInput>
+                </mat-form-field>
+                <button matTooltip="Buscar socio de negocio"
+                        type="button"
+                        mat-flat-button color="primary"
+                        class="e-bill"
+                        (click)="ShowModalSearchBusinnesPartner()">
+                  <mat-icon class="icon-display">search</mat-icon>
+                </button>
+              </div>
+
+            </fieldset>
+            <form class="form" [formGroup]="businessPartnersForm">
+              <fieldset class="first-content">
+                <legend>
+                  Datos de socio
+                </legend>
+                <div fxLayout="row wrap" fxLayoutAlign="space-between">
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Tipo socio de negocio</mat-label>
+                      <mat-select matInput formControlName="CardType" (selectionChange)="GetBpGroups($event.value)" [disabled]="EnableOrDisableFields()">
+                        <mat-option *ngFor="let card of cardType" [value]="card.Key">
+                          {{card.Description}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="businessPartnersForm.controls['CardType'].errors?.['required']">
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <ng-container *ngIf="!IsSerial  && opcionesMenuForm.controls['Opcion'].value === '1'">
+                    <div class="col-lg-4 col-md-12 col-sm-12">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Código socio de negocio</mat-label>
+                        <input matInput formControlName="CardCode" [readonly]="EnableOrDisableFields()">
+                      </mat-form-field>
+                    </div>
+                  </ng-container>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Identificación</mat-label>
+                      <mat-select matInput formControlName="TypeIdentification" [disabled]="EnableOrDisableFields()">
+                        <mat-option *ngFor="let type of TypeIdentification" [value]="type.Key">
+                          {{type.Description}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="businessPartnersForm.controls['TypeIdentification'].errors?.['required']">
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Número cédula</mat-label>
+                      <input matInput type="text" (blur)="ValidateBusinessPartner()" formControlName="FederalTaxID" [readonly]="EnableOrDisableFields()">
+                      <mat-error *ngIf="businessPartnersForm.controls['FederalTaxID'].errors?.['required']">
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Nombre</mat-label>
+                      <input matInput formControlName="CardName" [readonly]="EnableOrDisableFields()">
+                      <mat-error *ngIf="businessPartnersForm.controls['CardName'].errors?.['required']">
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Teléfono</mat-label>
+                      <input type="text" matInput formControlName="Phone1" [readonly]="EnableOrDisableFields()">
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Email</mat-label>
+                      <input matInput pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
+                             formControlName="EmailAddress" [readonly]="EnableOrDisableFields()">
+                      <mat-error *ngIf="businessPartnersForm.controls['EmailAddress'].errors?.['required']">
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Grupo de socios</mat-label>
+                      <mat-select matInput formControlName="GroupCode" [disabled]="EnableOrDisableFields()">
+                        <mat-option *ngFor="let option of bpsGroup" [value]="option.Code">
+                          {{option.Name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="24" fxFlex.gt-md="24">
+                    <mat-slide-toggle class="side-toggle" formControlName="Frozen"
+                                      (change)="ActivatedBps($event.checked)">
+                      Activar socio
+                    </mat-slide-toggle>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="first-content">
+                <legend>
+                  Datos adicionales
+                </legend>
+                <div fxLayout="row wrap" fxLayoutAlign="space-between">
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="32" fxFlex.gt-md="32">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Selección de moneda de socio</mat-label>
+                      <mat-select matInput formControlName="Currency" [disabled]="CheckUserHasPermission('Master_Data_Edit_CurrencySelectionByPartner')">
+                        <mat-option *ngFor="let option of bpCurrencies" [value]="option.Id">
+                          {{option.Name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="32" fxFlex.gt-md="32">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Condiciones de pago</mat-label>
+                      <mat-select matInput formControlName="PayTermsGrpCode" [disabled]="CheckUserHasPermission('Master_Data_Edit_TermsOfPayment')">
+                        <mat-option *ngFor="let option of payTerms" [value]="option.GroupNum">
+                          {{option.PymntGroup}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="32" fxFlex.gt-md="32">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Lista de precios</mat-label>
+                      <mat-select matInput formControlName="PriceListNum" [disabled]="CheckUserHasPermission('Master_Data_Edit_PriceList')">
+                        <mat-option *ngFor="let option of priceList" [value]="option.ListNum">
+                          {{option.ListName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="32" fxFlex.gt-md="32">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>% descuento límite de crédito</mat-label>
+                      <input matInput formControlName="DiscountPercent" [readonly]="CheckUserHasPermission('Master_Data_Edit_CreditLimitDiscount')">
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="32" fxFlex.gt-md="32">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Límite del comprometido</mat-label>
+                      <input matInput formControlName="MaxCommitment" [readonly]="CheckUserHasPermission('Master_Data_Edit_CommitmentLimit')">
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="32" fxFlex.gt-md="32">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Tipo de consolidación comercial</mat-label>
+                      <mat-select matInput formControlName="FatherType" [disabled]="CheckUserHasPermission('Master_Data_Edit_TypeOfCommercialConsolidation')">
+                        <mat-option *ngFor="let option of socioComercial" [value]="option.Code">
+                          {{option.Description}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.md="32" fxFlex.gt-md="32">
+                    <mat-label>Socio comercial de consolidación</mat-label>
+                    <div class="flex">
+                      <mat-form-field class="w-100 input-group" appearance="outline">
+                        <input readonly placeholder="Buscar socio comercial de consolidación" formControlName="ConsolidationBP" type="text"
+                               matInput>
+                      </mat-form-field>
+                      <button matTooltip="Buscar socio de negocio"
+                              type="button"
+                              mat-flat-button color="primary"
+                              class="e-bill"
+                              (click)="ShowModalConsolidationBusinnesPartner()">
+                        <mat-icon class="icon-display">search</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+            <ng-container *ngIf="isVisible">
+              <fieldset class="mt-1">
+                <legend>
+                  {{Title}}
+                </legend>
+                <cl-dynamics-udfs-presentation [Id]="UdfsId" [ApiUrl]="ApiUrl" [UdfsCategory]="DBODataEndPoint">
+                </cl-dynamics-udfs-presentation>
+              </fieldset>
+            </ng-container>
+          </mat-tab>
+
+          <mat-tab [disabled]="!currentBp || opcionesMenuForm.value === '1'">
+            <ng-template mat-tab-label>
+              <label class="label-tap" matTooltip="{{GetMessage('propiedades')}}">
+                Propiedades
+              </label>
+            </ng-template>
+            <fieldset class="fieldset">
+              <section>
+                <cl-table [Id]="tablePropiedadesId"
+                          [ShouldPaginateRequest]="shouldPaginateRequestPropiedades"
+                          [HasStandardHeaders]="true"
+                          [ShouldSplitPascal]="false"
+                          [ShouldEmitRows]="true"
+                          [HasItemsSelection]="true"
+                          [MappedColumns]="lineMappedColumnsPropiedades"
+                          [Records]="properties"
+                          [BackgroundTransparent]="true"
+                          ScrollHeight="400px">
+                </cl-table>
+              </section>
+            </fieldset>
+          </mat-tab>
+
+          <mat-tab [disabled]="!currentBp || opcionesMenuForm.value === '1'">
+            <ng-template mat-tab-label>
+              <label class="label-tap" matTooltip="{{GetMessage('anexos')}}">
+                Anexos
+              </label>
+            </ng-template>
+            <fieldset class="fieldset">
+              <section>
+                <input hidden (change)="AttachFile($event)" #fileInput type="file" multiple />
+                <cl-table [Id]="tableAnexosId"
+                          [ShouldPaginateRequest]="shouldPaginateRequestAnexos"
+                          [HasStandardHeaders]="true"
+                          [ShouldSplitPascal]="false"
+                          [MappedColumns]="lineMappedColumnsAnexos"
+                          [Records]="anexosFiles"
+                          [Buttons]="tableButtonsAnexos"
+                          [ItemsPeerPage]="15"
+                          [PageSizeOptions]="[5,10,15,20]"
+                          [BackgroundTransparent]="true"
+                          ScrollHeight="400px">
+                </cl-table>
+              </section>
+            </fieldset>
+          </mat-tab>
+
+          <mat-tab [disabled]="!currentBp || opcionesMenuForm.value === '1'">
+            <ng-template mat-tab-label>
+              <label class="label-tap" matTooltip="{{GetMessage('direcciones')}}">
+                Direcciones
+              </label>
+            </ng-template>
+            <div class="grid-container first-content">
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <fieldset>
+                  <div class="row-group search-field mt-20">
+                    <mat-form-field class="column-3 input-group" appearance="outline">
+                      <mat-label>Buscar</mat-label>
+                      <input matInput placeholder="Buscar" [formControl]="searchAddressForm"/>
+                    </mat-form-field>
+                    <button matTooltip="Realizar búsqueda" mat-flat-button color="primary"
+                            class="button-list ctrl-button-direcciones" (click)="SearchAddress()">
+                      <mat-icon class="icon-display">search</mat-icon>
+                    </button>
+                  </div>
+                  <section>
+                    <div>
+                      <cl-table [Id]="tableAddressId"
+                                [ShouldPaginateRequest]="shouldPaginateRequestAddress"
+                                [HasStandardHeaders]="true"
+                                [ShouldSplitPascal]="false"
+                                [MappedColumns]="lineMappedColumns"
+                                [Records]="addressList"
+                                [DropdownColumns]="dropdownColumns"
+                                [DropdownList]="dropdownList"
+                                [Buttons]="tableButtons"
+                                [BackgroundTransparent]="true"
+                                ScrollHeight="400px">
+                      </cl-table>
+                    </div>
+                    <div class="mt-1">
+                      <button matTooltip="Realizar búsqueda" mat-flat-button color="primary"
+                              class="button-list" (click)="SetStandard()">
+                        <mat-icon class="icon-display">check_circle</mat-icon>
+                        Fijar como estándar
+                      </button>
+                    </div>
+                  </section>
+                </fieldset>
+              </div>
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <fieldset>
+                  <form [formGroup]="addressBusinessPartnerForm" fxLayout="row wrap" fxLayoutAlign="space-between"
+                        class="first-content">
+                    <ng-container *ngIf="IsCompanyDirection">
+                      <ng-container *ngFor="let option of fieldsConfiguredDirection" [ngSwitch]="option.Description">
+                        <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                          <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'Provincia'">
+                            <mat-label>{{option.Description}}</mat-label>
+                            <mat-select matInput [formControlName]="option.NameSL" (selectionChange)="GetData(option)">
+                              <mat-option *ngFor="let provincia of provinceList" [value]="provincia.ProvinceId">
+                                {{provincia.ProvinceName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'Canton'">
+                            <mat-label>{{option.Description}}</mat-label>
+                            <mat-select matInput [formControlName]="option.NameSL" (selectionChange)="GetData(option)">
+                              <mat-option *ngFor="let canton of cantonList" [value]="canton.CantonId">
+                                {{canton.CantonName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'Distrito'">
+                            <mat-label>{{option.Description}}</mat-label>
+                            <mat-select matInput [formControlName]="option.NameSL" (selectionChange)="GetData(option)">
+                              <mat-option *ngFor="let distrito of districtList" [value]="distrito.DistrictId">
+                                {{distrito.DistrictName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'Barrio'">
+                            <mat-label>{{option.Description}}</mat-label>
+                            <mat-select matInput [formControlName]="option.NameSL" (selectionChange)="GetData(option)">
+                              <mat-option *ngFor="let barrio of neighborhoodList" [value]="barrio.NeighborhoodId">
+                                {{barrio.NeighborhoodName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Nombre de Dirección</mat-label>
+                        <input matInput formControlName="AddressName">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Nombre de dirección 2</mat-label>
+                        <input matInput formControlName="AddressName2">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Nombre de dirección 3</mat-label>
+                        <input matInput formControlName="AddressName3">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Calle / Número</mat-label>
+                        <input matInput formControlName="Street">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Colonia</mat-label>
+                        <input matInput formControlName="Block">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Ciudad</mat-label>
+                        <input matInput formControlName="City">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Código postal</mat-label>
+                        <input matInput formControlName="ZipCode">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Condado</mat-label>
+                        <input matInput formControlName="County">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>País/Región</mat-label>
+                        <mat-select matInput formControlName="Country" (selectionChange)="GetStates($event.value)">
+                          <mat-option *ngFor="let pais of paises" [value]="pais.Code">
+                            {{pais.Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Estado</mat-label>
+                        <mat-select matInput formControlName="State">
+                          <mat-option *ngFor="let state of states" [value]="state.Code">
+                            {{state.Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Latitud</mat-label>
+                        <input matInput formControlName="StreetNo">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Longitud</mat-label>
+                        <input matInput formControlName="BuildingFloorRoom">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>GNL</mat-label>
+                        <input matInput formControlName="GlobalLocationNumber">
+                      </mat-form-field>
+                    </div>
+                    <div fxflex="95" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="49" fxFlex.gt-md="49">
+                      <app-action-buttons [isIntoMatTab]="false"
+                                          (onActionButtonClicked)="OnActionButtonAddressClicked($event)"
+                                          [actionButtons]="actionButtonsAddress">
+                      </app-action-buttons>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+
+
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </app-action-buttons>
+    </div>
+  </div>
+</div>

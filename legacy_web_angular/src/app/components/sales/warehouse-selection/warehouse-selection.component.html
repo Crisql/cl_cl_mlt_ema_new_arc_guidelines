@@ -1,0 +1,25 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Cambiar almacén</h2>
+  </header>
+  <main>
+    <cl-table [Id]="tableId"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="mappedColumns"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [Records]="warehouses"
+              [RecordsCount]="warehouses.length"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="buttons"
+              [BackgroundTransparent]="true"
+              ScrollHeight="400px">
+    </cl-table>
+  </main>
+  <footer>
+    <app-action-buttons [actionButtons]="actionButtons"
+                        [isIntoMatTab]="false"
+                        (onActionButtonClicked)="onActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

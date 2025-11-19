@@ -1,0 +1,79 @@
+<header>
+    <h2 mat-dialog-title>Componente de dirección</h2>
+</header>
+
+<main>
+    <mat-dialog-content class="modal-content">
+        <div class="grid-container">
+            <mat-form-field appearance="outline" class="col-lg-12">
+                <mat-label>Destino</mat-label>
+                <input matInput [value]="data.AddressName" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Calle/ Apartado de correos</mat-label>
+                <input matInput [value]="data.Street" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Número de la calle</mat-label>
+                <input matInput [value]="data.StreetNo" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Colonia</mat-label>
+                <input matInput [value]="data.Block" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Ciudad</mat-label>
+                <input matInput [value]="data.City" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Código postal</mat-label>
+                <input matInput [value]="data.ZipCode" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Condado</mat-label>
+                <input matInput [value]="data.County" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Departamento</mat-label>
+                <input matInput [value]="data.State" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>País/Región</mat-label>
+                <input matInput [value]="data.Country" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Edificio/Planta/Sala</mat-label>
+                <input matInput [value]="data.BuildingFloorRoom" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Nombre de dirección 2</mat-label>
+                <input matInput [value]="data.AddressName2" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>Nombre de dirección 3</mat-label>
+                <input matInput [value]="data.AddressName3" readonly>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+                <mat-label>GLN</mat-label>
+                <input matInput [value]="data.GlobalLocationNumber" readonly>
+            </mat-form-field>
+        </div>
+      </mat-dialog-content>
+</main>
+
+<mat-dialog-actions class="actions-right">
+  <button mat-flat-button color="primary" (click)="CloseDialog()">
+    <mat-icon class="icon-color">cancel</mat-icon> Cerrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'ITEM MD.INVENTORY DETAILS' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="Dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Searchbar -->
+  <ion-toolbar color="light">
+    <ion-searchbar (ionInput)="FilterInventory($event)" placeholder="{{ 'ITEM MD.SEARCH WAREHOUSE' | translate }}"
+      animated debounce="200">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Accordion list -->
+  <ion-list lines="none">
+    <ion-item-group *ngFor="let item of filteredInventory">
+      <ion-item button (click)="ToggleExpand(item)" [class]="GetItemClass(item)">
+        <ion-avatar slot="start">
+          <ion-icon name="cube-outline" [color]="GetAvailabilityColor(item.Available)"></ion-icon>
+        </ion-avatar>
+
+         <!-- Featured details -->
+        <ion-label>
+          <h2>{{item.WhsName}}</h2>
+        </ion-label>
+        <ion-note slot="end">
+          <ion-badge [color]="GetAvailabilityColor(item.Available)">
+            {{item.Available}}/{{item.OnHand}}
+          </ion-badge>
+        </ion-note>
+      </ion-item>
+
+      <!-- Expandable details -->
+      <div class="expandable-content" *ngIf="item.Expanded">
+        <ion-item>
+          <ion-label>{{ 'ITEM MD.STOCK' | translate }}:</ion-label>
+          <ion-note slot="end">{{item.OnHand}}</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{ 'ITEM MD.COMMITTED' | translate }}:</ion-label>
+          <ion-note slot="end">{{item.IsCommited}}</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{ 'ITEM MD.ORDER' | translate }}:</ion-label>
+          <ion-note slot="end">{{item.OnOrder}}</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{ 'ITEM MD.AVAILABLE' | translate }}:</ion-label>
+          <ion-note slot="end">{{item.Available}}</ion-note>
+        </ion-item>
+      </div>
+    </ion-item-group>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,33 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Selección de ubicaciones</h2>
+  </header>
+  <main>
+    <section>
+      <div fxLayout="row">
+        <span fxFlex>Cantidad solicitada: <strong>{{QtySolicitada}}</strong></span>
+        <span fxFlex>Cantidad aplicada :  <strong>{{QtyAplicada}}</strong></span>
+      </div>
+    </section>
+    <section>
+      <cl-table
+        [Id]="LocationtableId"
+        [HasStandardHeaders]="hasStandardHeaders"
+        [ShouldSplitPascal]="shouldSplitPascal"
+        [MappedColumns]="mappedColumns"
+        [Records]="locationlist"
+        [RecordsCount]="locationlist.length"
+        [HasItemsSelection]="hasItemsSelection"
+        [CheckboxColumns]="checkboxColumns"
+        [BackgroundTransparent]="true"
+        [ShouldPaginateRequest]="shouldPaginateRequest">
+      </cl-table>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

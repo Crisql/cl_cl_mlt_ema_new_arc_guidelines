@@ -1,0 +1,62 @@
+<ion-item-group>
+  <ion-list-header color="light">
+      <ion-label>{{'BILLING.ATTACHMENT' | translate}}</ion-label>
+      
+      <ion-button *ngIf="showSignatureButton" (click)="OpenSignature()">
+          <ion-icon slot="start" name="create-outline"></ion-icon> 
+      </ion-button>
+
+      <ion-button (click)="fileInput.click()">
+          <ion-icon slot="start" name="attach"></ion-icon> 
+      </ion-button>
+
+      <ion-button fill="clear" (click)="ToggleAttachments()">
+          <ion-icon class="defaultDisplay" name="add-circle-outline" *ngIf="!isAttachmentToggled"></ion-icon>
+          <ion-icon class="defaultDisplay" name="remove-circle-outline" *ngIf="isAttachmentToggled"></ion-icon>
+      </ion-button>
+      
+      <input type="file" hidden #fileInput (change)="OnAttachFile($event)"
+          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xls,.ppt,.xlsx,.pptx" />
+  </ion-list-header>
+  <ion-item-group *ngIf="isAttachmentToggled">
+
+      <!-- Lista de archivos adjuntos -->
+      <ion-list>
+          <ion-item *ngFor="let attachment of documentAttachment.Attachments2_Lines; let i = index">
+              <ion-grid>
+                  <ion-row>
+                      <ion-col size="12">
+                          <strong>#{{attachment.Id}}</strong> - {{attachment.FileName}}.{{attachment.FileExtension}}
+                      </ion-col>
+
+                      <ion-col size="12">
+                          <ion-text >{{ 'BILLING.DATEANNEX' | translate }}: {{ attachment.AttachmentDate | date:'dd/MM/yyyy' }}</ion-text>
+                      </ion-col>
+
+                      <ion-col size="12">
+                          <ion-label position="stacked">{{'BILLING.FREETEXT' | translate}}</ion-label>
+                          <ion-input type="text" placeholder="{{'BILLING.COMMENT' | translate}}"
+                          [(ngModel)]="attachment.FreeText"
+                          >
+                          </ion-input>
+                      </ion-col>
+
+                      <ion-col size="6">
+                          <ion-button fill="clear" color="primary" (click)="RemoveAttachment(i)">
+                          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                          </ion-button>
+                      </ion-col>
+
+                      <ion-col size="6">
+                          <ion-button fill="clear" color="primary" (click)="DownloadAttachment(attachment)">
+                          <ion-icon slot="icon-only" name="cloud-download-outline"></ion-icon>
+                          </ion-button>
+                      </ion-col>
+
+                      
+                  </ion-row>
+              </ion-grid>
+          </ion-item>
+      </ion-list>
+  </ion-item-group>
+</ion-item-group>

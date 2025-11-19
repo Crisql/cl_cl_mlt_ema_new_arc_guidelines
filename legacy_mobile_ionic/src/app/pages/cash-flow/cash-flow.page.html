@@ -1,0 +1,66 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{ 'CASH FLOW.TITLE' | translate }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+    <ion-list>
+        <ion-list-header color="light">
+            DATOS
+        </ion-list-header>
+        <ion-item-group>
+            <ion-item>
+                <ion-label> {{ 'CASH FLOW.USER' | translate }} </ion-label>
+                <ion-input type="text" [readonly]="true" [(ngModel)]="User">
+                </ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{ 'CASH FLOW.AMOUNT' | translate }}</ion-label>
+                <ion-input type="text" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="Amount"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{ 'CASH FLOW.TYPES' | translate }}:</ion-label>
+                <ion-select  [(ngModel)]="Type">
+                    <ion-select-option
+                            *ngFor="let state of typesFlow"
+                            [value]="state.Key"
+                    >{{ state.Description }}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+    
+            <ion-item>
+                <ion-label position="stacked">{{ 'CASH FLOW.REASONS' | translate }}:</ion-label>
+                <ion-select [(ngModel)]="Reason">
+                    <ion-select-option
+                            *ngFor="let state of reasons"
+                            [value]="state.Key"
+                    >{{ state.Description }}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+    
+            <ion-item lines="none">
+                <ion-textarea rows="3" placeholder="{{ 'CASH FLOW.DETAILS' | translate }}" [(ngModel)]="Details" labelPlacement="floating" maxlength="250">
+                </ion-textarea>
+            </ion-item>
+        </ion-item-group>
+    </ion-list>
+    <ion-row>
+        <ion-col size="6">
+            <ion-button class="custom-outline-button" fill="outline" expand="block" (click)="ResetData()" >{{ 'BUTTONS.CANCEL' | translate }}
+            </ion-button>
+        </ion-col>
+        <ion-col size="6">
+            <ion-button class="custom-button" fill="solid" expand="block" (click)="CreateFlow()"  [disabled]="DisableCreationButton()">{{ 'BUTTONS.CREATE' | translate }}
+            </ion-button>
+        </ion-col>
+
+    </ion-row>
+</ion-content>
+

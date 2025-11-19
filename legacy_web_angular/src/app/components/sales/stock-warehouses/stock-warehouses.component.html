@@ -1,0 +1,24 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Detalle de existencias por almacén</h2>
+  </header>
+  <main>
+    <cl-table [Id]="tableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="mappedColumns"
+              [Records]="stockWarehouses"
+              [RecordsCount]="stockWarehouses.length"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="buttons"
+              [BackgroundTransparent] = "true"
+              ScrollHeight="400px"
+    ></cl-table>
+  </main>
+  <footer>
+    <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                        (onActionButtonClicked)="onActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

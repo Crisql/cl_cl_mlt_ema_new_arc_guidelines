@@ -1,0 +1,68 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <form [formGroup]="frmTerminals" class="grid-container">
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Código</mat-label>
+        <input type="text" matInput placeholder="" formControlName="TerminalCode">
+        <mat-error *ngIf="frmTerminals.controls['TerminalCode'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Descripción</mat-label>
+        <input type="text" matInput placeholder="" formControlName="Description">
+        <mat-error *ngIf="frmTerminals.controls['Description'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Moneda</mat-label>
+        <mat-select formControlName="Currency">
+          <mat-option *ngFor="let option of currencies" [value]="option.Id">
+            {{option.Name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="frmTerminals.controls['Currency'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Monto de pago rápido</mat-label>
+        <input type="number" matInput formControlName="QuickPayAmount">
+        <mat-error *ngIf="frmTerminals.controls['QuickPayAmount'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Contraseña</mat-label>
+        <input type="password" matInput formControlName="Password">
+        <mat-error *ngIf="frmTerminals.controls['Password'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <mat-checkbox class="example-margin" formControlName="IsActive">Activo</mat-checkbox>
+      </div>
+
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [form]="frmTerminals"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

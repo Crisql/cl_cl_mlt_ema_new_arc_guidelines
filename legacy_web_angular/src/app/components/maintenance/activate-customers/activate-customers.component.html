@@ -1,0 +1,46 @@
+<app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false" [form]="searchForm"
+                    (onActionButtonClicked)="OnActionButtonClicked($event)">
+<div class="mobile-margin">
+  <fieldset class="main-container container">
+    <legend>
+      Filtros
+    </legend>
+    <form [formGroup]="searchForm">
+      <section class="row">
+        <mat-form-field class="flex-formfield " appearance="outline">
+          <mat-label>Cliente</mat-label>
+          <input type="text" placeholder="Buscar cliente" matInput formControlName="Customer">
+
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="flex-formfield ">
+          <mat-label>Rango de fechas</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Desde" formControlName="DateFrom">
+            <input matEndDate placeholder="Hasta" formControlName="DateTo">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </section>
+    </form>
+  </fieldset>
+</div>
+
+
+  <fieldset class="mt-1">
+    <legend>
+      Resultados
+    </legend>
+    <cl-table [Id]="businessPartnerTableId"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="docTbMappedColumns"
+              [Records]="businessPartners"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="tableButtons"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [BackgroundTransparent]="true">
+    </cl-table>
+  </fieldset>
+
+</app-action-buttons>

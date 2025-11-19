@@ -1,0 +1,132 @@
+.main-container {
+  position: relative;
+}
+
+mat-card {
+  margin-top: 10px;
+}
+
+.totalposition {
+  margin-left: auto !important;
+  padding: 16px !important;
+  width: 600px;
+
+}
+
+.wrap {
+  width: 50px;
+  margin-left: auto;
+}
+
+.btn-legend {
+  background-color: transparent;
+  border: none;
+  font-weight: bold;
+  font-family: Roboto, Helvetica Neue, sans-serif;
+  cursor: pointer;
+}
+
+.mat-accordion {
+  background-color: transparent !important;
+}
+
+.display-none {
+  display: none !important;
+}
+
+.mt-1 {
+  margin-top: 20px;
+}
+
+/*Boton a la par de un campo*/
+.e-bill {
+  margin-top: -19px !important;
+  border-radius: 0 5px 5px 0;
+  background-color: #0082c0 !important;
+  color: white !important;
+  cursor: pointer;
+  height: 34px;
+
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+
+  .mat-form-field {
+    flex-grow: 1;
+  }
+}
+
+.flex-items {
+  width: 34.5625rem;
+
+}
+
+.label-total{
+  text-align: center;
+  border-radius: 0 7px 7px 0;
+  font-size:18px;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.div-total {
+  font-size: 2rem;
+  font-weight: 600;
+  height: 50px;
+  position: static;
+  text-align: center;
+  border-radius: 0 7px 7px 0;
+}
+
+.hover-content {
+  position: relative;
+  display: inline-block;
+}
+
+.conversion-tooltip {
+  display: none;
+  background-color: #A4DEF9;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.5em;
+  margin-right: 15px;
+  vertical-align: middle;
+  position: absolute;
+  right: 100%;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.conversion-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #A4DEF9;
+}
+
+.hover-content:hover .conversion-tooltip {
+  display: block;
+}
+
+@media screen and (max-width: 600px) {
+  .multi-bottoms {
+    flex-direction: column;
+    padding-top: 10px;
+    position: fixed;
+    background-color: #fafafa !important;
+    z-index: 9996;
+    width: 100%;
+  }
+}
+
+
+
+

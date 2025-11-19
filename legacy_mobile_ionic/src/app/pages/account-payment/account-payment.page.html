@@ -1,0 +1,148 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{ 'INCOMMINGPAYMENT.INCOMMINGPAYMENT' | translate }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-row>
+        <ion-col size="12">
+            <ion-button
+                    expand="block"
+                    fill="solid"
+                    color="primary"
+                    (click)="SearchCustomer(null)"
+                    *ngIf="SearchCustomerBtn"
+            >
+                {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+
+    <ion-list *ngIf="!SearchCustomerBtn">
+        <ion-item-sliding #slidingCustomer class="item-sliding-options-start">
+            <ion-item>
+                <ion-label>{{ customer.CardCode }} {{ customer.CardName }}</ion-label>
+            </ion-item>
+            <ion-item-options side="start">
+                <ion-item-option (click)="SearchCustomer(slidingCustomer)">
+                    {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+                </ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item>
+            <ion-textarea
+                    rows="3"
+                    [(ngModel)]="comments"
+                    placeholder="{{'BUTTONS.WRITE' | translate}}"
+            >
+            </ion-textarea>
+        </ion-item>
+
+        <ion-item-sliding #slidingCash class="item-sliding-options-end">
+            <ion-item>
+                <ion-label slot="start">{{ 'BILLING.CASH' | translate }}:</ion-label>
+                <ion-label
+                >{{ GetCurrency(paymentCurrency).Symbol }}{{
+                        cashPayment.amount |
+                            number:TO_FIXED_TOTALDOCUMENT
+                    }}
+                </ion-label
+                >
+            </ion-item>
+
+            <ion-item-options side="end">
+                <ion-item-option color="danger" (click)="DeleteCashInfo(slidingCash)">
+                    {{ 'BUTTONS.REMOVE' | translate }}
+                </ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding #slidingCards class="item-sliding-options-end">
+            <ion-item>
+                <ion-label slot="start">{{ 'BILLING.CARD' | translate }}:</ion-label>
+                <ion-label>
+                    {{ GetCurrency(paymentCurrency).Symbol }}{{ totalCards | number:TO_FIXED_TOTALDOCUMENT }}
+                </ion-label>
+            </ion-item>
+
+            <ion-item-options side="end">
+                <ion-item-option color="danger" (click)="DeleteCardsInfo(slidingCards)">
+                    {{ 'BUTTONS.REMOVE' | translate }}
+                </ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding #slidingTransfer class="item-sliding-options-end">
+            <ion-item>
+                <ion-label slot="start">
+                    {{ 'BILLING.TRANSFER' | translate }}
+                </ion-label>
+                <ion-label>
+                    {{ GetCurrency(paymentCurrency).Symbol }}{{
+                        transferPayment?.Amount |
+                            number:TO_FIXED_TOTALDOCUMENT
+                    }}
+                </ion-label>
+            </ion-item>
+
+            <ion-item-options side="end">
+                <ion-item-option
+                        color="danger"
+                        (click)="DeleteTransferInfo(slidingTransfer)"
+                >
+                    {{ 'BUTTONS.REMOVE' | translate }}
+                </ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item>
+            <ion-label slot="start">{{ 'BILLING.TOTAL' | translate }}:</ion-label>
+            <ion-label
+            >{{ GetCurrency(paymentCurrency).Symbol }}{{
+                    (totalCards + cashPayment.amount + transferPayment.Amount) |
+                        number:TO_FIXED_TOTALDOCUMENT
+                }}
+            </ion-label>
+        </ion-item>
+    </ion-list>
+
+    <ion-row *ngIf="!SearchCustomerBtn">
+        <ion-col size="4">
+            <ion-button
+                    expand="block"
+                    fill="solid"
+                    color="danger"
+                    (click)="resetData()"
+            >
+                {{ 'BUTTONS.CANCEL' | translate }}
+            </ion-button>
+        </ion-col>
+        <ion-col size="4">
+            <ion-button
+                    expand="block"
+                    fill="solid"
+                    color="primary"
+                    [disabled]="!customer"
+                    (click)="OpenPaymentModal()"
+            >
+                {{ 'BUTTONS.PAYM' | translate }}
+            </ion-button>
+        </ion-col>
+        <ion-col size="4">
+            <ion-button
+                    expand="block"
+                    fill="solid"
+                    color="primary"
+                    [disabled]="cashPayment.amount === 0 && totalCards === 0 && transferPayment.Amount === 0"
+                    (click)="Create()"
+            >
+                {{ 'BUTTONS.CREATE' | translate }}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+</ion-content>

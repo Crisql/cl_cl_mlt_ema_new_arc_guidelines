@@ -1,0 +1,89 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "RECONCILIATION.DOCUMENT DETAIL" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="Dismiss()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="ValidateFields()">
+                <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="documentForm">
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.CLIENT" | translate }}
+            </ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="ClientName">
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.TYPE DOCUMENT" | translate }}
+            </ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="DocumentType">
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.DOCUMENT NUMBER" | translate }}
+            </ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="DocNum">
+            </ion-input>
+        </ion-item>
+        
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.DOCUMENT DATE" | translate }}
+            </ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="DocDate">
+            </ion-input>
+        </ion-item>
+        
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.EXPIRATION DATE" | translate }}
+            </ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="DocDueDate">
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.CURRENCY" | translate }}
+            </ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="DocCurrency">
+            </ion-input>
+        </ion-item>
+        
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.TOTAL" | translate }}
+            </ion-label>
+            <ion-input type="number" [readonly]="true" formControlName="TotalShow">
+            </ion-input>
+        </ion-item>
+        
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.BALANCE" | translate }}
+            </ion-label>
+            <ion-input type="number" [readonly]="true" formControlName="SaldoShow">
+            </ion-input>
+        </ion-item>
+        
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "RECONCILIATION.PAY" | translate }}
+            </ion-label>
+            <ion-input type="number" formControlName="Pago" [readonly]="editPay">
+            </ion-input>
+        </ion-item>
+    </form>
+</ion-content>

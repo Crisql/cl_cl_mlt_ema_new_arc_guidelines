@@ -1,0 +1,27 @@
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 44%;
+}
+
+.active-check {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 10%;
+    margin-top: 10px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.btn-action {
+    margin-top: 20px;
+}

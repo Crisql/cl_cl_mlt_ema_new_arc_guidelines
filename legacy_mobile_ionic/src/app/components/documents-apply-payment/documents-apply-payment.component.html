@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{
+      "CREATEPAYMENTDOCLIST.CREATEPAYMENTDOCLIST" | translate
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="SelectedDocs()">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label slot="start">
+        {{ "CREATEPAYMENT.TOTAL" | translate }}
+      </ion-label>
+      <ion-label>
+        {{ total | number: TO_FIXED_TOTALDOCUMENT }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-virtual-scroll [items]="documents" [trackBy]="TrackByFunction">
+     <ion-item  *virtualItem="let doc">
+      <ion-card [ngClass]="doc.Selected ? 'background-selected' : ''">
+        <ion-card-header (click)="OnClickSelectDocument(doc)">
+          <p>{{ "CREATEPAYMENTDOCLIST.DOCNUM" | translate }}: {{ doc.DocNum }}</p>
+          <p>
+            {{ "CREATEPAYMENTDOCLIST.CARDNAME" | translate }}: {{ doc.CardName }}
+          </p>
+          <p>
+            {{ "CREATEPAYMENTDOCLIST.DOCDATE" | translate }}:
+            {{ doc.DocDate | date: "short" }}
+          </p>
+          <p>
+            {{ "CREATEPAYMENTDOCLIST.TOTAL" | translate }}:
+            {{ doc.Symbol }}
+            {{ doc.DocTotal | number:TO_FIXED_TOTALDOCUMENT}}
+          </p>
+          <p>
+            {{ "CREATEPAYMENTDOCLIST.BALANCE" | translate }}:
+            {{ doc.Symbol }}
+            {{ doc.DocSaldo | number:TO_FIXED_TOTALDOCUMENT}}
+          </p>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label stacked>{{
+              "CREATEPAYMENTDOCLIST.AMOUNTTOPAY" | translate
+            }}</ion-label>
+            <ion-input
+              type="number"
+              [(ngModel)]="doc.AmountPay"
+              (change)="OnBalnceChange(doc)"
+            ></ion-input>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+     </ion-item>
+  </ion-virtual-scroll>
+  <ion-infinite-scroll (ionInfinite)="SearchDoc($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

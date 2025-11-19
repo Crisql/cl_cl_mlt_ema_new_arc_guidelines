@@ -1,0 +1,139 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <section cdkScrollable>
+      <form [formGroup]="serieForm">
+        <fieldset>
+          <legend>
+            Configuración de serie
+          </legend>
+
+          <section class="grid-container">
+            <mat-form-field class="col-lg-3 col-md-6 col-sm-12" appearance="outline">
+              <mat-label>Tipo de documento</mat-label>
+              <input type="text" placeholder="Buscar documento" matInput formControlName="Document"
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event.option.value)"
+                                [displayWith]="DisplayTypesDocuments">
+                <mat-option *ngFor="let option of filteredtypesDocuments$ | async" [value]="option">
+                  {{option.TableDescription}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="serieForm.controls['Document'].errors?.['required']">
+                Campo requerido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col-lg-3 col-md-6 col-sm-12" appearance="outline">
+              <mat-label>Serie</mat-label>
+              <input type="text" placeholder="Buscar serie" matInput formControlName="Serie"
+                     [matAutocomplete]="typeSeries">
+              <mat-autocomplete #typeSeries="matAutocomplete" [displayWith]="DisplayTypesSeries">
+                <mat-option *ngFor="let option of filteredtypesSeries$ | async" [value]="option">
+                  {{option.Serie}} - {{option.SerieName}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="serieForm.controls['Serie'].errors?.['required']">
+                Campo requerido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Generación de serie</mat-label>
+              <mat-select formControlName="TypeSerie">
+                <mat-option [value]="genType.Key"
+                            *ngFor="let genType of seriesGenerationTypes">{{genType.Description}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="serieForm.controls['TypeSerie'].errors?.['required']">
+                Campo requerido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-2 col-md-6 col-sm-12">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="Type">
+                <mat-option [value]="type.Key" *ngFor="let type of seriesTypes">{{type.Description}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="serieForm.controls['Type'].errors?.['required']">
+                Campo requerido
+              </mat-error>
+            </mat-form-field>
+
+            <div class="col-lg-1 col-md-6 col-sm-12">
+              <app-action-buttons [actionButtons]="actionButtonsAdd"
+                                  [form]="serieForm"
+                                  [isIntoMatTab]="false"
+                                  (onActionButtonClicked)="OnActionButtonClicked($event)">
+              </app-action-buttons>
+            </div>
+          </section>
+
+        </fieldset>
+
+        <fieldset *ngIf="ShowFESeriesSection()">
+          <legend>
+            Series de numeración FE
+          </legend>
+
+          <section class="grid-container">
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Nombre de la serie</mat-label>
+              <input matInput type="text" formControlName="SerieName" >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Sucursal</mat-label>
+              <input matInput type="number" formControlName="BranchOffice" >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Terminal</mat-label>
+              <input matInput type="number" formControlName="Terminal" >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+              <mat-label>Siguente número</mat-label>
+              <input matInput type="number" formControlName="NextNumber" >
+            </mat-form-field>
+          </section>
+
+        </fieldset>
+
+      </form>
+
+
+    </section>
+
+    <section cdkScrollable>
+
+      <fieldset>
+        <legend>
+          Series
+        </legend>
+        <div>
+          <cl-table [Id]="seriesTableId"
+                    [ShouldPaginateRequest]="shouldPaginateRequest"
+                    [HasStandardHeaders]="hasStandardHeaders"
+                    [ShouldSplitPascal]="shouldSplitPascal"
+                    [MappedColumns]="seriesMappedColumns"
+                    [Records]="dataSource"
+                    [RecordsCount]="dataSource.length"
+                    [HasItemsSelection]="hasItemsSelection"
+                    [Buttons]="buttons"
+                    [BackgroundTransparent]="true"
+                    ScrollHeight="600px"
+          ></cl-table>
+        </div>
+      </fieldset>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>
+

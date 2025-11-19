@@ -1,0 +1,44 @@
+form {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-direction: row;
+  padding-top: 15px;
+  width: 100%;
+}
+
+.form-check-section {
+  flex-basis: 20%;
+}
+
+.row {
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+
+.flex-formfield {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-basis: 32%;
+}
+
+fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 20px;
+
+}
+
+legend {
+  margin-top: -10px;
+  font-weight: bold;
+}
+
+.mt-1 {
+  margin-top: 20px;
+}

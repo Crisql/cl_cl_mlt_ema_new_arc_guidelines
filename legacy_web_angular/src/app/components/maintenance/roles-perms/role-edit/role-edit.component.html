@@ -1,0 +1,36 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <form class="grid-container" [formGroup]="this.isRole ? roleForm : permForm">
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="" formControlName="Name">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Descripción</mat-label>
+        <input matInput placeholder="" formControlName="Description">
+      </mat-form-field>
+
+      <ng-container *ngIf="!this.isRole">
+        <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+          <mat-label>Tipo permiso</mat-label>
+          <mat-select formControlName="PermissionType">
+            <mat-option *ngFor="let perm of permissionType" [value]="perm.Id">
+              {{perm.Name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <mat-checkbox class="example-margin" formControlName="IsActive">Activo</mat-checkbox>
+      </div>
+    </form>
+  </main>
+  <app-action-buttons [form]="this.isRole ? roleForm : permForm"
+                      [actionButtons]="actionButtons"
+                      [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>

@@ -1,0 +1,194 @@
+.main-container {
+  position: relative;
+}
+
+
+mat-card {
+  margin-top: 10px;
+}
+
+.totalposition {
+  margin-left: auto !important;
+  width: 600px;
+}
+
+.wrap {
+  width: 50px;
+  margin-left: auto;
+}
+
+.btn-legend {
+  background-color: transparent;
+  border: none;
+  font-weight: bold;
+  font-family: Roboto, Helvetica Neue, sans-serif;
+  cursor: pointer;
+}
+
+.mat-accordion {
+  background-color: transparent !important;
+}
+
+.display-none {
+  display: none !important;
+}
+
+.mt-1 {
+  margin-top: 20px;
+}
+
+.table-heigth {
+  height: 400px;
+  max-height: 400px;
+  background-color: white;
+  overflow: auto;
+}
+
+
+/*Diseño para los multidocumentos*/
+.multi-documentos {
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2px;
+
+  .multi-documentos-content {
+    max-height: 100px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: start;
+
+    .btn-multi-doc {
+      height: 35px;
+    }
+
+    .span-text,
+    button {
+      border-radius: 5px;
+      padding: 10px 8px;
+      cursor: pointer;
+    }
+
+    .span {
+      display: inline-block;
+      transition: all 0.6s;
+      border-radius: 5px;
+      cursor: pointer;
+      height: 35px;
+      font-size: 14px;
+    }
+
+    .span:hover {
+      color: white;
+      background-color: #A4DEF9;
+      transform: scale(1.1);
+    }
+
+    .active {
+      background-color: #A4DEF9;
+      color: white;
+    }
+
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.mat-autocomplete-panel {
+  overflow: scroll !important;
+}
+
+
+/******* Reduce el padding al bajo los inputs *******/
+.mat-form-field-wrapper {
+  padding-bottom: 0.2rem !important;
+}
+
+/*Boton a la par de un campo*/
+.e-bill {
+  margin-top: -5px !important;
+  border-radius: 0 5px 5px 0;
+  background-color: #0082c0 !important;
+  color: white !important;
+  cursor: pointer;
+  height: 34px;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+
+  .mat-form-field {
+    flex-grow: 1;
+  }
+}
+
+.inline-flex {
+  justify-content: center;
+}
+
+.button-display-type-doc {
+  margin-top: 0px !important;
+  background-color: #0082c0 !important;
+  color: white !important;
+  cursor: pointer;
+}
+
+/*Boton a la par izquierda de un campo*/
+.btn-loyalty {
+  margin-top: -19px !important;
+  border-radius: 5px 0 0 5px;
+  background-color: #0082c0 !important;
+  color: white !important;
+  cursor: pointer;
+  height: 34px;
+}
+
+
+.DownPaymentPercentage {
+  width: 50px;
+  border: none;
+}
+
+.top-margin {
+  margin-top: 1em;
+}
+
+.udf-fieldset {
+  padding: 0 20px !important;
+}
+
+@media screen and (max-width: 600px) {
+  .multi-documentos {
+    flex-direction: column;
+    padding-top: 10px;
+    position: fixed;
+    background-color: #fafafa !important;
+    z-index: 9996;
+    width: 100%;
+  }
+
+
+}
+
+.table-totales .total-retention-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-totales .btn-info-retention {
+  min-width: 0;
+  padding: 0;
+  line-height: 0;
+  border-radius: 20px;
+}
+
+.table-totales .icon-retention {
+  color: #fff !important;
+}

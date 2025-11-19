@@ -1,0 +1,39 @@
+<ng-container *ngIf="udfs && udfs.length > 0">
+    <ion-item-group>
+        <ion-list-header color="light">
+            <ion-label>{{'BILLING.UDFS' | translate}}</ion-label>
+            <ion-button fill="clear" (click)="ToggleUdfForm()">
+                <ion-icon class="defaultDisplay" name="add-circle-outline"
+                          *ngIf="!isUdfFormToggled"></ion-icon>
+                <ion-icon class="defaultDisplay" name="remove-circle-outline"
+                          *ngIf="isUdfFormToggled"></ion-icon>
+            </ion-button>
+        </ion-list-header>
+        <form [formGroup]="UDFsForm" *ngIf="isUdfFormToggled">
+            <ng-container *ngFor="let UDF of udfs">
+                <ion-item>
+                    <ion-label position="stacked">
+                        {{ translateService.currentLang === 'es' ? UDF.Description : UDF.Description
+                        }}</ion-label>
+                    <ng-container *ngIf="UDF.FieldType === 'Int32' || UDF.FieldType === 'Double'">
+                        <ion-input type="number" formControlName="{{UDF.Name}}"></ion-input>
+                    </ng-container>
+                    <ng-container
+                            *ngIf="UDF.FieldType === 'String' && (!UDF.MappedValues || UDF.MappedValues.length === 0)">
+                        <ion-input type="text" formControlName="{{UDF.Name}}"></ion-input>
+                    </ng-container>
+                    <ng-container *ngIf="UDF.FieldType === 'DateTime'">
+                        <ion-input type="date" formControlName="{{UDF.Name}}"></ion-input>
+                    </ng-container>
+                    <ng-container *ngIf="UDF.MappedValues && UDF.MappedValues.length > 0">
+                        <ion-select formControlName="{{UDF.Name}}">
+                            <ion-select-option *ngFor="let option of UDF.MappedValues"
+                                               [value]="option.Value">
+                                {{option.Description}}</ion-select-option>
+                        </ion-select>
+                    </ng-container>
+                </ion-item>
+            </ng-container>
+        </form>
+    </ion-item-group>
+</ng-container>

@@ -1,0 +1,74 @@
+<section>
+  <app-action-buttons [form]="filterForm" [isIntoMatTab]="false" [actionButtons]="actionButtons" (onActionButtonClicked)="OnActionButtonClicked($event)"> </app-action-buttons>
+
+  <fieldset class="main-container container">
+      <legend>
+        Filtros
+      </legend>
+      <form [formGroup]="filterForm">
+        <section class="row">
+          <mat-form-field appearance="outline" class="flex-formfield">
+            <mat-label>Nombre de la ruta</mat-label>
+            <input matInput formControlName="RouteName">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-formfield">
+            <mat-label>Usuario asignado</mat-label>
+            <input type="text"
+                   placeholder="Escribe para buscar"
+                   matInput
+                   formControlName="UserId"
+                   [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="UserAssingAutocompleteDisplayWith">
+              <mat-option *ngFor="let user of filteredUsers" [value]="user">
+                {{user.Id}} - {{user.Name}} {{user.LastName}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-formfield">
+            <mat-label>Rango de fechas</mat-label>
+            <mat-date-range-input
+              [rangePicker]="datespicker"
+              [comparisonStart]="filterForm.value.DateFrom"
+              [comparisonEnd]="filterForm.value.DateTo">
+              <input matStartDate formControlName="DateFrom">
+              <input matEndDate formControlName="DateTo">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="datespicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #datespicker></mat-date-range-picker>
+          </mat-form-field>
+
+
+          <mat-form-field appearance="outline" class="flex-formfield">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="Status">
+              <mat-option *ngFor="let status of routeStatus" [value]="status.Key">{{status.Description}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+      </form>
+    </fieldset>
+
+
+  <section>
+    <fieldset class="mt-1">
+      <legend>
+        Resultados
+      </legend>
+      <cl-table
+        [Id]="tableId"
+        [ShouldPaginateRequest]="shouldPaginateRequest"
+        [HasStandardHeaders]="true"
+        [ShouldSplitPascal]="false"
+        [MappedColumns]="mappedColumns"
+        [Records]="filteredRoutes"
+        [RecordsCount]="filteredRoutes.length"
+        [HasItemsSelection]="false"
+        [Buttons]="tableButtons"
+        [BackgroundTransparent] = "true"
+      ></cl-table>
+    </fieldset>
+  </section>
+
+</section>

@@ -1,0 +1,47 @@
+<ion-content *ngIf="!isPopover">
+    <ion-header>
+        <ion-toolbar>
+            <ion-title>{{ inputTitle | translate }}</ion-title>
+            <ion-buttons slot="end">
+                <ion-button fill="clear" (click)="Dismiss()">
+                    <ion-icon name="close"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+        <ion-item>
+            <ion-searchbar
+                    [(ngModel)]="searchTerm"
+                    (ionChange)="FilterData()"
+                    placeholder="{{ 'FILTER DATA.SEARCH' | translate }}"
+            ></ion-searchbar>
+        </ion-item>
+    </ion-header>
+    <ion-content>
+        <ion-virtual-scroll [items]="filteredData" approxItemHeight="60px">
+            <div
+                    *virtualItem="let customer"
+                    class="customer-container ion-padding-start ion-padding-top ion-padding-bottom"
+                    (click)="Dismiss(customer)"
+            >
+                <div class="item-border-bottom">
+                    <ng-container *ngFor="let property of inputFilterProperties; let last = last">
+                        {{ customer[property] }}<span *ngIf="!last"> </span> 
+                    </ng-container>
+                </div>
+            </div>
+        </ion-virtual-scroll>
+    </ion-content>
+</ion-content>
+
+<ion-content *ngIf="isPopover">
+    <ion-list>
+        <ion-list>
+            <ion-list-header>
+                {{ inputTitle | translate }}
+            </ion-list-header>
+            <ion-item *ngFor="let data of filteredData">
+                <ion-label class="popover-font" *ngFor="let property of inputFilterProperties; let last = last" (click)="Dismiss(data)">{{ data[property] }}<span *ngIf="!last"> </span> </ion-label>
+            </ion-item>
+        </ion-list>
+    </ion-list>
+</ion-content>

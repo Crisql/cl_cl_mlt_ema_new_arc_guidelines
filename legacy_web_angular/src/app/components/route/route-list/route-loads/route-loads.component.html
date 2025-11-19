@@ -1,0 +1,37 @@
+<div>
+  <h2 mat-dialog-title>Carga de rutas</h2>
+</div>
+<div >
+  <div >
+
+    <div >
+      <cl-table
+        [Id]="tableId"
+        [ShouldPaginateRequest]="shouldPaginateRequest"
+        [HasStandardHeaders]="true"
+        [ShouldSplitPascal]="false"
+        [MappedColumns]="mappedColumns"
+        [Records]="processedRoutes"
+        [RecordsCount]="processedRoutes.length"
+        [HasItemsSelection]="false"
+        [BackgroundTransparent] = "true"
+      ></cl-table>
+    </div>
+
+    <div>
+      <div class="drop_box">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileID"
+               (change)="OnAttachTemplate($event)" />
+        <div class="row">
+          <p style="margin-top: 10px">
+            {{fileSpaceText}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <app-action-buttons [isIntoMatTab]="false" [actionButtons]="actionButtons" (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</div>

@@ -1,0 +1,41 @@
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.visible-checks {
+    margin: 20px 0;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 29%;
+}
+
+.btn-search {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 10%;
+    margin-top: 4px;
+}
+
+.w-100 {
+    width: 100%;
+} 
+
+
+  ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+    background-color: rgb(73, 73, 73) !important;
+    opacity: 50%;
+  }
+  
+
+ 

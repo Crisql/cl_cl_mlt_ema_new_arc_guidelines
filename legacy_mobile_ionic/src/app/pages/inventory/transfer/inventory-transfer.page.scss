@@ -1,0 +1,79 @@
+.defaultDisplay {
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+.defaultHide {
+  opacity: 0;
+}
+
+.blanketAgreementApplied {
+  color: #69bb7b;
+}
+
+.micon {
+  display: inline-block;
+  font-size: 35px;
+  color: #ffC977;
+  vertical-align: middle;
+}
+
+.mtext {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.Blink {
+  animation: blinker 3s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+}
+
+@keyframes blinker {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.text-red{
+  color: #C0392B;
+}
+
+.line-closed{
+  opacity: 0.45;
+}
+
+.line-def-details-container
+{
+  font-size: .73rem;
+}
+
+.bill-of-materials-close {
+  display: none;
+}
+
+.bill-of-materials-open {
+  display: block;
+}
+
+ion-button.primary-button {
+  --background: 1980bd;
+}
+
+.custom-button {
+  --background: #1980bd;
+  --background-activated: #4ab5fa;
+  --background-focused: #4ab5fa;
+  --background-hover: #4ab5fa;
+  --color: #ffffff;
+}
+
+.custom-outline-button {
+  --border-color: #1980bd;
+  --color: #1980bd;
+}
+
+.light-red{
+  --background: rgb(250, 220, 225) !important;
+}

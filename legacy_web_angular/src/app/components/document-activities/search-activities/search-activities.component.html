@@ -1,0 +1,56 @@
+<section>
+  <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false" [form]="documentForm"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+<section class="filtros">
+  <fieldset>
+    <legend>Filtros</legend>
+    <form [formGroup]="documentForm" class="grid-container">
+      <div class="col-lg-4 col-md-12 col-sm-12">
+        <div class="flex">
+          <mat-form-field appearance="outline" class="input-group" style="margin-bottom: -1em">
+            <mat-label>Cliente</mat-label>
+            <input placeholder="Buscar cliente" type="text"  formControlName="CardName" matInput>
+          </mat-form-field>
+          <button matTooltip="Buscar cliente"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill-search"
+                  (click)="ShowModalSearchBusinnesPartner()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+      </div>
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-6 col-sm-12">
+        <mat-label>Número de actividad</mat-label>
+        <input matInput type="number" formControlName="Code">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-6 col-sm-12">
+        <mat-label>Rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Desde" formControlName="DateFrom">
+          <input matEndDate placeholder="Hasta" formControlName="DateTo">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+    </form>
+  </fieldset>
+</section>
+
+<section>
+  <fieldset>
+    <legend>Resultados</legend>
+    <cl-table [Id]="documentsTableId"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="docTbMappedColumns"
+              [Records]="documents"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="tableButtons"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [BackgroundTransparent]="true">
+    </cl-table>
+  </fieldset>
+</section>

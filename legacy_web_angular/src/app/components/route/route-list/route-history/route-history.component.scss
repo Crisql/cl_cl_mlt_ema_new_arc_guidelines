@@ -1,0 +1,151 @@
+.main-section {
+  display: flex;
+  justify-content: space-between;
+  max-height: 100%;
+}
+
+.route-info-section {
+  max-height: 100%;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 0 0;
+  overflow-y: auto;
+
+}
+
+.frame {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 5px;
+}
+
+.route-name {
+  font-size: 1rem;
+  margin: 10px 0 10px 0;
+  font-weight: bold;
+}
+
+.back-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+}
+
+.history-title {
+  font-size: 1rem;
+}
+
+.route-calculations-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.route-calculation {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-right: 10px;
+}
+
+.rt-history-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.rt-history-buttons-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.estimate {
+  margin-top: 15px;
+}
+
+
+.sub-title {
+  font-size: medium;
+  font-weight: 500;
+}
+
+.route-line {
+  padding: 3px 0 3px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion {
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px; 
+}
+
+.secondary-accordion {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+}
+
+.second-section {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 5px 5px 0;
+  
+}
+
+.filters-section {
+  max-height: calc(40% - 0px);
+}
+
+.filters-checks-container {
+  padding: 10px 0px;
+}
+
+.btn-filter {
+  display: flex;
+  justify-content: end;
+}
+
+
+.map-section {
+  max-width: 100%;
+  max-height: calc(60% - 0px);
+  //height:  calc(70vh - 70px);
+  height: 70vh;
+}
+
+agm-map {
+  width: 100%;
+  height: 100%;
+}
+
+.panels {
+  padding: 0 5px;
+}
+
+.overflow {
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+.clavis-color {
+  color: #0082c0;
+}

@@ -1,0 +1,10 @@
+{
+    "name": "EMA Easy Market App",
+    "integrations": {
+        "capacitor": {
+            "enabled": false
+        },
+        "cordova": {}
+    },
+    "type": "angular"
+}

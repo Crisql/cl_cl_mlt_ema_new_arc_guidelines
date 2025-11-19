@@ -1,0 +1,29 @@
+html, body {
+  margin: 0;
+  /*height: 100%;*/
+}
+
+body {
+  background: linear-gradient(#ECF0F8 55%, transparent 40%) no-repeat;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.error_message {
+  text-align: center;
+  color: white;
+  background-color: #1C64A9;
+  margin-top: 15vh;
+  padding: 1px;
+}
+
+.error_image {
+  margin-top: 7vh;
+  text-align: center;
+}
+
+.error_solution {
+  margin-top: 5vh;
+  text-align: center;
+  color: #707070;
+  font-size: 25px;
+}

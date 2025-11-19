@@ -1,0 +1,20 @@
+.main-container {
+  .warehouse-footer {
+    width: 100%;
+    text-align: right;
+    margin-top: 20px;
+  }
+  .header{
+    .title{
+      font-weight: bold;
+    }
+  }
+}
+
+/*Diseño para la tabla*/
+.table-overflow {
+  .mat-table {
+    width: 100%;
+    min-width: 600px;
+  }
+}

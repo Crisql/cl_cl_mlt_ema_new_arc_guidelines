@@ -1,0 +1,77 @@
+<section class="section multi-bottoms">
+  <app-action-buttons [form]="searchForm" [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+<section class="section doc-margin">
+  <fieldset>
+    <legend>Filtros</legend>
+    <form [formGroup]="searchForm" class="grid-container">
+      <div class="col-lg-3 col-md-12 col-sm-12">
+        <div class="flex">
+          <mat-form-field appearance="outline" class="input-group" (change)="ChangeBusinessPartner()" style="margin-bottom: -1em">
+            <mat-label>Buscar cliente</mat-label>
+            <input placeholder="Buscar cliente" type="text"  formControlName="BusinessPartner" type="text" matInput>
+          </mat-form-field>
+          <button matTooltip="Buscar cliente"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill-search"
+                  (click)="ShowModalSearchBusinnesPartner()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-12 col-sm-12">
+        <mat-label>Rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Desde" formControlName="DateFrom">
+          <input matEndDate placeholder="Hasta" formControlName="DateTo">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-error *ngIf="searchForm.controls['DateFrom'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+        <mat-error *ngIf="searchForm.controls['DateTo'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-2 col-md-12 col-sm-12">
+        <mat-label>Moneda</mat-label>
+        <mat-select formControlName="DocCurrency" (selectionChange)="SelectCurrency()">
+          <mat-option *ngFor="let currency of currencies" [value]="currency.Id">
+            {{currency.Name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="searchForm.controls['DocCurrency'].errors?.['required']">
+          El campo es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-2 col-md-12 col-sm-12 ">
+        <mat-label>Tipo de documento</mat-label>
+        <mat-select formControlName="DocType" (selectionChange)="OnChangeDocumentType($event)">
+          <mat-option *ngFor="let docType of documentTypes" [value]="docType.Key">{{docType.Description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </fieldset>
+</section>
+<section class="section">
+  <fieldset>
+    <legend>Resultados</legend>
+    <cl-table [Id]="docTableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [MappedColumns]="docTbMappedColumns"
+              [Records]="documents"
+              [CheckboxColumns]="checkboxColumns"
+              [Buttons]="tableButtons"
+              [BackgroundTransparent] = "true"
+              ScrollHeight="400px" >
+    </cl-table>
+  </fieldset>
+
+</section>

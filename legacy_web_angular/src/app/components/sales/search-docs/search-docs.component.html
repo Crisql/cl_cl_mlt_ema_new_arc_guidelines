@@ -1,0 +1,100 @@
+<section class="main-container">
+  <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false" [form]="searchForm"
+    (onActionButtonClicked)="OnActionButtonClicked($event)">
+    <div class="mobile-margin">
+      <fieldset class="main-container container">
+        <legend>
+          Filtros
+        </legend>
+        <form [formGroup]="searchForm" class="row">
+
+          <div class="col-3 col-md-6 col-sm-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Empleado de ventas</mat-label>
+              <input type="text" placeholder="Buscar empleado de ventas" matInput formControlName="SalePerson"
+                [matAutocomplete]="salesPersons">
+              <mat-autocomplete #salesPersons="matAutocomplete" [displayWith]="DisplaySalesPersons">
+                <mat-option *ngFor="let option of filteredSalesPersons$ | async" [value]="option">
+                  {{option.SlpCode}} - {{option.SlpName}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+
+          <div class="col-3 col-md-6 col-sm-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Número de documento</mat-label>
+              <input matTooltip="Este filtro tiene prioridad sobre el resto" matInput type="number"
+                (click)="tooltip.show()" #tooltip="matTooltip" formControlName="DocNum">
+            </mat-form-field>
+          </div>
+
+          <div class="col-3 col-md-6 col-sm-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Estado de documento</mat-label>
+              <mat-select formControlName="DocStatus">
+                <mat-option *ngFor="let state of documentStatesToShow" [value]="state.Key">{{state.Description}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-3 col-md-6 col-sm-12">
+            <div class="flex">
+              <mat-form-field appearance="outline" class="input-group" style="margin-bottom: -1em">
+                <mat-label>Cliente</mat-label>
+                <input placeholder="Buscar cliente" type="text" formControlName="Customer" type="text" matInput>
+              </mat-form-field>
+              <button matTooltip="Buscar cliente" type="button" mat-flat-button color="primary" class="e-bill-search"
+                (click)="ShowModalSearchBusinnesPartner()">
+                <mat-icon>search</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-3 col-md-6 col-sm-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Rango de fechas</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Desde" formControlName="DateFrom">
+                <input matEndDate placeholder="Hasta" formControlName="DateTo">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+
+          <div class="col-3 col-md-6 col-sm-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Tipo de documento</mat-label>
+              <mat-select formControlName="DocType" (selectionChange)="OnChangeDocumentType($event)">
+                <mat-option *ngFor="let docType of documentTypes"
+                  [value]="docType.Key">{{docType.Description}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-3 col-md-6 col-sm-12" *ngIf="secondFilterVisible">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Tipo de Preliminar</mat-label>
+              <mat-select formControlName="ObjType" (selectionChange)="OnChangeDocumentType($event)">
+                <mat-option *ngFor="let objType of documentTypesSecondFilter"
+                  [value]="objType.Key">{{objType.Description}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </form>
+      </fieldset>
+    </div>
+    <fieldset class="mt-1">
+      <legend>
+        Resultados
+      </legend>
+      <cl-table [Id]="documentsTableId" [HasStandardHeaders]="hasStandardHeaders"
+        [ShouldSplitPascal]="shouldSplitPascal" [MappedColumns]="docTbMappedColumns" [Records]="documents"
+        [HasItemsSelection]="hasItemsSelection" [Buttons]="buttons" [ShouldPaginateRequest]="shouldPaginateRequest"
+        [BackgroundTransparent]="true">
+      </cl-table>
+    </fieldset>
+  </app-action-buttons>
+</section>

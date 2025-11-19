@@ -1,0 +1,29 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>Selección de Reglas de Distribución</h2>
+  </header>
+  <main>
+    <section>
+      <cl-table [Id]="lineTableId"
+                [ShouldPaginateRequest]="shouldPaginateRequest"
+                [HasStandardHeaders]="true"
+                [ShouldSplitPascal]="false"
+                [MappedColumns]="lineMappedColumns"
+                [Records]="lines"
+                [RecordsCount]="lines.length"
+                [HasItemsSelection]="false"
+                [DropdownColumns]="dropdownColumns"
+                [DropdownDiffBy]="dropdownDiffBy"
+                [DropdownDiffList]="dropdownDiffList"
+                [BackgroundTransparent] = "true">
+      </cl-table>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>
+
+

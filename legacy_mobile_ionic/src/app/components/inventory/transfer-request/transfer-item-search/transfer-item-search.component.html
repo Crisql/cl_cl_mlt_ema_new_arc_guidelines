@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "SEARCH PRODUCT.SEARCH PRODUCT" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="Dismiss()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="SaveItemsSelected()">
+                <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-item>
+        <ion-searchbar
+                [(ngModel)]="searchTerm"
+                (ionChange)="FilterProducts()"
+                placeholder="{{ 'SEARCH PRODUCT.SEARCH PRODUCT2' | translate }}"
+        ></ion-searchbar>
+    </ion-item>
+</ion-header>
+<ion-content>
+    <ion-virtual-scroll [items]="filteredData" approxItemHeight="60px">
+        <div
+                *virtualItem="let product; let i = index"
+                class="grid-container ion-padding ion-no-margin item-border-bottom"
+                [ngClass]="{ 'background-selected': product.State}"
+        >
+            <div class="product-grid">
+                <div (click)="SelectItem(product)" class="product-data">
+                    <div>{{ product.ItemCode }} {{ product.ItemName }}</div>
+                    <div>
+                        <ion-badge color="light">{{ 'SEARCH TRANSFER ITEM.AVAILABLE' | translate }}: {{ product.Stock }}</ion-badge>
+                    </div>
+                </div>
+                <div *ngIf="product.State" >
+                    <ion-input type="number"  [(ngModel)]="product.Quantity"
+                               (ionChange)="OnQuantityChange($event.target.value, product)"
+                               class="product-quantity">
+                    </ion-input>
+                </div>
+            </div>
+        </div>
+    </ion-virtual-scroll>
+</ion-content>

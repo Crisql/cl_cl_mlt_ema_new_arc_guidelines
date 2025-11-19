@@ -1,0 +1,49 @@
+<section class="action-buttons-main-container">
+  <div class="actions-container" *ngIf="actionButtons?.length" [ngClass]="isIntoMatTab ? 'into-mat-tap' : ''">
+    <div class="btn-container" [ngClass]="isIntoMatTab ? 'border' : ''">
+      <ng-container *ngFor="let actionBtn of actionButtons; index as i">
+
+        <ng-container *ngIf="!actionBtn.Options || actionBtn.Options.length === 0">
+          <button mat-flat-button
+                  type="button"
+                  id="AC-{{actionBtn.Key}}"
+                  color="{{actionBtn.MatColor ? actionBtn.MatColor : 'primary'}}"
+                  [disabled]="actionBtn.DisabledIf ? actionBtn.DisabledIf(form, userPermissions) : false"
+                  (click)="EmitActionButtonClickEvent(actionBtn)"
+                  [ngClass]="i == 0 ? 'first-button action-button' : 'action-button'">
+            <mat-icon *ngIf="actionBtn.MatIcon" class="material-symbols-outlined">{{actionBtn.MatIcon}}</mat-icon>
+            {{actionBtn.Text}}
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="actionBtn.Options && actionBtn.Options.length > 0">
+          <button mat-flat-button
+                  type="button"
+                  id="AC-{{actionBtn.Key}}"
+                  color="{{actionBtn.MatColor ? actionBtn.MatColor : 'primary'}}"
+                  [matMenuTriggerFor]="menu"
+                  [disabled]="actionBtn.DisabledIf ? actionBtn.DisabledIf(form, userPermissions) : false"
+                  [ngClass]="i == 0 ? 'first-button action-button' : 'action-button'">
+            <mat-icon *ngIf="actionBtn.MatIcon" class="material-symbols-outlined">{{actionBtn.MatIcon}}</mat-icon>
+            {{actionBtn.Text}}
+          </button>
+          <mat-menu #menu="matMenu">
+            <ng-container *ngFor="let option of actionBtn.Options">
+              <button mat-menu-item
+                      type="button"
+                      id="AC-{{option.Key}}"
+                      [disabled]="actionBtn.DisabledIf ? actionBtn.DisabledIf(form, userPermissions) : false"
+                      (click)="EmitActionButtonClickEvent(option)">
+                <mat-icon color="primary" *ngIf="option.MatIcon" class="material-symbols-outlined">
+                  {{option.MatIcon}}
+                </mat-icon>
+                {{option.Text}}
+              </button>
+            </ng-container>
+          </mat-menu>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <ng-content></ng-content>
+</section>

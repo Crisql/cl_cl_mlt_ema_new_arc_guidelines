@@ -1,0 +1,131 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "MANT. CUSTOMERS.LOCATIONS" | translate }}</ion-title>
+    <ion-buttons slot="end" *ngIf="!showMap">
+      <ion-button (click)="Dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+      <ion-button (click)="SaveAddress()">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="showMap">
+      <ion-button (click)="showMap = !showMap">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div *ngIf="!showMap">
+    <ion-list>
+      <form [formGroup]="locationForm">
+        <ion-item>
+          <ion-label position="stacked">
+            {{ "MANT. CUSTOMERS.LOCATIONNAME" | translate }}
+          </ion-label>
+          <ion-input type="text" formControlName="locationName"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            {{ "MANT. CUSTOMERS.OTHERSIGNS" | translate }}</ion-label
+          >
+          <ion-textarea rows="3" formControlName="otherSigns"> </ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            {{"ROUTE DETAIL MODAL.ADDRESSTYPE" | translate}}
+          </ion-label>
+          <ion-select formControlName="Type">
+            <ion-select-option value="bo_ShipTo"
+              >{{ "MANT. CUSTOMERS.BILLTO" | translate }}</ion-select-option
+            >
+            <ion-select-option value="bo_BillTo"
+              >{{ "MANT. CUSTOMERS.SHIPTO" | translate }}</ion-select-option
+            >
+          </ion-select>
+        </ion-item>
+      </form>
+    </ion-list>
+    <ion-row>
+      <ion-col size="4">
+        <ion-button
+          expand="block"
+          fill="solid"
+          color="primary"
+          (click)="OnClickCurrentPosition()"
+        >
+          {{ "MANT. CUSTOMERS.CURRLOCATION" | translate }}
+        </ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button
+          expand="block"
+          fill="solid"
+          color="primary"
+          (click)="HandleMapVisibility()"
+        >
+          {{ "LOCATIONS.TOGGLEMAP" | translate }}
+        </ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button
+          expand="block"
+          fill="solid"
+          color="primary"
+          (click)="AddNewLocation()"
+          [disabled]="!latLng || locationForm.invalid"
+        >
+          {{ btnSaveText | translate }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-list>
+      <ion-list-header>
+        <ion-label> {{"LOCATIONS.LOCLIST" | translate}} </ion-label>
+      </ion-list-header>
+      <ion-item-sliding *ngFor="let location of Locations; index as i" #slidingLocation class="item-sliding-options-end item-sliding-options-start">
+        <ion-item>
+          <label (click)="LoadLocationInfo(location)">
+            <p>{{location.AddressName}}</p>
+            <p *ngIf="location.AddressType === 'bo_BillTo'">
+              {{"MANT. CUSTOMERS.BILLTO"  | translate}}
+            </p>
+            <p *ngIf="location.AddressType === 'bo_ShipTo'">
+              {{ "MANT. CUSTOMERS.SHIPTO" | translate}}
+            </p>
+          </label>
+          <ion-icon
+            slot="end"
+            name="star"
+            [color]="GetColor(location)"
+          ></ion-icon>
+        </ion-item>
+        <ion-item-options side="start">
+          <ion-item-option
+            color="primary"
+            (click)="SetAsDefault(location,i, slidingLocation)"
+          >
+            <ion-icon slot="icon-only" name="star"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item-options side="end">
+          <ion-item-option
+            color="danger"
+            (click)="LocDeletionConfirmation(location, i, slidingLocation)"
+          >
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+
+  <div id="map_canvas" *ngIf="showMap">
+    <img id="marker" src="../../../assets/imgs/marker.svg" alt="Marker" />
+  </div>
+
+  <ion-infinite-scroll (ionInfinite)="GetMoreAddress($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

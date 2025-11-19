@@ -1,0 +1,24 @@
+<div class="flex">
+  <mat-form-field class="w-100 input-group" appearance="outline" style="margin-bottom: -1em">
+    <mat-label>Artículo</mat-label>
+    <input #searchInput placeholder="Buscar ítem"
+           type="text" matInput
+           [formControl]="itemForm"
+           (keyup)="FindItem($event)"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete"
+                      [displayWith]="DisplayFnItem"
+                      (optionSelected)="SelectItem($event.option.value)">
+      <mat-option *ngFor="let item of items$ | async" [value]="item">
+        {{item.TypeAheadFormat}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <button matTooltip="Buscar ítems"
+          type="button"
+          mat-flat-button color="primary"
+          class="e-bill"
+          (click)="ShowModalSearchItem()">
+    <mat-icon class="icon-display">search</mat-icon>
+  </button>
+</div>

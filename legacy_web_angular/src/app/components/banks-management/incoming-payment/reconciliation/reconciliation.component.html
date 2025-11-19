@@ -1,0 +1,99 @@
+<div class="justify-content" fxLayout="row">
+  <div>
+    <h2 class="align-right" mat-dialog-title>Reconciliación de documentos</h2>
+  </div>
+
+  <div class="button-container">
+    <button class="margin-btn" mat-flat-button (click)="SearchDocuments()" [disabled]="documentForm.invalid">
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
+    <button class="margin-btn" mat-flat-button color="primary" (click)="Save()">
+      <mat-icon>save</mat-icon>
+      Crear
+    </button>
+    <button class="margin-btn" mat-flat-button [mat-dialog-close]="false">
+      <mat-icon class="material-symbols-outlined">cancel</mat-icon>
+      Cancelar
+    </button>
+  </div>
+</div>
+
+<section>
+  <div>
+    <p>
+      <span><b>Cliente:</b></span> {{customer?.CardCode}} {{customer?.CardName}}
+    </p>
+  </div>
+  <div class="Totals">
+    <p>
+      <span class="hover-content-reconciliation">
+                <span
+                  class="conversion-tooltip-reconciliation">{{GetSymbol(1)}} {{ DisplayTotal(1) | number: TO_FIXED_TOTALDOCUMENT}}</span>
+        <strong>Total pago:</strong> {{GetSymbol(2)}} {{ DisplayTotal(4) | number: TO_FIXED_TOTALDOCUMENT}}
+              </span>
+    </p>
+    <p>
+       <span class="hover-content-reconciliation">
+                <span
+                  class="conversion-tooltip-reconciliation">{{GetSymbol(1)}} {{ DisplayTotal(2) | number: TO_FIXED_TOTALDOCUMENT}}</span>
+         <strong>Total facturas:</strong> {{GetSymbol(2)}} {{ DisplayTotal(5) | number: TO_FIXED_TOTALDOCUMENT}}
+              </span>
+    </p>
+    <p>
+      <span class="hover-content-reconciliation">
+                <span
+                  class="conversion-tooltip-reconciliation">{{GetSymbol(1)}} {{ DisplayTotal(3) | number: TO_FIXED_TOTALDOCUMENT}}</span>
+        <strong>Total conciliación: </strong> {{GetSymbol(2)}} {{ DisplayTotal(6) | number: TO_FIXED_TOTALDOCUMENT}}
+              </span>
+    </p>
+  </div>
+</section>
+<fieldset class="main-container margin-top">
+  <legend>
+    Filtros
+  </legend>
+  <form [formGroup]="documentForm" class="grid-container">
+    <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+      <mat-label>Rango de fechas</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Desde" formControlName="DateFrom">
+        <input matEndDate placeholder="Hasta" formControlName="DateTo">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </form>
+</fieldset>
+<div class="container margin-top">
+  <section class="section">
+    <fieldset>
+      <legend>Pagos</legend>
+      <cl-table [Id]="TableIdPayment"
+                [CheckboxColumns]="checkboxColumns"
+                [ShouldPaginateRequest]="shouldPaginateRequestPay"
+                [MappedColumns]="paymentsTbMappedColumns"
+                [Records]="payments"
+                [BackgroundTransparent]="true"
+                ScrollHeight="400px">
+      </cl-table>
+    </fieldset>
+  </section>
+  <section class="section">
+    <fieldset>
+      <legend>Facturas</legend>
+      <cl-table [Id]="TableIdInvoice"
+                [ShouldPaginateRequest]="shouldPaginateRequestFacturas"
+                [MappedColumns]="invoicesTbMappedColumns"
+                [Records]="invoices"
+                [RecordsCount]="invoices.length"
+                [BackgroundTransparent]="true"
+                ScrollHeight="400px">
+      </cl-table>
+    </fieldset>
+  </section>
+</div>
+
+
+
+

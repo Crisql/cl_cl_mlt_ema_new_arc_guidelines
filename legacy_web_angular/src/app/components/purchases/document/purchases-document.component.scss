@@ -1,0 +1,71 @@
+.main-container
+{
+  position: relative;
+}
+
+mat-card {
+  margin-top: 10px;
+}
+
+
+.totalposition {
+  margin-left: auto !important;
+  width: 600px;
+}
+
+.wrap{
+  width: 50px;
+  margin-left: auto;
+}
+
+fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+legend {
+  margin-top: -10px;
+  font-weight: bold;
+}
+
+.mt-1 {
+  margin-top: 20px;
+}
+
+.mt-1 {
+  margin-top: 10px;
+}
+.udf-fieldset {
+  padding: 0 20px !important;
+}
+@media screen and (max-width: 600px) {
+  .multi-bottoms {
+    flex-direction: column;
+    padding-top: 10px;
+    position: fixed;
+    background-color: #fafafa !important;
+    z-index: 9996;
+    width: 100%;
+  }
+  .main-container{
+    margin-top: 135px;
+  }
+}
+
+.table-totales .total-retention-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-totales .btn-info-retention {
+  min-width: 0;
+  padding: 0;
+  line-height: 0;
+  border-radius: 20px;
+}
+
+.table-totales .icon-retention {
+  color: #fff !important;
+}

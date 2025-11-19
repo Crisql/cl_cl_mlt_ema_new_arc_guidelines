@@ -1,0 +1,26 @@
+<div class="address-container">
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Destino</mat-label>
+    <mat-select
+      [disabled]="!isPermissionChangeAdress"
+      (selectionChange)="SelectAdress($event)"
+      [value]="addressSeleccted"
+    >
+      <mat-option *ngFor="let adress of adresses" [value]="adress">
+        {{ adress.AddressName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="textarea-container">
+    <mat-form-field appearance="outline" class="form-field full-width">
+      <mat-label>Detalles</mat-label>
+      <textarea matInput rows="6" readonly>{{ GetAdressDetails() }}</textarea>
+    </mat-form-field>
+
+    <button matTooltip="Más detalles" type="button" mat-flat-button color="primary"
+                        class="icon-button" (click)="OpenAddressDetailsModal()">
+      <mat-icon class="icon-color">info</mat-icon>
+     </button>
+  </div>
+</div>

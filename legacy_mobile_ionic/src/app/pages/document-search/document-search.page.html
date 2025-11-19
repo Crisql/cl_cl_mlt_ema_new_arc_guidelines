@@ -1,0 +1,208 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{"INCOMMINGPAYMENT.SEARCHDOCS" | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [(ngModel)]="currentSegment">
+    <ion-segment-button value="search">
+      <ion-label>{{ "BUTTONS.BUSQUEDA" | translate }}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="docList">
+      <ion-label>{{ "SEARCHDOCUMENTLIST.SEARCHDOCUMENTLIST" | translate }}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="currentSegment">
+    <div *ngSwitchCase="'search'">
+      <ion-row *ngIf="SearchCustomerBtn">
+        <ion-col size="12">
+          <ion-button
+            fill="solid"
+            expand="block"
+            color="primary"
+            (click)="SearchCustomer(null)"
+          >
+            {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-list>
+        <ion-item-sliding
+          #slidingCustomer
+          *ngIf="!SearchCustomerBtn"
+          class="item-sliding-options-start"
+        >
+          <ion-item>
+            <ion-label>
+              <p>{{customer.CardCode}} {{customer.CardName}}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item-options side="start">
+            <ion-item-option
+              color="primary"
+              (click)="SearchCustomer(slidingCustomer)"
+            >
+              {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+          
+          <ion-item>
+              <ion-label position="stacked"
+              >{{ 'SEARCHDOCUMENTS.DOCTYPE' | translate }}</ion-label
+              >
+              <ion-select [(ngModel)]="docTypeSelected" (ionChange)="GetDocStateByDocType()">
+                  <ion-select-option value="8"
+                  >{{ 'SEARCHDOCUMENTS.QUOTATION' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="4"
+                  >{{ 'SEARCHDOCUMENTS.SO' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="1"
+                  >{{ 'SEARCHDOCUMENTS.INV' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="3"
+                  >{{ 'SEARCHDOCUMENTS.RESERVEINV' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="10"
+                  >{{ 'SEARCHDOCUMENTS.DELIVERY' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="12"
+                  >{{ 'SEARCHDOCUMENTS.CREDITNOTES' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="16"
+                  >{{ 'SEARCHDOCUMENTS.DRAFTS' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="18"
+                  >{{ 'SEARCHDOCUMENTS.DOWN PAYMENT' | translate }}
+                  </ion-select-option>
+              </ion-select>
+          </ion-item>
+          
+          <ion-item *ngIf="secondFilterVisible">
+              <ion-label position="stacked"
+              >{{ 'SEARCHDOCUMENTS.DOCTYPESUB' | translate }}</ion-label
+              >
+              <ion-select [(ngModel)]="docObjTypeSelected">
+                  <ion-select-option value="23"
+                  >{{ 'SEARCHDOCUMENTS.QUOTATION' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="17"
+                  >{{ 'SEARCHDOCUMENTS.SO' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="13"
+                  >{{ 'SEARCHDOCUMENTS.INV' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="-13"
+                  >{{ 'SEARCHDOCUMENTS.RESERVEINV' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="15"
+                  >{{ 'SEARCHDOCUMENTS.DELIVERY' | translate }}
+                  </ion-select-option>
+                  <ion-select-option value="14"
+                  >{{ 'SEARCHDOCUMENTS.CREDITNOTES' | translate }}
+                  </ion-select-option>
+              </ion-select>
+          </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked"
+            >{{ 'SEARCHDOCUMENTLIST.DOCCUR' | translate }}:</ion-label
+          >
+          <ion-select [(ngModel)]="docCur" [disabled]="!customer">
+            <ion-select-option *ngFor="let currency of currencyList" [value]="currency.Id"> 
+              {{ currency.Name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked"
+            >{{ 'SEARCHDOCUMENTS.DOCSTATE' | translate }}:</ion-label
+          >
+          <ion-select [(ngModel)]="docState">
+            <ion-select-option
+              *ngFor="let state of docStatesToShow"
+              [value]="state.Id"
+              >{{ state.Name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label slot="start">
+            {{ 'CREATEPAYMENT.STARTDATE' | translate }}
+          </ion-label>
+          <ion-button
+            fill="clear"
+            color="primary"
+            (click)="ShowStartDatePicker()"
+          >
+            {{startDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <ion-item>
+          <ion-label slot="start">
+            {{ 'CREATEPAYMENT.ENDDATE' | translate }}
+          </ion-label>
+          <ion-button
+            fill="clear"
+            color="primary"
+            (click)="ShowEndDatePicker()"
+          >
+            {{endDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-button
+            fill="solid"
+            expand="block"
+            color="primary"
+            (click)="SearchDoc()"
+          >
+            {{ 'BUTTONS.SEARCH' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div *ngSwitchCase="'docList'">
+      <ion-list >
+        <ion-item *ngFor="let doc of docList" (click)="ShowDocsOptions(doc)">
+          <ion-label >
+            <p>
+              {{ doc.CardName }} {{ GetSymbolCurrency(doc.DocCurrency) }}{{doc.DocTotal |
+              number:'1.2-2'}}
+            </p>
+            <p>
+              {{ 'SEARCHDOCUMENTLIST.DOCDATE' | translate }}: {{ doc.DocDate |
+              date:'dd/MM/yyyy h:mm a'}}
+            </p>
+            <p>
+              {{ 'SEARCHDOCUMENTLIST.DOCNUM' | translate }}: {{ doc.DocNum }}
+            </p>
+            <p>
+              {{ 'SEARCHDOCUMENTLIST.SLPNAME' | translate }}: {{ doc.SalesPersonName }}
+            </p>
+          </ion-label>
+          <ion-button slot="end" color="primary" fill="clear">
+            <ion-icon name="settings-outline" size="medium"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+      <ion-infinite-scroll (ionInfinite)="SearchMoreDocuments($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </div>
+  </div>
+</ion-content>

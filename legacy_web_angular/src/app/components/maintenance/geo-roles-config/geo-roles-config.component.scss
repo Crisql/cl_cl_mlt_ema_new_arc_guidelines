@@ -1,0 +1,86 @@
+.margin-top {
+  margin-top: 5px !important;
+}
+
+.margin {
+  margin-top: 5px !important;
+  margin-bottom: 10px !important;
+}
+
+.margin-btn {
+  margin-bottom: 5px !important;
+}
+
+.container mat-form-field + mat-form-field {
+  margin-left: 8px;
+}
+
+.container mat-form-field {
+  width: 220px;
+}
+
+.container form {
+  margin-bottom: 20px;
+}
+
+.container form > * {
+  margin: 12px 0;
+}
+
+.container .mat-radio-button {
+  margin: 0 12px;
+}
+
+.form-fields {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 800px) {
+  .container mat-form-field {
+    width: 100% !important;
+  }
+}
+
+.button-rol {
+  justify-content: flex-end;
+  display: flex !important;
+  margin-bottom: 2px;
+}
+
+.filter {
+  display: flex;
+  .btn-filter {
+    div {
+      padding-top: 0.3rem;
+    }
+  }
+}
+
+.options
+{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.options form
+{
+  display: flex;
+  align-items: center;
+}
+.table-actions
+{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+.table-actions button
+{
+  margin-left: 5px;
+}
+
+.top-margin{
+  margin-top: 20px;
+}

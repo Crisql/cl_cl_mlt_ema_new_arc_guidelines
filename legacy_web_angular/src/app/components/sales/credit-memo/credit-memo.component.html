@@ -1,0 +1,309 @@
+<section class="multi-bottoms">
+  <app-action-buttons [form]="documentForm" [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+
+<section class="mobile-margin">
+  <fieldset class="main-container container">
+    <legend>
+      Encabezado
+    </legend>
+    <form [formGroup]="documentForm" class="grid-container">
+
+      <mat-form-field appearance="outline" class="col-lg-1 col-md-3 col-sm-12">
+        <mat-label>Cant.</mat-label>
+        <input matInput type="number" min="1" formControlName="Quantity">
+        <mat-error *ngIf="documentForm.controls['Quantity'].errors?.['min']">
+          Cantidad permitida mayor a 0
+        </mat-error>
+      </mat-form-field>
+
+      <div class="col-lg-5 col-md-9 col-sm-12">
+        <app-item [display]="false" [items]="items" (onItemSelected)="OnSelectItem($event)"
+                  (refresh)="GetItems()"></app-item>
+      </div>
+
+      <mat-form-field appearance="outline" class="col-lg-1 col-md-4 col-med-4 col-gt-md-4 col-sm-12">
+
+        <mat-label>Código de cliente</mat-label>
+        <input readonly matInput formControlName="CardCode">
+        <mat-error *ngIf="documentForm.controls['CardCode'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="col-lg-5 col-md-8 col-gt-md-8 col-sm-12">
+        <div class="flex">
+          <mat-form-field appearance="outline" class="input-group">
+            <mat-label>Nombre del cliente</mat-label>
+            <input placeholder="Buscar cliente" type="text" formControlName="CardName" type="text" matInput>
+            <mat-error *ngIf="documentForm.controls['CardName'].errors?.['required']">
+              Campo requerido
+            </mat-error>
+          </mat-form-field>
+          <button matTooltip="Buscar clientes"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill"
+                  (click)="ShowModalSearchBusinnesPartner()">
+            <mat-icon class="icon-display">search</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="col-lg-2 col-md-6 col-sm-12">
+        <mat-label>Term. de pagos</mat-label>
+        <mat-select matInput formControlName="PaymentGroupCode">
+          <mat-option *ngFor="let pay of payTerms" [value]="pay.GroupNum">
+            {{ pay.PymntGroup }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['PaymentGroupCode'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-2 col-md-6 col-sm-12">
+        <mat-label>Moneda</mat-label>
+        <mat-select matInput [disabled]="!isPermissionChangeCurrency" formControlName="DocCurrency"
+                    (selectionChange)="SelectCurrency()">
+          <mat-option *ngFor="let curr of currencies" [value]="curr.Id">
+            {{ curr.Name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['DocCurrency'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+        <mat-label>Lista de Precios</mat-label>
+        <mat-select (selectionChange)="SelectPriceList()" formControlName="PriceList"
+                    [disabled]="(this.lines && this.lines.length > 0) || !canChangePriceList">
+          <mat-option *ngFor="let price of priceLists" [value]="price.ListNum">
+            {{ price.ListName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['PriceList'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+        <mat-label>Vendedor</mat-label>
+        <mat-select formControlName="SalesPersonCode">
+          <mat-option *ngFor="let person of salesPersons" [value]="person.SlpCode">
+            {{ person.SlpName }}
+          </mat-option>
+          <mat-error *ngIf="documentForm.controls['SalesPersonCode'].errors?.['required']">
+            Campo requerido
+          </mat-error>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-2 col-md-12 col-sm-12">
+        <mat-label>Número de referencia</mat-label>
+        <input type="text" matInput formControlName="NumAtCard">
+        <mat-error *ngIf="documentForm.controls['NumAtCard'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-4 col-sm-12">
+        <mat-label>Fecha de contabilización</mat-label>
+        <input matInput [matDatepicker]="pickerDocDate" formControlName="DocDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerDocDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDocDate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4  col-md-4 col-sm-12">
+        <mat-label>Fecha de vencimiento</mat-label>
+        <input matInput [matDatepicker]="pickerDocDueDate" formControlName="DocDueDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerDocDueDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDocDueDate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-4 col-sm-12">
+        <mat-label>Fecha del documento</mat-label>
+        <input matInput [matDatepicker]="pickerTaxDate" formControlName="TaxDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerTaxDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerTaxDate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Comentario</mat-label>
+        <input matInput formControlName="Comments">
+      </mat-form-field>
+
+    </form>
+  </fieldset>
+</section>
+
+<section>
+  <ng-container *ngIf="isCashCustomer">
+    <fieldset class="mt-1">
+      <legend>
+        <button class="btn-legend" (click)="ToggleFe()">
+          Factura electrónica
+        </button>
+      </legend>
+      <form *ngIf="isToggleFe" [formGroup]="feForm">
+        <div class="grid-container">
+
+          <mat-form-field appearance="outline" class="col-lg-2 col-md-4 col-sm-12">
+            <mat-label>Identificación</mat-label>
+            <mat-select matInput formControlName="IdType">
+              <mat-option *ngFor="let type of TypeIdentification" [value]="type.Key">
+                {{ type.Description }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="feForm.controls['IdType'].errors?.['required']">
+              Campo requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-5 col-md-4 col-sm-12">
+            <mat-label>Número cédula</mat-label>
+            <input matInput type="number" formControlName="Identification" (blur)="GetPadron()">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-5 col-md-4 col-sm-12">
+            <mat-label>Email</mat-label>
+            <input matInput pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
+                   formControlName="Email">
+            <mat-error *ngIf="feForm.controls['Email'].errors?.['required']">
+              Campo requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </form>
+    </fieldset>
+  </ng-container>
+
+</section>
+
+<section>
+
+  <fieldset class="top-margin udf-fieldset">
+    <mat-tab-group>
+      <mat-tab *ngIf="isVisible" label="Udfs">
+        <cl-dynamics-udfs-presentation
+          [Id]="UdfsId"
+          [ApiUrl]="ApiUrl"
+          [UdfsCategory]="DBODataEndPoint"
+          [UdfsGroup]="'null'"
+        >
+        </cl-dynamics-udfs-presentation>
+      </mat-tab>
+
+      <mat-tab label="Adjuntos" *ngIf="this.IsVisibleAttachTable">
+
+        <div style="display: flex; justify-content: flex-end; align-content: center; padding: 5px;">
+          <button mat-flat-button color="primary" (click)="attach_file.click()">
+            <mat-icon>
+              attach_file
+            </mat-icon>
+            Adjuntar
+          </button>
+        </div>
+
+        <input multiple style="display: none;" #attach_file type="file"
+               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xls,.ppt,.xlsx,.pptx" (change)="OnAttachFile($event)">
+        <cl-table [Id]="attachmentTableId"
+                  [ShouldPaginateRequest]="false"
+                  [HasStandardHeaders]="true"
+                  [ShouldSplitPascal]="false"
+                  [MappedColumns]="attachmentLineMappedColumns"
+                  [Records]="documentAttachment.Attachments2_Lines"
+                  [RecordsCount]="documentAttachment.Attachments2_Lines.length"
+                  [Buttons]="attachmentTableButtons"
+                  [ItemsPeerPage]="5"
+                  [PageSizeOptions]="[5, 10, 20]"
+                  [BackgroundTransparent]="true"
+                  ScrollHeight="400px">
+        </cl-table>
+      </mat-tab>
+
+      <mat-tab label="Logística">
+        <app-logistics 
+        [businessPartner]="DefaultBusinessPartner" 
+        [isPermissionChangeAdressardCode]="canChangeDeliveryAddres" 
+        [preloadedShipCode]="documentData?.ShipToCode ?? ''"
+        (selectedAddress)="AdressSelected($event)">
+      </app-logistics>
+      </mat-tab>
+    </mat-tab-group>
+  </fieldset>
+
+  <fieldset class="mt-1">
+    <legend>Documento</legend>
+
+    <cl-table [Id]="lineTableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="lineMappedColumns"
+              [Records]="lines"
+              [RecordsCount]="lines.length"
+              [DropdownColumns]="dropdownColumns"
+              [DropdownList]="dropdownList"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="buttons"
+              [CheckboxColumns]="checkboxColumns"
+              [DropdownDiffBy]="dropdownDiffBy"
+              [DropdownDiffList]="dropdownDiffList"
+              [DisableDragAndDrop]="disableDragAndDrop"
+              [BackgroundTransparent]="true">
+    </cl-table>
+
+    <section>
+      <div class="flex-container">
+        <div class="flex-items">
+          <table class="table-totales">
+            <tr>
+              <td class="bg-subtotal">Subtotal</td>
+              <td class="bg-montos">
+                <span>{{ GetSymbol() }} {{ DisplaySubtotal()  | number: TO_FIXED_TOTALDOCUMENT }}</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="bg-subtotal">Descuento</td>
+              <td class="bg-montos">
+                <span>{{ GetSymbol() }} {{ DisplayDiscount() | number: TO_FIXED_TOTALDOCUMENT }}</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="bg-subtotal">Impuesto</td>
+              <td class="bg-montos">
+                <span>{{ GetSymbol() }} {{ DisplayTaxes()  | number: TO_FIXED_TOTALDOCUMENT }}</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="flex-items">
+          <div class="label-total">
+            <label>Total</label>
+          </div>
+          <div class="div-total">
+          <span class="hover-content">
+                <span
+                  class="conversion-tooltip">{{ GetConversionSymbol() }} {{ DisplayTotal(1) | number: TO_FIXED_TOTALDOCUMENT }}</span>
+            {{ GetSymbol() }} {{ DisplayTotal(2) | number: TO_FIXED_TOTALDOCUMENT }}
+              </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </fieldset>
+</section>
+
+
+
+
+
+
+
+

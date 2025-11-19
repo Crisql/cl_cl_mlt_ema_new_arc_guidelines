@@ -1,0 +1,162 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.section-internal{
+  flex: 1;
+  min-width: 300px;
+  min-height: 200px;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+.section {
+
+  margin-bottom: 20px;
+}
+.container section fieldset {
+  height: 450px;
+}
+.grid-container {
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+  .row {
+    flex-direction: column;
+  }
+}
+
+
+.mat-form-field {
+  flex: 1;
+  min-width: 0;
+}
+
+
+.flex{
+  display: flex;
+  justify-items: center;
+  flex-wrap: wrap;
+}
+
+
+.totales{
+  div{
+    border: 0.5px solid #BDBDBD;
+    padding: 5px;
+    flex-grow: 1;
+  }
+}
+
+.Totals {
+  display: flex;
+  justify-content: end;
+  margin: 2rem;
+  .flex-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+  }
+}
+
+//.label-total{
+//  text-align: center;
+//  border-radius: 0 7px 7px 0;
+//  font-size:18px;
+//  font-weight: bold;
+//  margin: 10px 0;
+//}
+
+.label-total{
+  text-align: center;
+  border-radius: 0 7px 7px 0;
+  font-size:18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.div-total {
+  font-size: 2rem;
+  font-weight: 600;
+  height: 50px;
+  position: static;
+  text-align: center;
+  border-radius: 0 7px 7px 0;
+  color: #0082c0;
+  padding: 0 20px;
+}
+
+.divider {
+  border-right: 1px solid #d8d8d8;
+}
+
+@media screen and (max-width: 587px) {
+  .divider {
+    border-right: none;
+    border-bottom: 1px solid #d8d8d8;
+  }
+}
+
+
+
+.hover-content {
+  position: relative;
+  display: inline-block;
+}
+
+.conversion-tooltip {
+  display: none;
+  background-color: #A4DEF9;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.5em;
+  margin-right: 15px;
+  vertical-align: middle;
+  position: absolute;
+  right: 100%;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.margin-right{
+  margin-right: 10px;
+}
+
+.conversion-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #A4DEF9;
+}
+
+.hover-content:hover .conversion-tooltip {
+  display: block;
+}
+@media screen and (max-width: 600px) {
+  .multi-bottoms {
+    flex-direction: column;
+    padding-top: 10px;
+    position: fixed;
+    background-color: #fafafa !important;
+    z-index: 9996;
+    width: 100%;
+  }
+}
+
+
+

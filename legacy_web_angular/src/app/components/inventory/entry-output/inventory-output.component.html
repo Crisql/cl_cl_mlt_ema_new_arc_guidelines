@@ -1,0 +1,177 @@
+<section class="multi-bottoms">
+  <app-action-buttons [form]="documentForm" [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+<section class="m-1 mobile-margin">
+  <fieldset class="main-container container">
+    <legend>
+      Encabezado
+    </legend>
+    <form [formGroup]="documentForm" class="grid-container">
+
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Almacén</mat-label>
+        <mat-select matInput formControlName="WhsCode">
+          <mat-option *ngFor="let option of warehouses" [value]="option.WhsCode">
+            {{ option.WhsName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['WhsCode'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Lista de Precios</mat-label>
+        <mat-select formControlName="PriceList"
+                    (selectionChange)="SelectPriceList($event.value)"
+                    [disabled]="(this.lines && this.lines.length > 0) || !canChangePriceList">
+          <mat-option *ngFor="let price of priceLists" [value]="price.ListNum">
+            {{ price.ListName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentForm.controls['PriceList'].errors?.['required']">
+          Campo requerido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+        <mat-label>Fecha de contabilización</mat-label>
+        <input matInput [matDatepicker]="pickerDocDate" formControlName="DocDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerDocDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDocDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-3 col-md-6 col-sm-12">
+        <mat-label>Fecha del documento</mat-label>
+        <input matInput [matDatepicker]="pickerTaxDate" formControlName="TaxDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerTaxDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerTaxDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Comentario</mat-label>
+        <input matInput formControlName="Comments">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-2 col-md-2 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Cant.</mat-label>
+        <input matInput type="number" min="1" formControlName="Quantity">
+        <mat-error *ngIf="documentForm.controls['Quantity'].errors?.['min']">
+          Cantidad permitida mayor a 0
+        </mat-error>
+      </mat-form-field>
+      <div class="col-lg-10 col-md-10 col-sm-12">
+        <app-item [display]="false" [items]="items" (onItemSelected)="OnSelectItem($event)"
+                  (refresh)="GetItems()"></app-item>
+      </div>
+    </form>
+  </fieldset>
+</section>
+<fieldset class="top-margin udf-fieldset" *ngIf="isVisible || this.IsVisibleAttachTable">
+  <mat-tab-group>
+    <mat-tab *ngIf="isVisible" label="Udfs">
+      <cl-dynamics-udfs-presentation
+        [Id]="UdfsId"
+        [ApiUrl]="ApiUrl"
+        [UdfsCategory]="DBODataEndPoint"
+        [UdfsGroup]="'null'"
+      >
+      </cl-dynamics-udfs-presentation>
+    </mat-tab>
+
+    <mat-tab label="Adjuntos" *ngIf="this.IsVisibleAttachTable">
+
+      <div style="display: flex; justify-content: flex-end; align-content: center; padding: 5px;">
+        <button mat-flat-button color="primary" (click)="attach_file.click()">
+          <mat-icon>
+            attach_file
+          </mat-icon>
+          Adjuntar
+        </button>
+      </div>
+
+      <input multiple style="display: none;" #attach_file type="file"
+             accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xls,.ppt,.xlsx,.pptx" (change)="OnAttachFile($event)">
+      <cl-table [Id]="attachmentTableId"
+                [ShouldPaginateRequest]="false"
+                [HasStandardHeaders]="true"
+                [ShouldSplitPascal]="false"
+                [MappedColumns]="attachmentLineMappedColumns"
+                [Records]="documentAttachment.Attachments2_Lines"
+                [RecordsCount]="documentAttachment.Attachments2_Lines.length"
+                [Buttons]="attachmentTableButtons"
+                [ItemsPeerPage]="5"
+                [PageSizeOptions]="[5, 10, 20]"
+                [BackgroundTransparent]="true"
+                ScrollHeight="400px">
+      </cl-table>
+    </mat-tab>
+  </mat-tab-group>
+</fieldset>
+<section>
+  <fieldset class="mt-1">
+    <legend>Documento</legend>
+    <cl-table [Id]="lineTableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [HasStandardHeaders]="hasStandardHeaders"
+              [ShouldSplitPascal]="shouldSplitPascal"
+              [MappedColumns]="lineMappedColumns"
+              [Records]="lines"
+              [RecordsCount]="lines.length"
+              [DropdownColumns]="dropdownColumns"
+              [DropdownList]="dropdownList"
+              [HasItemsSelection]="hasItemsSelection"
+              [Buttons]="buttons"
+              [CheckboxColumns]="checkboxColumns"
+              [DropdownDiffBy]="dropdownDiffBy"
+              [DropdownDiffList]="dropdownDiffList"
+              [DisableDragAndDrop]="disableDragAndDrop"
+              [BackgroundTransparent]="true">
+    </cl-table>
+    <section>
+      <div class="flex-container">
+        <div class="total-area">
+          <div class="flex-items">
+            <table class="table-totales">
+              <tr>
+                <td class="bg-subtotal">Subtotal</td>
+                <td class="bg-montos">
+                <span>
+                  {{ GetSymbol() }} {{ DisplaySubtotal()  | number: TO_FIXED_TOTALDOCUMENT }}
+                </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-subtotal">Descuento</td>
+                <td class="bg-montos">
+                <span>
+                  {{ GetSymbol() }} {{ DisplayDiscount() | number: TO_FIXED_TOTALDOCUMENT }}
+                </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-subtotal">Impuesto</td>
+                <td class="bg-montos">
+                <span>
+                  {{ GetSymbol() }} {{ DisplayTaxes() | number: TO_FIXED_TOTALDOCUMENT }}
+                </span>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="flex-items total-align">
+            <div class="label-total">
+              <label>Total</label>
+            </div>
+            <div class="div-total">
+          <span class="hover-content">
+                <span class="conversion-tooltip">
+                  {{ GetConversionSymbol() }} {{ DisplayTotal(1) | number: TO_FIXED_TOTALDOCUMENT }}
+                </span>
+            {{ GetSymbol() }} {{ DisplayTotal(2) | number: TO_FIXED_TOTALDOCUMENT }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </fieldset>
+</section>

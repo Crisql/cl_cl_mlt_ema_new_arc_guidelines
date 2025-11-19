@@ -1,0 +1,181 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{ isOnCustomerEdition ? ('MANT. CUSTOMERS.UPD. CUSTOMERS' | translate) : ('MANT. CUSTOMERS.MANT. CUSTOMERS' | translate) }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-row>
+        <ion-col size="12">
+            <ion-button expand="block" fill="solid" color="primary" (click)="SearchCustomer()">
+                {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+
+    <app-attachment-files 
+     [showSignatureButton]="false"
+    ></app-attachment-files>
+
+    <form [formGroup]="bpForm">
+        <ion-list>
+            <ion-item>
+                <ion-label position="stacked" [ngClass]="{'field-required': !isSerial && !isOnCustomerEdition}">{{ 'MANT. CUSTOMERS.CARDCODE' | translate }}</ion-label>
+                <ion-input formControlName="CardCode" type="text" [readonly]="!(!isSerial && !isOnCustomerEdition)"></ion-input>
+            </ion-item>
+            <ion-item lines="none" class="form-control-error"
+                      *ngIf="bpForm?.get('CardCode')?.hasError('required') && bpForm?.get('CardCode')?.touched">
+                {{ 'VALIDATORS.REQUIRED' | translate }}
+            </ion-item>
+        </ion-list>
+
+        <ion-item>
+            <ion-label position="stacked"
+                       class="field-required">{{ 'MANT. CUSTOMERS.CARDNAME' | translate }}</ion-label>
+            <ion-input formControlName="CardName" type="text"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('CardName')?.hasError('required') && bpForm?.get('CardName')?.touched">
+            {{ 'VALIDATORS.REQUIRED' | translate }}
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked"
+                       class="field-required">{{ 'MANT. CUSTOMERS.GROUPCODE' | translate }}</ion-label>
+            <ion-input type="text"
+                       readonly="true"
+                       [value]="groupInput"
+                       (click)="ShowInputOptions(bpForm?.controls['GroupCode'], 'groupInput', inputsOptions['Groups'], 'people-circle-outline')"
+                       placeholder="{{'BILLING.CHOOSE OPTION' | translate }}">
+            </ion-input>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('GroupCode')?.hasError('required') && bpForm?.get('GroupCode')?.touched">
+            {{ 'VALIDATORS.REQUIRED' | translate }}
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked"
+                       class="field-required">{{ 'MANT. CUSTOMERS.CURRENCY' | translate }}</ion-label>
+            <ion-select formControlName="Currency">
+                <ion-select-option *ngFor="let curr of currencyList"
+                                   [value]="curr.Id">{{ curr.Name}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('Currency')?.hasError('required') && bpForm?.get('Currency')?.touched">
+            {{ 'VALIDATORS.REQUIRED' | translate }}
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked"
+                       class="field-required">{{ 'MANT. CUSTOMERS.U_TIPOIDENTIFICACION' | translate }}</ion-label>
+            <ion-select formControlName="U_TipoIdentificacion">
+                <ion-select-option *ngFor="let idType of TipoIdentificacionList" [value]="idType.Id">
+                    {{ idType.DescriptionES }}
+                </ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('U_TipoIdentificacion')?.hasError('required') && bpForm?.get('U_TipoIdentificacion')?.touched">
+            {{ 'VALIDATORS.REQUIRED' | translate }}
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked"
+                       class="field-required">{{ 'MANT. CUSTOMERS.LICTRADNUM' | translate }}</ion-label>
+            <ion-input formControlName="FederalTaxID" type="text"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('FederalTaxID').invalid && bpForm?.get('FederalTaxID')?.touched">
+            <div class="field-invalid" *ngIf="bpForm?.get('FederalTaxID')?.hasError('required')">
+                {{ 'VALIDATORS.REQUIRED' | translate }}
+            </div>
+            <div class="field-invalid" *ngIf="bpForm?.get('FederalTaxID')?.hasError('minLength')">
+                {{ 'VALIDATORS.LENGTH' | translate }} {{ ideMinLength }}
+            </div>
+            <div class="field-invalid" *ngIf="bpForm?.get('FederalTaxID')?.hasError('maxLength')">
+                {{ 'VALIDATORS.LENGTH' | translate }} {{ ideMaxLength }}
+            </div>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">{{ 'MANT. CUSTOMERS.E_MAIL' | translate }}</ion-label>
+            <ion-input formControlName="EmailAddress" type="email"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('EmailAddress')?.hasError('pattern') && bpForm?.get('EmailAddress')?.touched">
+            {{ 'VALIDATORS.FORMAT' | translate }}
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked"
+                       class="field-required">{{ 'MANT. CUSTOMERS.U_MAXDISCBP' | translate }}</ion-label>
+            <ion-input formControlName="DiscountPercent" type="number"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('DiscountPercent')?.hasError('required') && bpForm?.get('DiscountPercent')?.touched">
+            {{ 'VALIDATORS.REQUIRED' | translate }}
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">{{ 'MANT. CUSTOMERS.PHONE 1' | translate }}</ion-label>
+            <ion-input formControlName="Phone1" type="tel"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="form-control-error"
+                  *ngIf="bpForm?.get('Phone1')?.hasError('maxlength') && bpForm?.get('Phone1')?.touched">
+            {{ 'MANT. CUSTOMERS.PHONE1_ERROR_MAX' | translate }}
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">{{ 'MANT. CUSTOMERS.CELLULAR' | translate }}</ion-label>
+            <ion-input formControlName="Cellular" type="tel"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">{{ 'MANT. CUSTOMERS.INTRNTSITE' | translate }}</ion-label>
+            <ion-input formControlName="IntrntSite" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">{{ 'MANT. CUSTOMERS.NOTES' | translate }}</ion-label>
+            <ion-input formControlName="Notes" type="text"></ion-input>
+        </ion-item>
+        
+        <app-udf-presentation 
+                [udfs]="udfs"
+                [udfsValues]="udfsValues"
+        ></app-udf-presentation>
+    </form>
+
+    <ion-row>
+        <ion-col *ngIf="isOnCustomerEdition" size="12">
+            <ion-button expand="block" fill="solid" color="primary" (click)="EditCustomerLocations()">
+                {{'MANT. CUSTOMERS.EDITLOCATIONS' | translate}}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+
+    <ion-row>
+        <ion-col size="6">
+            <ion-button  class="custom-outline-button" fill="outline" expand="block" (click)="InitializePage()">{{ 'BUTTONS.CANCEL' | translate}}
+            </ion-button>
+        </ion-col>
+        
+        <ion-col *ngIf="!isOnCustomerEdition" size="6">
+            <ion-button expand="block" fill="solid" color="primary" [disabled]="bpForm.invalid"
+                        (click)="CreateCustomer()">
+                {{'BUTTONS.CREATE' | translate}}
+            </ion-button>
+        </ion-col>
+        <ion-col *ngIf="isOnCustomerEdition"  size="6">
+            <ion-button expand="block" fill="solid" color="primary" [disabled]="bpForm.invalid"
+                        (click)="UpdateCustomer()">
+                {{'BUTTONS.UPDATE' | translate}}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+</ion-content>

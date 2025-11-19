@@ -1,0 +1,67 @@
+<section class="main-container">
+  <app-action-buttons [actionButtons]="actionButtons"
+                      [isIntoMatTab]="false"
+                      [form]="frmSearchDocument"
+                      (onActionButtonClicked)="onActionButtonClicked($event)">
+<div class="mobile-margin">
+  <fieldset class="main-container container">
+    <legend>
+      Filtros
+    </legend>
+    <form [formGroup]="frmSearchDocument" class="row">
+
+      <mat-form-field class="flex-formfield" appearance="outline">
+        <mat-label>Usuario</mat-label>
+        <input type="text"
+               placeholder="Buscar usuario"
+               matInput
+               formControlName="User"
+               [matAutocomplete]="users">
+        <mat-autocomplete #users="matAutocomplete" [displayWith]="displayUsersPersons">
+          <mat-option *ngFor="let option of filteredUsers$ | async" [value]="option">
+            {{option.Name}} - {{option.LastName}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="flex-formfield">
+        <mat-label>Terminales</mat-label>
+        <mat-select formControlName="Terminal">
+          <mat-option *ngFor="let terminal of terminals" [value]="terminal">{{terminal.Description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="flex-formfield" appearance="outline">
+        <mat-label>Rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Desde" formControlName="DateFrom">
+          <input matEndDate placeholder="Hasta" formControlName="DateTo">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+    </form>
+  </fieldset>
+</div>
+
+
+    <fieldset class="mt-1">
+      <legend>
+        Resultados
+      </legend>
+      <div class="overflow">
+        <cl-table
+          [Id]="documentsTableId"
+          [ShouldPaginateRequest]="false"
+          [MappedColumns]="docTbMappedColumns"
+          [Records]="commitedVoidedTransactions"
+          [RecordsCount]="commitedVoidedTransactions.length"
+          [Buttons]="buttons"
+          [BackgroundTransparent] = "true">
+        </cl-table>
+      </div>
+
+    </fieldset>
+
+  </app-action-buttons>
+</section>
+

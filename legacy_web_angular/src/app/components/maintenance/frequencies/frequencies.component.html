@@ -1,0 +1,25 @@
+<section>
+
+  <app-action-buttons
+    [userPermissions]="permissions"
+    [actionButtons]="actionButtons"
+    (onActionButtonClicked)="OnActionButtonClicked($event)"
+    [isIntoMatTab]="false">
+    <div class="mobile-margin">
+      <fieldset class="top-margin ">
+        <cl-table
+          [Id]="tableId"
+          [ShouldPaginateRequest]="shouldPaginateRequest"
+          [HasStandardHeaders]="true"
+          [ShouldSplitPascal]="false"
+          [MappedColumns]="mappedColumns"
+          [Records]="frequencies"
+          [RecordsCount]="frequencies.length"
+          [HasItemsSelection]="false"
+          [Buttons]="tableButtons"
+          [BackgroundTransparent] = "true"
+        ></cl-table>
+      </fieldset>
+    </div>
+  </app-action-buttons>
+</section>

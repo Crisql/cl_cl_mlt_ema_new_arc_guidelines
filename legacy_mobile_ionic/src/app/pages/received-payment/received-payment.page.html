@@ -1,0 +1,248 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ 'CREATEPAYMENT.CREATEPAYMENT' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [(ngModel)]="currentSegment">
+    <ion-segment-button value="search">
+      <ion-label>{{ "INCOMMINGPAYMENT.SEARCHDOCS" | translate }}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="create">
+      <ion-label>{{ "INCOMMINGPAYMENT.CREATEPAY" | translate }}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list *ngIf="!searchCustomerButton">
+    <ion-item>
+      <ion-label> {{customer?.CardCode}} {{customer?.CardName}} </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div [ngSwitch]="currentSegment">
+    <div *ngSwitchCase="'search'">
+      <ion-row>
+        <ion-col size="12">
+          <ion-button
+            expand="block"
+            fill="solid"
+            color="primary"
+            (click)="SearchCustomer(null)"
+          >
+            {{ 'BUTTONS.SEARCH CUSTOMER' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-item >
+        <ion-label position="stacked"
+          >{{ 'CREATEPAYMENT.CURRENCY' | translate }}</ion-label
+        >
+        <ion-select [(ngModel)]="Currency" [disabled]="!customer">
+          <ion-select-option *ngFor="let cur of customerCurrencyList" value="{{cur.Id}}">
+            {{ cur.Name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked"
+          >{{ 'CREATEPAYMENT.DOCTYPE' | translate }}</ion-label
+        >
+        <ion-select [(ngModel)]="docType">
+          <ion-select-option value="1"
+            >{{ 'CREATEPAYMENT.INV' | translate }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label slot="start">
+          {{ 'CREATEPAYMENT.STARTDATE' | translate }}
+        </ion-label>
+        <ion-button
+          fill="clear"
+          color="primary"
+          (click)="ShowStartDatePicker()"
+        >
+          {{startDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <ion-item>
+        <ion-label slot="start">
+          {{ 'CREATEPAYMENT.ENDDATE' | translate }}
+        </ion-label>
+        <ion-button fill="clear" color="primary" (click)="ShowEndDatePicker()">
+          {{endDate | date: 'dd/MM/y'}}<ion-icon name="calendar"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-button
+            expand="block"
+            fill="solid"
+            color="primary"
+            (click)="SearchDoc()"
+          >
+            {{ 'BUTTONS.SEARCH' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngSwitchCase="'create'">
+      <ion-list>
+        <ion-item>
+          <ion-label slot="start">
+            {{ 'CREATEPAYMENT.SELECTEDDOCS' | translate }}
+          </ion-label>
+          <ion-label>{{ toPay.docList.length }}</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-textarea
+            rows="3"
+            [(ngModel)]="comments"
+            placeholder="{{'BUTTONS.WRITE' | translate}}"
+          >
+          </ion-textarea>
+        </ion-item>
+        <ion-item-group *ngIf="billingUDFs && billingUDFs.length > 0">
+
+          <ion-list-header color="light">
+              <ion-label>{{'BILLING.UDFS' | translate}}</ion-label>
+              <ion-button fill="clear" (click)="ToggleUdfForm()">
+                  <ion-icon class="defaultDisplay" name="add-circle-outline" *ngIf="!isUdfFormToggled"></ion-icon>
+                  <ion-icon class="defaultDisplay" name="remove-circle-outline" *ngIf="isUdfFormToggled"></ion-icon>
+              </ion-button>
+          </ion-list-header>
+          <form [formGroup]="UDFsForm" *ngIf="isUdfFormToggled" class="defaultDisplay">
+              <ion-item *ngFor="let UDF of billingUDFs" [ngSwitch]="UDF.FieldType">
+                  <ion-label position="stacked">
+                      {{ currentLang === 'es'? UDF.DescriptionES : UDF.DescriptionEN }}</ion-label>
+                  <ion-input type="number" formControlName="{{UDF.Name}}" *ngSwitchCase="1"></ion-input>
+                  <ion-input type="text" formControlName="{{UDF.Name}}" *ngSwitchCase="2"></ion-input>
+                  <ion-select *ngSwitchCase="3" formControlName="{{UDF.Name}}">
+                    <ion-select-option *ngFor="let option of GetOptionsForSelectTypeUDF(UDF)" [value]="option.Value">
+                      {{option.Description}}</ion-select-option>
+                    </ion-select>
+                    <ion-input type="date" formControlName="{{UDF.Name}}" *ngSwitchCase="4"></ion-input>
+                    <ion-input type="number" formControlName="{{UDF.Name}}" *ngSwitchCase="5"></ion-input>
+              </ion-item>
+          </form>
+      </ion-item-group>
+
+        <ion-item-sliding #slidingCash class="item-sliding-options-end">
+          <ion-item>
+            <ion-label slot="start">
+              {{ 'BILLING.CASH' | translate }}
+            </ion-label>
+            <ion-label>
+              {{ GetCurrency(paymentCurrency).Symbol }}{{ cashPayment?.amount |
+              number:TO_FIXED_TOTALDOCUMENT }}
+            </ion-label>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option
+              color="danger"
+              (click)="DeleteCashInfo(slidingCash)"
+            >
+              {{ 'BUTTONS.REMOVE' | translate }}
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding #slidingCards class="item-sliding-options-end">
+          <ion-item>
+            <ion-label slot="start">
+              {{ 'BILLING.CARD' | translate }}
+            </ion-label>
+            <ion-label>
+              {{ GetCurrency(paymentCurrency).Symbol }}{{ totalCards | number:TO_FIXED_TOTALDOCUMENT}}
+            </ion-label>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option
+              color="danger"
+              (click)="DeleteCardsInfo(slidingCards)"
+            >
+              {{ 'BUTTONS.REMOVE' | translate }}
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding #slidingTransfer class="item-sliding-options-end">
+          <ion-item>
+            <ion-label slot="start">
+              {{ 'BILLING.TRANSFER' | translate }}
+            </ion-label>
+            <ion-label>
+              {{ GetCurrency(paymentCurrency).Symbol }}{{ transferPayment?.Amount |
+              number:TO_FIXED_TOTALDOCUMENT }}
+            </ion-label>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option
+              color="danger"
+              (click)="DeleteTransferInfo(slidingTransfer)"
+            >
+              {{ 'BUTTONS.REMOVE' | translate }}
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item>
+          <ion-label slot="start">
+            {{ 'CREATEPAYMENT.TOTAL' | translate }}
+          </ion-label>
+          <ion-label>
+            {{ GetCurrency(documentCurrency).Symbol }}{{ toPay?.total | number:TO_FIXED_TOTALDOCUMENT}}
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-row>
+        <ion-col size="4">
+          <ion-button
+            expand="block"
+            fill="solid"
+            color="danger"
+            (click)="ResetData()"
+          >
+            {{ 'BUTTONS.CANCEL' | translate }}
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button
+            fill="solid"
+            expand="block"
+            color="primary"
+            (click)="OpenPaymentModal()"
+            [disabled]=" !toPay || toPay.total === 0"
+          >
+            {{ 'BUTTONS.PAYM' | translate }}
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button
+            fill="solid"
+            expand="block"
+            color="primary"
+            (click)="CreatePayment()"
+            [disabled]="(!cardsPayment || cardsPayment.length === 0 ) && (!cashPayment || cashPayment.amount === 0) && (!transferPayment || transferPayment.Amount === 0)"
+          >
+            {{ 'BUTTONS.CREATE' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

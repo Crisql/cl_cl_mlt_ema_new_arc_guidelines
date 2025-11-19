@@ -1,0 +1,100 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+.section {
+  flex: 1;
+  width: 45%;
+  max-width: 900px;
+}
+
+.margin-btn {
+  margin-left: 5px;
+}
+
+.container section fieldset {
+  height: 450px;
+}
+
+.Totals p {
+  display: inline;
+  margin-right: 25px;
+}
+
+.grid-container {
+  width: 600px;
+  margin-top: 5px;
+}
+
+.align-right {
+  text-align: left;
+}
+
+.justify-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.align-right {
+  flex: 1;
+  text-align: right;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+}
+
+
+.margin-top {
+  margin-top: 5px;
+}
+
+.hover-content-reconciliation {
+  position: relative;
+  display: inline-block;
+}
+
+.conversion-tooltip-reconciliation {
+  display: none;
+  background-color: #A4DEF9;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.5em;
+  margin-right: 15px;
+  vertical-align: middle;
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.conversion-tooltip-reconciliation::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #A4DEF9 transparent transparent transparent;
+}
+
+.hover-content-reconciliation:hover .conversion-tooltip-reconciliation {
+  display: block;
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,125 @@
+<section class="multi-bottoms">
+  <app-action-buttons [form]="documentForm" [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+<section class="section doc-margin">
+  <fieldset>
+    <legend>Filtros</legend>
+    <form [formGroup]="documentForm">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="flex">
+            <mat-form-field appearance="outline" class="input-group" (change)="ChangeBusinessPartner()" style="margin-bottom: -1em">
+              <mat-label>Cliente</mat-label>
+              <input placeholder="Buscar cliente" type="text"  formControlName="BusinessPartner" type="text" matInput>
+            </mat-form-field>
+            <button matTooltip="Buscar cliente"
+                    type="button"
+                    mat-flat-button color="primary"
+                    class="e-bill-search"
+                    (click)="ShowModalSearchBusinnesPartner()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+          <mat-label>Rango de fechas</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Desde" formControlName="DateFrom">
+            <input matEndDate placeholder="Hasta" formControlName="DateTo">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-6 col-md-6 col-sm-12">
+          <mat-label>Moneda</mat-label>
+          <mat-select formControlName="DocCurrency" (selectionChange)="SelectCurrency()">
+            <mat-option *ngFor="let currency of currencies" [value]="currency.Id">
+              {{currency.Name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="documentForm.controls['DocCurrency'].errors?.['required']">
+            El campo es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </fieldset>
+
+</section>
+<div class="container">
+  <section class="section-internal margin-right">
+    <fieldset>
+      <legend>Facturas</legend>
+      <cl-table [Id]="docTableId"
+                [ShouldPaginateRequest]="shouldPaginateRequestFactura"
+                [MappedColumns]="docTbMappedColumns"
+                [CheckboxColumns]="checkboxColumns"
+                [Records]="documents"
+                [BackgroundTransparent]="true"
+                ScrollHeight="560px">
+      </cl-table>
+    </fieldset>
+  </section>
+  <section class="section-internal">
+    <fieldset>
+      <legend>Notas de crédito</legend>
+      <cl-table [Id]="TableIdCreditnemo"
+                [ShouldPaginateRequest]="shouldPaginateRequestNC"
+                [MappedColumns]="creditMemosTbMappedColumns"
+                [CheckboxColumns]="checkboxColumns"
+                [Records]="creditnemos"
+                [RecordsCount]="creditnemos.length"
+                [BackgroundTransparent]="true"
+                ScrollHeight="560px">
+      </cl-table>
+    </fieldset>
+  </section>
+</div>
+<section class="section">
+  <div class="Totals">
+    <div class=""></div>
+    <div class="flex-row">
+      <div class="divider">
+        <div class="label-total">
+          <label>Total facturas</label>
+        </div>
+        <div class="div-total">
+        <span class="hover-content">
+           <span
+             class="conversion-tooltip">{{GetConversionSymbol()}} {{ DisplayTotalHover(1) | number: TO_FIXED_TOTALDOCUMENT}}</span>
+          {{symbolCurrency}} {{DisplayTotal(1) | number:TO_FIXED_TOTALDOCUMENT}}
+        </span>
+        </div>
+      </div>
+      <div class="divider">
+        <div class="label-total">
+          <label>Total nota crédito</label>
+        </div>
+        <div class="div-total">
+        <span class="hover-content">
+           <span
+             class="conversion-tooltip">{{GetConversionSymbol()}} {{ DisplayTotalHover(2) | number: TO_FIXED_TOTALDOCUMENT}}</span>
+          {{symbolCurrency}} {{ DisplayTotal(2) | number:TO_FIXED_TOTALDOCUMENT}}
+        </span>
+        </div>
+      </div>
+      <div class="column">
+        <div class="label-total">
+          <label>Total conciliación</label>
+        </div>
+        <div class="div-total">
+        <span class="hover-content">
+            <span
+              class="conversion-tooltip">{{GetConversionSymbol()}} {{ DisplayTotalHover(3) | number: TO_FIXED_TOTALDOCUMENT}}</span>
+          {{symbolCurrency}} {{DisplayTotal(3) | number:TO_FIXED_TOTALDOCUMENT}}
+        </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>

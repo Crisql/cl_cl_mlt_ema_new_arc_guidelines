@@ -1,0 +1,27 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <form class="grid-container" [formGroup]="localPrinterForm">
+      <div class="col-lg-1 col-md-12 col-sm-12">
+        <mat-slide-toggle matTooltip="Indica si la impresión de companía es local o web"
+                          formControlName="UseLocalPrint" class="side-toggle column-3"
+                          (change)="OnSlideToggleChangePrintMethod()">Impresión local
+        </mat-slide-toggle>
+
+      </div>
+      <mat-form-field matTooltip="{{localPrinterForm.get('UseLocalPrint')?.value ? 'Impresora configurada: ' + (localPrinterForm.get('PrinterName')?.value ? localPrinterForm.get('PrinterName')?.value : '') : ''}}" appearance="outline" matTooltipPosition="above" class="col-lg-10">
+        <mat-label>Url de servicio</mat-label>
+        <input matInput placeholder="" formControlName="PortServicePrintMethod">
+      </mat-form-field>
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [form]="localPrinterForm"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

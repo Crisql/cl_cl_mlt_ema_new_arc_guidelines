@@ -1,0 +1,37 @@
+<section>
+  <section class="section">
+    <div class="add-shorcuts" matTooltip="Agregar acceso directo">
+      <button mat-mini-fab (click)="openDialogShorcuts()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <div class="list-shorcuts">
+      <ng-container *ngFor="let option of listShorcuts; index as i">
+        <mat-card>
+          <mat-card-header>
+            <button mat-icon-button (click)="deleteShorcuts(i)" matTooltip="Eliminar acceso directo">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content (click)="redirect(option)">
+            <mat-icon>{{option.Icon}}</mat-icon>
+          </mat-card-content>
+          <mat-divider></mat-divider>
+          <mat-card-footer class="mat-card-footer">
+            <p>{{option.Description}}</p>
+          </mat-card-footer>
+        </mat-card>
+      </ng-container>
+    </div>
+  </section>
+
+  <fieldset *ngIf="chartData.length > 0" class="grid-container margin-content">
+    <legend>Gráficos</legend>
+      <div class="col-lg-6 col-xs-12 size" *ngFor="let chart of chartData" >
+        <canvas #canvas class="size"></canvas>
+      </div>
+  </fieldset>
+
+</section>
+

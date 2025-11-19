@@ -1,0 +1,25 @@
+.doc-container{
+    padding: 5px;
+}
+
+.doc-transaction-status-container{
+    display: inline-flex;
+    justify-content: center;
+}
+
+.doc-title-container{
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.doc-title{
+    padding: 3px;
+    margin: 0;
+}
+
+.doc-date{
+    padding: 3px;
+    margin: 0;
+}

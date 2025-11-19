@@ -1,0 +1,44 @@
+.main-container {
+  margin-top: 40px;
+}
+
+
+/*Diseño para la tabla*/
+.table-overflow {
+  .mat-table {
+    width: 100%;
+    min-width: 1200px;
+  }
+}
+
+.table-heigth{
+  height: 400px;
+  max-height: 400px;
+  background-color: transparent;
+  overflow: auto;
+}
+.flex-search {
+  display: flex;
+  align-items: center;
+
+  .mat-form-field {
+    flex-grow: 1;
+  }
+}
+/*Boton a la par de un campo*/
+.search {
+  margin-top: -19px !important;
+  border-radius: 5px 0 0 5px;
+  background-color: #0082c0 !important;
+  color: white !important;
+  cursor: pointer;
+  height: 34px;
+  min-width: 0px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+

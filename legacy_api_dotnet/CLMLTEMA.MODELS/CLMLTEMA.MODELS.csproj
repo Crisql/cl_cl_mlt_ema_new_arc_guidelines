@@ -1,0 +1,870 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7B778F4A-2706-48B5-A31A-35053F483F5D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CLMLTEMA.MODELS</RootNamespace>
+    <AssemblyName>CLMLTEMA.MODELS</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'clv_development|x64'">
+    <OutputPath>bin\x64\clv_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'clv_staging|x64'">
+    <OutputPath>bin\x64\clv_staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'clv_master|x64'">
+    <OutputPath>bin\x64\clv_master\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'crm_development|x64'">
+    <OutputPath>bin\x64\crm_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'crm_staging|x64'">
+    <OutputPath>bin\x64\crm_staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'crm_master|x64'">
+    <OutputPath>bin\x64\crm_master\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'gga_development|x64'">
+    <OutputPath>bin\x64\gga_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'gga_staging|x64'">
+    <OutputPath>bin\x64\gga_staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'gga_master|x64'">
+    <OutputPath>bin\x64\gga_master\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'tcr_development|x64'">
+    <OutputPath>bin\x64\tcr_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'tcr_staging|x64'">
+    <OutputPath>bin\x64\tcr_staging\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'tcr_master|x64'">
+    <OutputPath>bin\x64\tcr_master\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'thu_development|x64'">
+    <OutputPath>bin\x64\thu_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'thu_staging|x64'">
+    <OutputPath>bin\x64\thu_staging\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'thu_master|x64'">
+    <OutputPath>bin\x64\thu_master\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ams_development|x64'">
+    <OutputPath>bin\x64\ams_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ams_staging|x64'">
+    <OutputPath>bin\x64\ams_staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ams_master|x64'">
+    <OutputPath>bin\x64\ams_master\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'zsw_development|x64'">
+    <OutputPath>bin\x64\zsw_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'zsw_staging|x64'">
+    <OutputPath>bin\x64\zsw_staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'zsw_master|x64'">
+    <OutputPath>bin\x64\zsw_master\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'idc_development|x64'">
+    <OutputPath>bin\x64\idc_development\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'idc_staging|x64'">
+    <OutputPath>bin\x64\idc_staging\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'idc_master|x64'">
+    <OutputPath>bin\x64\idc_master\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'nvm_development|x64'">
+    <OutputPath>bin\x64\nvm_development\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'nvm_staging|x64'">
+    <OutputPath>bin\x64\nvm_staging\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'nvm_master|x64'">
+    <OutputPath>bin\x64\nvm_master\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Azure.Core, Version=1.36.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Azure.Core.1.36.0\lib\net472\Azure.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Azure.Storage.Blobs, Version=12.16.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Azure.Storage.Blobs.12.16.0\lib\netstandard2.0\Azure.Storage.Blobs.dll</HintPath>
+    </Reference>
+    <Reference Include="Azure.Storage.Common, Version=12.18.1.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Azure.Storage.Common.12.18.1\lib\netstandard2.0\Azure.Storage.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CL.COMMON, Version=1.4.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\CL.COMMON.1.4.0\lib\net462\CL.COMMON.dll</HintPath>
+    </Reference>
+    <Reference Include="CL.DB, Version=2.1.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\CL.DB.2.1.0\lib\net462\CL.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="CL.SL, Version=1.3.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\CL.SL.1.3.0\lib\net462\CL.SL.dll</HintPath>
+    </Reference>
+    <Reference Include="CL.STRUCTURES, Version=2.5.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\CL.STRUCTURES.2.5.0\lib\net462\CL.STRUCTURES.dll</HintPath>
+    </Reference>
+    <Reference Include="CL.UDFS, Version=1.2.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\CL.UDFS.1.2.0\lib\net462\CL.UDFS.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.12.0\lib\net47\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Async, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.Async.1.5.0\lib\net461\Serilog.Sinks.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File, Version=5.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.File.5.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.1\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Hashing, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Hashing.6.0.0\lib\net461\System.IO.Hashing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory.Data, Version=1.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.Data.1.0.2\lib\net461\System.Memory.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=4.0.5.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.4.7.2\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.9\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.9\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activities.cs" />
+    <Compile Include="ApprovalQueriesFilterCondition.cs" />
+    <Compile Include="CalendarAppointment.cs" />
+    <Compile Include="CashClosing.cs" />
+    <Compile Include="Charts.cs" />
+    <Compile Include="ClUserContextODBC.cs" />
+    <Compile Include="ClUserUiContext.cs" />
+    <Compile Include="Company.cs" />
+    <Compile Include="Credential.cs" />
+    <Compile Include="DBResource.cs" />
+    <Compile Include="DiscountHierarchy.cs" />
+    <Compile Include="Document.cs" />
+    <Compile Include="DocumentsActivities.cs" />
+    <Compile Include="DocumentToPrint.cs" />
+    <Compile Include="DocumentXml.cs" />
+    <Compile Include="FESerie.cs" />
+    <Compile Include="File.cs" />
+    <Compile Include="GeoConfig.cs" />
+    <Compile Include="GeoRole.cs" />
+    <Compile Include="GuideTour.cs" />
+    <Compile Include="ItemToFreight.cs" />
+    <Compile Include="Migrations\202412122049222_ADD_SELLER_AND_BUYER_CODE_FIELDS.cs" />
+    <Compile Include="Migrations\202412122049222_ADD_SELLER_AND_BUYER_CODE_FIELDS.Designer.cs">
+      <DependentUpon>202412122049222_ADD_SELLER_AND_BUYER_CODE_FIELDS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506191904468_Add_LineGroupName_Field_To_RouteLines_Entity.cs" />
+    <Compile Include="Migrations\202506191904468_Add_LineGroupName_Field_To_RouteLines_Entity.Designer.cs">
+      <DependentUpon>202506191904468_Add_LineGroupName_Field_To_RouteLines_Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509022203201_Add-RouteAssigment-multiple-users.cs" />
+    <Compile Include="Migrations\202509022203201_Add-RouteAssigment-multiple-users.Designer.cs">
+      <DependentUpon>202509022203201_Add-RouteAssigment-multiple-users.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MobilePayTerms.cs" />
+    <Compile Include="ReportParameters.cs" />
+    <Compile Include="SalesDocument.cs" />
+    <Compile Include="ItemsActivities.cs" />
+    <Compile Include="Migrations\202404031648289_Add_FESeries_Table.cs" />
+    <Compile Include="Migrations\202404031648289_Add_FESeries_Table.Designer.cs">
+      <DependentUpon>202404031648289_Add_FESeries_Table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202404101508401_Change_CommitedDate_and_UserAssignRelation_in_SyncDocuments.cs" />
+    <Compile Include="Migrations\202404101508401_Change_CommitedDate_and_UserAssignRelation_in_SyncDocuments.Designer.cs">
+      <DependentUpon>202404101508401_Change_CommitedDate_and_UserAssignRelation_in_SyncDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202404171538279_Add_Group_Field_To_CompanyUdfs_Entity.cs" />
+    <Compile Include="Migrations\202404171538279_Add_Group_Field_To_CompanyUdfs_Entity.Designer.cs">
+      <DependentUpon>202404171538279_Add_Group_Field_To_CompanyUdfs_Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202404291644156_ChangeTypeFieldDocumentType.cs" />
+    <Compile Include="Migrations\202404291644156_ChangeTypeFieldDocumentType.Designer.cs">
+      <DependentUpon>202404291644156_ChangeTypeFieldDocumentType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MobileChangeInformation.cs" />
+    <Compile Include="PaymentReceivedDocument.cs" />
+    <Compile Include="LocalPrinter.cs" />
+    <Compile Include="LogEvent.cs" />
+    <Compile Include="Lealto.cs" />
+    <Compile Include="LoyaltyPlan.cs" />
+    <Compile Include="Migrations\202304181953170_AddCompanyIdToDbResources.cs" />
+    <Compile Include="Migrations\202304181953170_AddCompanyIdToDbResources.Designer.cs">
+      <DependentUpon>202304181953170_AddCompanyIdToDbResources.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202304182100539_CrtTableResourceByCompanies.cs" />
+    <Compile Include="Migrations\202304182100539_CrtTableResourceByCompanies.Designer.cs">
+      <DependentUpon>202304182100539_CrtTableResourceByCompanies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202304251757322_Add_Table_Series.cs" />
+    <Compile Include="Migrations\202304251757322_Add_Table_Series.Designer.cs">
+      <DependentUpon>202304251757322_Add_Table_Series.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202304252011307_AddFieldsInTableSeries.cs" />
+    <Compile Include="Migrations\202304252011307_AddFieldsInTableSeries.Designer.cs">
+      <DependentUpon>202304252011307_AddFieldsInTableSeries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202304271621480_AddfieldSerieTypeInTableSeries.cs" />
+    <Compile Include="Migrations\202304271621480_AddfieldSerieTypeInTableSeries.Designer.cs">
+      <DependentUpon>202304271621480_AddfieldSerieTypeInTableSeries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202305051703009_addFieldsCompanyIdInTemrinalByUser.cs" />
+    <Compile Include="Migrations\202305051703009_addFieldsCompanyIdInTemrinalByUser.Designer.cs">
+      <DependentUpon>202305051703009_addFieldsCompanyIdInTemrinalByUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202305262041376_AddTableUdf.cs" />
+    <Compile Include="Migrations\202305262041376_AddTableUdf.Designer.cs">
+      <DependentUpon>202305262041376_AddTableUdf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306021614159_addTable_PaydeskBalances.cs" />
+    <Compile Include="Migrations\202306021614159_addTable_PaydeskBalances.Designer.cs">
+      <DependentUpon>202306021614159_addTable_PaydeskBalances.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306060336245_addFieldsCompanyIdInTablePaydeskBalance.cs" />
+    <Compile Include="Migrations\202306060336245_addFieldsCompanyIdInTablePaydeskBalance.Designer.cs">
+      <DependentUpon>202306060336245_addFieldsCompanyIdInTablePaydeskBalance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306081533311_addCompanyInTablePPTransaction.cs" />
+    <Compile Include="Migrations\202306081533311_addCompanyInTablePPTransaction.Designer.cs">
+      <DependentUpon>202306081533311_addCompanyInTablePPTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306211618199_AddLogEventTable.cs" />
+    <Compile Include="Migrations\202306211618199_AddLogEventTable.Designer.cs">
+      <DependentUpon>202306211618199_AddLogEventTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306221737267_AddRouteTables.cs" />
+    <Compile Include="Migrations\202306221737267_AddRouteTables.Designer.cs">
+      <DependentUpon>202306221737267_AddRouteTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306271759017_Add_SyncDocumentsTable.cs" />
+    <Compile Include="Migrations\202306271759017_Add_SyncDocumentsTable.Designer.cs">
+      <DependentUpon>202306271759017_Add_SyncDocumentsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306300851198_Add_GeoRolesAndGeoConfigTables.cs" />
+    <Compile Include="Migrations\202306300851198_Add_GeoRolesAndGeoConfigTables.Designer.cs">
+      <DependentUpon>202306300851198_Add_GeoRolesAndGeoConfigTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306301007044_Add_GeoRoleByUserTable.cs" />
+    <Compile Include="Migrations\202306301007044_Add_GeoRoleByUserTable.Designer.cs">
+      <DependentUpon>202306301007044_Add_GeoRoleByUserTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306301812593_Remove_GeoRoleOnUserAssign.cs" />
+    <Compile Include="Migrations\202306301812593_Remove_GeoRoleOnUserAssign.Designer.cs">
+      <DependentUpon>202306301812593_Remove_GeoRoleOnUserAssign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202307061706056_AddRouteAdministratorsTable.cs" />
+    <Compile Include="Migrations\202307061706056_AddRouteAdministratorsTable.Designer.cs">
+      <DependentUpon>202307061706056_AddRouteAdministratorsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202307062122286_addFiledsPasswordInTableTerminals.cs" />
+    <Compile Include="Migrations\202307062122286_addFiledsPasswordInTableTerminals.Designer.cs">
+      <DependentUpon>202307062122286_addFiledsPasswordInTableTerminals.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202307262203278_AddEmailTypeInUsersTable.cs" />
+    <Compile Include="Migrations\202307262203278_AddEmailTypeInUsersTable.Designer.cs">
+      <DependentUpon>202307262203278_AddEmailTypeInUsersTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202307271542355_AddCalendarAppointmentsTable.cs" />
+    <Compile Include="Migrations\202307271542355_AddCalendarAppointmentsTable.Designer.cs">
+      <DependentUpon>202307271542355_AddCalendarAppointmentsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202307281729423_AddUseSchedulingAndEmailPasswordToUsersTable.cs" />
+    <Compile Include="Migrations\202307281729423_AddUseSchedulingAndEmailPasswordToUsersTable.Designer.cs">
+      <DependentUpon>202307281729423_AddUseSchedulingAndEmailPasswordToUsersTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308041455408_AddDiscountHierarchyTable.cs" />
+    <Compile Include="Migrations\202308041455408_AddDiscountHierarchyTable.Designer.cs">
+      <DependentUpon>202308041455408_AddDiscountHierarchyTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308041637525_ChangeDescriptionTypeOfTableDiscountHierarchies.cs" />
+    <Compile Include="Migrations\202308041637525_ChangeDescriptionTypeOfTableDiscountHierarchies.Designer.cs">
+      <DependentUpon>202308041637525_ChangeDescriptionTypeOfTableDiscountHierarchies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308151438112_AddTableSeriesByUsers_and_DeleteTableSeries.cs" />
+    <Compile Include="Migrations\202308151438112_AddTableSeriesByUsers_and_DeleteTableSeries.Designer.cs">
+      <DependentUpon>202308151438112_AddTableSeriesByUsers_and_DeleteTableSeries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308161639473_AddFieldSerieDescriptionInTableSeriesByUsers.cs" />
+    <Compile Include="Migrations\202308161639473_AddFieldSerieDescriptionInTableSeriesByUsers.Designer.cs">
+      <DependentUpon>202308161639473_AddFieldSerieDescriptionInTableSeriesByUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308181700347_DeleteFiledsInTablePaydeskBalances.cs" />
+    <Compile Include="Migrations\202308181700347_DeleteFiledsInTablePaydeskBalances.Designer.cs">
+      <DependentUpon>202308181700347_DeleteFiledsInTablePaydeskBalances.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308241558173_Add_GuideTourTable.cs" />
+    <Compile Include="Migrations\202308241558173_Add_GuideTourTable.Designer.cs">
+      <DependentUpon>202308241558173_Add_GuideTourTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308291600003_AddSchedulingEmailOnUserTable.cs" />
+    <Compile Include="Migrations\202308291600003_AddSchedulingEmailOnUserTable.Designer.cs">
+      <DependentUpon>202308291600003_AddSchedulingEmailOnUserTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202309051936002_AddGuideTourGroupsAndGuideTourStepsTables.cs" />
+    <Compile Include="Migrations\202309051936002_AddGuideTourGroupsAndGuideTourStepsTables.Designer.cs">
+      <DependentUpon>202309051936002_AddGuideTourGroupsAndGuideTourStepsTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202309132008502_AddFiledCardTypeInTableSeriesByUsers.cs" />
+    <Compile Include="Migrations\202309132008502_AddFiledCardTypeInTableSeriesByUsers.Designer.cs">
+      <DependentUpon>202309132008502_AddFiledCardTypeInTableSeriesByUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310100019588_Remove_CardType_OnSeriesByUser.cs" />
+    <Compile Include="Migrations\202310100019588_Remove_CardType_OnSeriesByUser.Designer.cs">
+      <DependentUpon>202310100019588_Remove_CardType_OnSeriesByUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310161901226_AddTokenRecoveryTokenRecoveryEndDateToUsersTable.cs" />
+    <Compile Include="Migrations\202310161901226_AddTokenRecoveryTokenRecoveryEndDateToUsersTable.Designer.cs">
+      <DependentUpon>202310161901226_AddTokenRecoveryTokenRecoveryEndDateToUsersTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310301626123_Remove_CreationDate_Add_TerminalIdonPPStoredTransactions.cs" />
+    <Compile Include="Migrations\202310301626123_Remove_CreationDate_Add_TerminalIdonPPStoredTransactions.Designer.cs">
+      <DependentUpon>202310301626123_Remove_CreationDate_Add_TerminalIdonPPStoredTransactions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202311021449373_Add_TransactionTypeFieldOnPPStoredTransactions.cs" />
+    <Compile Include="Migrations\202311021449373_Add_TransactionTypeFieldOnPPStoredTransactions.Designer.cs">
+      <DependentUpon>202311021449373_Add_TransactionTypeFieldOnPPStoredTransactions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202312061711158_Add_Fields_DBObject_QueryString_PageSize_BaseEntityOnResourcesByCompanies.cs" />
+    <Compile Include="Migrations\202312061711158_Add_Fields_DBObject_QueryString_PageSize_BaseEntityOnResourcesByCompanies.Designer.cs">
+      <DependentUpon>202312061711158_Add_Fields_DBObject_QueryString_PageSize_BaseEntityOnResourcesByCompanies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401102116210_Add_Table_LocalPrinters.cs" />
+    <Compile Include="Migrations\202401102116210_Add_Table_LocalPrinters.Designer.cs">
+      <DependentUpon>202401102116210_Add_Table_LocalPrinters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MobileAccount.cs" />
+    <Compile Include="MobileBatches.cs" />
+    <Compile Include="MobileBinAllocation.cs" />
+    <Compile Include="MobileBlanketAgreement.cs" />
+    <Compile Include="MobileBlanketAgreementDetail.cs" />
+    <Compile Include="MobileBusinessPartner.cs" />
+    <Compile Include="MobileCard.cs" />
+    <Compile Include="MobileCompanyInformation.cs" />
+    <Compile Include="MobileDiscountGroup.cs" />
+    <Compile Include="MobileDiscountHierarchy.cs" />
+    <Compile Include="MobileItem.cs" />
+    <Compile Include="MobileMeasurementUnit.cs" />
+    <Compile Include="MobilePriceList.cs" />
+    <Compile Include="MobilePriceListInfo.cs" />
+    <Compile Include="MobilePrintDocTypeLabel.cs" />
+    <Compile Include="MobileTaxCodeDetermination.cs" />
+    <Compile Include="MobileWarehouse.cs" />
+    <Compile Include="NumberRecords.cs" />
+    <Compile Include="Otros.cs" />
+    <Compile Include="Paises.cs" />
+    <Compile Include="Password.cs" />
+    <Compile Include="PaydeskBalance.cs" />
+    <Compile Include="PlanCard.cs" />
+    <Compile Include="QueryCondition.cs" />
+    <Compile Include="RecordsCount.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="SAP\Accounts.cs" />
+    <Compile Include="SAP\AdditionalExpense.cs" />
+    <Compile Include="SAP\APInvoice.cs" />
+    <Compile Include="SAP\APInvoiceRows.cs" />
+    <Compile Include="SAP\ApprovalRequest.cs" />
+    <Compile Include="SAP\ARCreditMemo.cs" />
+    <Compile Include="SAP\ARCreditMemoRows.cs" />
+    <Compile Include="SAP\ARInvoiceWithPayment.cs" />
+    <Compile Include="SAP\Batch.cs" />
+    <Compile Include="SAP\BusinessPartners.cs" />
+    <Compile Include="SAP\CashFlow.cs" />
+    <Compile Include="SAP\Delivery.cs" />
+    <Compile Include="SAP\DeliveryRows.cs" />
+    <Compile Include="SAP\Dimension.cs" />
+    <Compile Include="SAP\DistributionRules.cs" />
+    <Compile Include="SAP\DownPayments.cs" />
+    <Compile Include="SAP\Draft.cs" />
+    <Compile Include="SAP\DraftRows.cs" />
+    <Compile Include="SAP\ExchangeRate.cs" />
+    <Compile Include="SAP\GoodsIssue.cs" />
+    <Compile Include="SAP\GoodsIssueRows.cs" />
+    <Compile Include="SAP\GoodsReceipt.cs" />
+    <Compile Include="SAP\GoodsReceiptPO.cs" />
+    <Compile Include="SAP\GoodsReceiptPORows.cs" />
+    <Compile Include="SAP\GoodsReceiptRows.cs" />
+    <Compile Include="SAP\GoodsReturn.cs" />
+    <Compile Include="SAP\GoodsReturnRows.cs" />
+    <Compile Include="SAP\IncomingPayment.cs" />
+    <Compile Include="SAP\ItemDetail.cs" />
+    <Compile Include="SAP\ItemSearch.cs" />
+    <Compile Include="SAP\Location.cs" />
+    <Compile Include="SAP\PayInAccount.cs" />
+    <Compile Include="SAP\PaymentChecks.cs" />
+    <Compile Include="SAP\PaymentCreditCards.cs" />
+    <Compile Include="SAP\PaymentInvoices.cs" />
+    <Compile Include="SAP\PayTermcs.cs" />
+    <Compile Include="SAP\PriceList.cs" />
+    <Compile Include="SAP\PurchaseOrder.cs" />
+    <Compile Include="SAP\PurchaseOrderRows.cs" />
+    <Compile Include="SAP\Recaptcha.cs" />
+    <Compile Include="SAP\SalesServicePreview.cs" />
+    <Compile Include="SAP\Serial.cs" />
+    <Compile Include="SAP\StockTransfer.cs" />
+    <Compile Include="SAP\StockTransferLinesBinAllocations.cs" />
+    <Compile Include="SAP\StockTransferRequest.cs" />
+    <Compile Include="SAP\StockTransferRequestRows.cs" />
+    <Compile Include="SAP\StockTransferRows.cs" />
+    <Compile Include="SAP\UoMMasterData.cs" />
+    <Compile Include="SAP\UsersSAP.cs" />
+    <Compile Include="SAP\WithholdingTax.cs" />
+    <Compile Include="SearchDocumentsActivities.cs" />
+    <Compile Include="SerialType.cs" />
+    <Compile Include="SeriesByUser.cs" />
+    <Compile Include="ShareFolder.cs" />
+    <Compile Include="Shorcuts.cs" />
+    <Compile Include="Structures.cs" />
+    <Compile Include="Filters.cs" />
+    <Compile Include="License.cs" />
+    <Compile Include="MainDBContext.cs" />
+    <Compile Include="Menu.cs" />
+    <Compile Include="Migrations\202302062257442_InitialTablesRelationships.cs" />
+    <Compile Include="Migrations\202302062257442_InitialTablesRelationships.designer.cs">
+      <DependentUpon>202302062257442_InitialTablesRelationships.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302151625181_Rm_DbObjectNamesTable.cs" />
+    <Compile Include="Migrations\202302151625181_Rm_DbObjectNamesTable.designer.cs">
+      <DependentUpon>202302151625181_Rm_DbObjectNamesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302151631523_Add_DBResourcesTable.cs" />
+    <Compile Include="Migrations\202302151631523_Add_DBResourcesTable.designer.cs">
+      <DependentUpon>202302151631523_Add_DBResourcesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302151931160_Rm_SapConnectionTable.cs" />
+    <Compile Include="Migrations\202302151931160_Rm_SapConnectionTable.designer.cs">
+      <DependentUpon>202302151931160_Rm_SapConnectionTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302161441207_Add_ConnectionTable.cs" />
+    <Compile Include="Migrations\202302161441207_Add_ConnectionTable.designer.cs">
+      <DependentUpon>202302161441207_Add_ConnectionTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302161442526_Add_ConnectionIdColumnInCompanies.cs" />
+    <Compile Include="Migrations\202302161442526_Add_ConnectionIdColumnInCompanies.designer.cs">
+      <DependentUpon>202302161442526_Add_ConnectionIdColumnInCompanies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302161552319_Add_UserAssignAndLicencesRelationship.cs" />
+    <Compile Include="Migrations\202302161552319_Add_UserAssignAndLicencesRelationship.designer.cs">
+      <DependentUpon>202302161552319_Add_UserAssignAndLicencesRelationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302161949121_ChangeDBResourceColumnsNames.cs" />
+    <Compile Include="Migrations\202302161949121_ChangeDBResourceColumnsNames.designer.cs">
+      <DependentUpon>202302161949121_ChangeDBResourceColumnsNames.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302282055577_Add_RolesPermissionsAndRelationships.cs" />
+    <Compile Include="Migrations\202302282055577_Add_RolesPermissionsAndRelationships.designer.cs">
+      <DependentUpon>202302282055577_Add_RolesPermissionsAndRelationships.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202303012102225_Add_TerminalAndTerminalsByUsersTables.cs" />
+    <Compile Include="Migrations\202303012102225_Add_TerminalAndTerminalsByUsersTables.designer.cs">
+      <DependentUpon>202303012102225_Add_TerminalAndTerminalsByUsersTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202303071643221_Add_BaseEntityProperties.cs" />
+    <Compile Include="Migrations\202303071643221_Add_BaseEntityProperties.designer.cs">
+      <DependentUpon>202303071643221_Add_BaseEntityProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202303161525454_AddBaseEntityPropsToRolsByUserAndPermsByRol.cs" />
+    <Compile Include="Migrations\202303161525454_AddBaseEntityPropsToRolsByUserAndPermsByRol.designer.cs">
+      <DependentUpon>202303161525454_AddBaseEntityPropsToRolsByUserAndPermsByRol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202303281914164_AddTablesForPPDomain.cs" />
+    <Compile Include="Migrations\202303281914164_AddTablesForPPDomain.Designer.cs">
+      <DependentUpon>202303281914164_AddTablesForPPDomain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202304051937407_AddCompanyIdToLicences.cs" />
+    <Compile Include="Migrations\202304051937407_AddCompanyIdToLicences.Designer.cs">
+      <DependentUpon>202304051937407_AddCompanyIdToLicences.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ObjectSap.cs" />
+    <Compile Include="Permission.cs" />
+    <Compile Include="PP_Domain.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Role.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="SAP\ARInvoice.cs" />
+    <Compile Include="SAP\ARInvoiceRows.cs" />
+    <Compile Include="SAP\BarCodeMasterData.cs" />
+    <Compile Include="SAP\ItemPrice.cs" />
+    <Compile Include="SAP\SalesOrder.cs" />
+    <Compile Include="SAP\SalesQuotation.cs" />
+    <Compile Include="SAP\SalesOrderRows.cs" />
+    <Compile Include="SAP\SalesQuotationRows.cs" />
+    <Compile Include="SAP\SalesTaxes.cs" />
+    <Compile Include="SAP\Warehouses.cs" />
+    <Compile Include="Setting.cs" />
+    <Compile Include="SyncDocument.cs" />
+    <Compile Include="Tapp.cs" />
+    <Compile Include="Terminal.cs" />
+    <Compile Include="SettingFormat.cs" />
+    <Compile Include="TypeInvoice.cs" />
+    <Compile Include="Udf.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserLicense.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202302062257442_InitialTablesRelationships.resx">
+      <DependentUpon>202302062257442_InitialTablesRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302151625181_Rm_DbObjectNamesTable.resx">
+      <DependentUpon>202302151625181_Rm_DbObjectNamesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302151631523_Add_DBResourcesTable.resx">
+      <DependentUpon>202302151631523_Add_DBResourcesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302151931160_Rm_SapConnectionTable.resx">
+      <DependentUpon>202302151931160_Rm_SapConnectionTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302161441207_Add_ConnectionTable.resx">
+      <DependentUpon>202302161441207_Add_ConnectionTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302161442526_Add_ConnectionIdColumnInCompanies.resx">
+      <DependentUpon>202302161442526_Add_ConnectionIdColumnInCompanies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302161552319_Add_UserAssignAndLicencesRelationship.resx">
+      <DependentUpon>202302161552319_Add_UserAssignAndLicencesRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302161949121_ChangeDBResourceColumnsNames.resx">
+      <DependentUpon>202302161949121_ChangeDBResourceColumnsNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302282055577_Add_RolesPermissionsAndRelationships.resx">
+      <DependentUpon>202302282055577_Add_RolesPermissionsAndRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303012102225_Add_TerminalAndTerminalsByUsersTables.resx">
+      <DependentUpon>202303012102225_Add_TerminalAndTerminalsByUsersTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303071643221_Add_BaseEntityProperties.resx">
+      <DependentUpon>202303071643221_Add_BaseEntityProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303161525454_AddBaseEntityPropsToRolsByUserAndPermsByRol.resx">
+      <DependentUpon>202303161525454_AddBaseEntityPropsToRolsByUserAndPermsByRol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303281914164_AddTablesForPPDomain.resx">
+      <DependentUpon>202303281914164_AddTablesForPPDomain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202304051937407_AddCompanyIdToLicences.resx">
+      <DependentUpon>202304051937407_AddCompanyIdToLicences.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202304181953170_AddCompanyIdToDbResources.resx">
+      <DependentUpon>202304181953170_AddCompanyIdToDbResources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202304182100539_CrtTableResourceByCompanies.resx">
+      <DependentUpon>202304182100539_CrtTableResourceByCompanies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202304251757322_Add_Table_Series.resx">
+      <DependentUpon>202304251757322_Add_Table_Series.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202304252011307_AddFieldsInTableSeries.resx">
+      <DependentUpon>202304252011307_AddFieldsInTableSeries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202304271621480_AddfieldSerieTypeInTableSeries.resx">
+      <DependentUpon>202304271621480_AddfieldSerieTypeInTableSeries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305051703009_addFieldsCompanyIdInTemrinalByUser.resx">
+      <DependentUpon>202305051703009_addFieldsCompanyIdInTemrinalByUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305262041376_AddTableUdf.resx">
+      <DependentUpon>202305262041376_AddTableUdf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306021614159_addTable_PaydeskBalances.resx">
+      <DependentUpon>202306021614159_addTable_PaydeskBalances.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306060336245_addFieldsCompanyIdInTablePaydeskBalance.resx">
+      <DependentUpon>202306060336245_addFieldsCompanyIdInTablePaydeskBalance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306081533311_addCompanyInTablePPTransaction.resx">
+      <DependentUpon>202306081533311_addCompanyInTablePPTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306211618199_AddLogEventTable.resx">
+      <DependentUpon>202306211618199_AddLogEventTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306221737267_AddRouteTables.resx">
+      <DependentUpon>202306221737267_AddRouteTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306271759017_Add_SyncDocumentsTable.resx">
+      <DependentUpon>202306271759017_Add_SyncDocumentsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306300851198_Add_GeoRolesAndGeoConfigTables.resx">
+      <DependentUpon>202306300851198_Add_GeoRolesAndGeoConfigTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306301007044_Add_GeoRoleByUserTable.resx">
+      <DependentUpon>202306301007044_Add_GeoRoleByUserTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306301812593_Remove_GeoRoleOnUserAssign.resx">
+      <DependentUpon>202306301812593_Remove_GeoRoleOnUserAssign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202307061706056_AddRouteAdministratorsTable.resx">
+      <DependentUpon>202307061706056_AddRouteAdministratorsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202307062122286_addFiledsPasswordInTableTerminals.resx">
+      <DependentUpon>202307062122286_addFiledsPasswordInTableTerminals.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202307262203278_AddEmailTypeInUsersTable.resx">
+      <DependentUpon>202307262203278_AddEmailTypeInUsersTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202307271542355_AddCalendarAppointmentsTable.resx">
+      <DependentUpon>202307271542355_AddCalendarAppointmentsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202307281729423_AddUseSchedulingAndEmailPasswordToUsersTable.resx">
+      <DependentUpon>202307281729423_AddUseSchedulingAndEmailPasswordToUsersTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308041455408_AddDiscountHierarchyTable.resx">
+      <DependentUpon>202308041455408_AddDiscountHierarchyTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308041637525_ChangeDescriptionTypeOfTableDiscountHierarchies.resx">
+      <DependentUpon>202308041637525_ChangeDescriptionTypeOfTableDiscountHierarchies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308151438112_AddTableSeriesByUsers_and_DeleteTableSeries.resx">
+      <DependentUpon>202308151438112_AddTableSeriesByUsers_and_DeleteTableSeries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308161639473_AddFieldSerieDescriptionInTableSeriesByUsers.resx">
+      <DependentUpon>202308161639473_AddFieldSerieDescriptionInTableSeriesByUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308181700347_DeleteFiledsInTablePaydeskBalances.resx">
+      <DependentUpon>202308181700347_DeleteFiledsInTablePaydeskBalances.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308241558173_Add_GuideTourTable.resx">
+      <DependentUpon>202308241558173_Add_GuideTourTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308291600003_AddSchedulingEmailOnUserTable.resx">
+      <DependentUpon>202308291600003_AddSchedulingEmailOnUserTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202309051936002_AddGuideTourGroupsAndGuideTourStepsTables.resx">
+      <DependentUpon>202309051936002_AddGuideTourGroupsAndGuideTourStepsTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202309132008502_AddFiledCardTypeInTableSeriesByUsers.resx">
+      <DependentUpon>202309132008502_AddFiledCardTypeInTableSeriesByUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310100019588_Remove_CardType_OnSeriesByUser.resx">
+      <DependentUpon>202310100019588_Remove_CardType_OnSeriesByUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310161901226_AddTokenRecoveryTokenRecoveryEndDateToUsersTable.resx">
+      <DependentUpon>202310161901226_AddTokenRecoveryTokenRecoveryEndDateToUsersTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310301626123_Remove_CreationDate_Add_TerminalIdonPPStoredTransactions.resx">
+      <DependentUpon>202310301626123_Remove_CreationDate_Add_TerminalIdonPPStoredTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202311021449373_Add_TransactionTypeFieldOnPPStoredTransactions.resx">
+      <DependentUpon>202311021449373_Add_TransactionTypeFieldOnPPStoredTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202312061711158_Add_Fields_DBObject_QueryString_PageSize_BaseEntityOnResourcesByCompanies.resx">
+      <DependentUpon>202312061711158_Add_Fields_DBObject_QueryString_PageSize_BaseEntityOnResourcesByCompanies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401102116210_Add_Table_LocalPrinters.resx">
+      <DependentUpon>202401102116210_Add_Table_LocalPrinters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202404031648289_Add_FESeries_Table.resx">
+      <DependentUpon>202404031648289_Add_FESeries_Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202404101508401_Change_CommitedDate_and_UserAssignRelation_in_SyncDocuments.resx">
+      <DependentUpon>202404101508401_Change_CommitedDate_and_UserAssignRelation_in_SyncDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202404171538279_Add_Group_Field_To_CompanyUdfs_Entity.resx">
+      <DependentUpon>202404171538279_Add_Group_Field_To_CompanyUdfs_Entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202404291644156_ChangeTypeFieldDocumentType.resx">
+      <DependentUpon>202404291644156_ChangeTypeFieldDocumentType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202412122049222_ADD_SELLER_AND_BUYER_CODE_FIELDS.resx">
+      <DependentUpon>202412122049222_ADD_SELLER_AND_BUYER_CODE_FIELDS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506191904468_Add_LineGroupName_Field_To_RouteLines_Entity.resx">
+      <DependentUpon>202506191904468_Add_LineGroupName_Field_To_RouteLines_Entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509022203201_Add-RouteAssigment-multiple-users.resx">
+      <DependentUpon>202509022203201_Add-RouteAssigment-multiple-users.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

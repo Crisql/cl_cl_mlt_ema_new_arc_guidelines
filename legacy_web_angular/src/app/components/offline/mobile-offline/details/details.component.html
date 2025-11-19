@@ -1,0 +1,46 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <section class="main-container">
+      <fieldset>
+        <legend>Detalles</legend>
+        <form class="grid-container" [formGroup]="syncDocumentForm">
+          <mat-form-field appearance="outline" class="col-lg-2 col-md-6 col-sm-12">
+            <mat-label>Document Entry</mat-label>
+            <input matInput placeholder="" formControlName="DocEntry">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-2 col-md-6 col-sm-12">
+            <mat-label>Fecha de creación en SAP</mat-label>
+            <input matInput placeholder="Fecha de creación" formControlName="UpdateDate">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-2 col-md-4 col-sm-12">
+            <mat-label>Estado de la transacción </mat-label>
+            <input matInput placeholder="" formControlName="TransactionStatus">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-6 col-md-8 col-sm-12">
+            <mat-label>Detalles de la transacción</mat-label>
+            <input matInput placeholder="" formControlName="TransactionDetail">
+          </mat-form-field>
+        </form>
+      </fieldset>
+    </section>
+    <section>
+      <fieldset>
+        <legend>Representación del documento</legend>
+        <pre style="overflow-y: auto; max-height: 40vh;"><p>{{ FormatJSON(syncDocumentInEdition?.RawDocument) | json }}</p></pre>
+      </fieldset>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+    [actionButtons]="actionButtons"
+    (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>
+

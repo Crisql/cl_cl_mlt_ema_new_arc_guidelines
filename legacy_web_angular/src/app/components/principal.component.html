@@ -1,0 +1,77 @@
+<cl-menu [Id]="MenuId" [User]="User" [Nodes]="MenuNodes" [Title]="environmentName" [Logo]="'../../assets/logo.png'">
+  <div class="main-content">
+    <mat-toolbar class="toolbar">
+      <div class="current-page">
+        <button mat-icon-button aria-label="Button to toggle menu" (click)="ToggleMenu()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="page-title">{{currentPage}}</span>
+      </div>
+      <div class="content-info">
+        <div class="company-name">
+
+          <div class="submenu clickable" matTooltip="Cambiar de almacén" (click)="OpenDialogWarehouse()">
+            <strong>
+              Almacén:</strong> {{currentSessionService.getWhsName()}}
+          </div>
+          <div matTooltip="Refrescar tipo de cambio" (click)="RefreshExchangeRate()"
+               class="submenu submenu-divider clickable"><strong>Tipo
+            de cambio:</strong> <span class="exchange-focus">{{exchangeRateCurrencySymbol}}{{currentSessionService?.getRate() |
+            number:'1.2-2'}}</span>
+          </div>
+          <div class="submenu submenu-divider clickable" (click)="OpenDialogCompanySelection()"
+               matTooltip="Cambiar de compañía">
+            <ng-container *ngIf="selectedCompany">
+              {{selectedCompany?.DatabaseCode}} {{selectedCompany?.Name}}
+            </ng-container>
+          </div>
+
+
+        </div>
+        <div class="dropdown-toggle">
+
+          <button mat-button [matMenuTriggerFor]="menu" #session>
+<!--            <mat-icon class="session">person</mat-icon>-->
+<!--            <mat-icon>arrow_drop_down</mat-icon>-->
+            <span class="material-symbols-outlined">
+              person
+            </span>
+            <span class="material-symbols-outlined">
+              arrow_drop_down
+            </span>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <div mat-menu-item class="submenu-row clickable" (click)="OpenDialogWarehouse()" matTooltip="Cambiar de almacén">
+                <span class="space"><strong>Almacén:</strong></span>
+                {{currentSessionService.getWhsName()}}
+              </div>
+            </button>
+            <button mat-menu-item>
+              <div class="submenu-row clickable" matTooltip="Refrescar tipo de cambio"
+                   (click)="RefreshExchangeRate()">
+                <span class="space"><strong>Tipo de cambio:</strong></span>
+                {{exchangeRateCurrencySymbol}}{{currentSessionService.getRate() | number:'1.2-2'}}
+              </div>
+            </button>
+            <button mat-menu-item>
+              <div class="submenu-row clickable" (click)="OpenDialogCompanySelection()" matTooltip="Cambiar de compañía">
+                <span class="space"><strong>Compañía:</strong></span>
+                <ng-container *ngIf="selectedCompany">
+                  {{selectedCompany?.DatabaseCode}} {{selectedCompany?.Name}}
+                </ng-container>
+              </div>
+            </button>
+          </mat-menu>
+        </div>
+        <div class="notification-container">
+          <cl-notification-center></cl-notification-center>
+        </div>
+      </div>
+    </mat-toolbar>
+    <div class="router-outlet-container">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</cl-menu>
+<cl-pinpad></cl-pinpad>

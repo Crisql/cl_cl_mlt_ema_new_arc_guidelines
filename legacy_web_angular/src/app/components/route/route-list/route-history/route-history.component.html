@@ -1,0 +1,155 @@
+<section class="main-section">
+  <section class="route-info-section">
+    <div class="back-button-container">
+      <button mat-icon-button [mat-dialog-close]="false">
+        <mat-icon>arrow_back_ios</mat-icon>
+      </button>
+      <span class="history-title">Historial de ruta</span>
+    </div>
+    <div>
+      <div class="route-name">{{route?.Name}}</div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="estimate">
+      <h3 class="title">Cálculos de ruta</h3>
+      <div class="route-calculations-container"
+        *ngIf="route?.TotalEstimatedDistance || route?.TotalDistance || route?.TotalEstimatedDuration || route?.TotalDuration;else noCalculated">
+        <div class="route-calculation">
+          <h4 class="sub-title">Distancia total:</h4>
+          <span *ngIf="route?.TotalEstimatedDistance">Estimada: {{(route?.TotalEstimatedDistance ?? 0) |
+            routeCalculations: 'distance'}}</span>
+          <span *ngIf="route?.TotalDistance">Calculada: {{(route?.TotalDistance ?? 0) | routeCalculations:
+            'distance'}}</span>
+        </div>
+        <div class="route-calculation">
+          <h4 class="sub-title">Duración total:</h4>
+          <span *ngIf="route?.TotalEstimatedDuration">Estimado: {{(route?.TotalEstimatedDuration ?? 0) |
+            routeCalculations:'time'}}</span>
+          <span *ngIf="route?.TotalDuration">Calculado: {{(route?.TotalDuration ?? 0) | routeCalculations:
+            'time'}}</span>
+        </div>
+      </div>
+      <ng-template #noCalculated>
+        No se realizaron cálculos
+      </ng-template>
+    </div>
+    <div class="panels">
+      <mat-accordion>
+        <mat-expansion-panel class="accordion mat-elevation-z0" *ngFor="let grouppedLine of routeLinesGroupedByCustomer"
+          hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div class="title">{{grouppedLine.CardCode}} - {{grouppedLine.CardName}}</div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-expansion-panel *ngFor="let line of grouppedLine.RouteLines"
+            (click)="AddBounceAnimationToLineMarker(line)" class="secondary-accordion mat-elevation-z0">
+            <mat-expansion-panel-header>
+              <mat-panel-title class="route-line">
+                <span>{{line.Address}}</span>
+                <span>{{GetRouteTypeName(line.AddressType)}}</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngFor="let history of line.RouteHistories" class="rt-history-container"
+              (dblclick)="ZoomToMarker(history)">
+              <span>{{GetRouteCheckTypePropertyValue(history.CheckType, 'Description')}}</span>
+              <span>{{history.CreatedDate | date:'short'}}</span>
+              <div class="rt-history-buttons-container">
+                <button (click)="OpenHistoryDetailsModal(history)" matTooltip="Ver detalles de check"
+                  matTooltipPosition="left" mat-icon-button color="primary">
+                  <mat-icon class="clavis-color">info</mat-icon>
+                </button>
+                <button matTooltip="Ver en mapa" matTooltipPosition="right" mat-icon-button color="primary"
+                  (click)="$event.stopPropagation(); AddBounceAnimationToHistoryMarker(history)"
+                  [disabled]="!RouteHistoryIsVisible(history)">
+                  <mat-icon class="clavis-color">{{history.Animation === 'BOUNCE' ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <mat-accordion>
+        <mat-expansion-panel class="accordion mat-elevation-z0" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="title">
+              <div class="title">Otros puntos</div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="overflow">
+            <div *ngFor="let history of otherPoints" class="rt-history-container" (dblclick)="ZoomToMarker(history)">
+              <span>{{GetRouteCheckTypePropertyValue(history.CheckType, 'Description')}}</span>
+              <span>{{history.CreatedDate | date:'short'}}</span>
+              <div class="rt-history-buttons-container">
+                <button (click)="OpenHistoryDetailsModal(history)" matTooltip="Ver detalles de check"
+                  matTooltipPosition="left" mat-icon-button color="primary">
+                  <mat-icon class="clavis-color">info</mat-icon>
+                </button>
+                <button matTooltip="Ver en mapa" matTooltipPosition="right" mat-icon-button color="primary"
+                  (click)="$event.stopPropagation(); AddBounceAnimationToHistoryMarker(history)"
+                  [disabled]="!RouteHistoryIsVisible(history)">
+                  <mat-icon class="clavis-color">{{history.Animation === 'BOUNCE' ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </section>
+
+  <section class="second-section">
+    <section class="filters-section">
+      <div>
+        <button mat-flat-button (click)="OpenFiltersModal()">
+          <mat-icon>
+            tune
+          </mat-icon>
+          Filtros
+        </button>
+      </div>
+      <div class="filters-checks-container">
+        <mat-chip-list aria-label="Fish selection">
+          <mat-chip *ngFor="let check of visibleRouteCheckTypes" style="{{check.Prop2}}">
+            {{check.Description}}
+            <button matChipRemove (click)="OnClickRemoveCheckType(check)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </section>
+    <section class="map-section">
+      <agm-map #gm [latitude]="mapLatitude" [longitude]="mapLongitude" [(zoom)]="mapZoom"
+        (mapReady)="OnMapReady($event)">
+        <ng-container *ngFor="let history of filteredRouteHistories">
+          <agm-marker title="{{history.CardCode}} - {{history.CardName}}" [latitude]="history.Latitude"
+            [animation]="history.Animation" [longitude]="history.Longitude"
+            [iconUrl]="GetRouteCheckTypePropertyValue(history.CheckType, 'Prop1')" [markerClickable]="true"
+            (markerRightClick)="ZoomToMarker(history)">
+            <agm-info-window [disableAutoPan]="false" #infoWindow *ngIf="history.Comments">
+              <div>
+                {{ history.Comments }}
+              </div>
+            </agm-info-window>
+          </agm-marker>
+        </ng-container>
+
+        <ng-container *ngFor="let line of filteredRouteLines">
+          <agm-marker title="{{line.CardCode}} - {{line.CardName}}" [latitude]="line.Latitude"
+            [animation]="line.Animation" [longitude]="line.Longitude" [markerClickable]="true"
+            [iconUrl]="GetRouteCheckTypePropertyValue(0, 'Prop1')" (markerRightClick)="ZoomToMarker(line)">
+            <agm-info-window [disableAutoPan]="false" #infoWindow>
+              <div>
+                {{ line.Address }}
+              </div>
+            </agm-info-window>
+          </agm-marker>
+        </ng-container>
+      </agm-map>
+    </section>
+  </section>
+</section>

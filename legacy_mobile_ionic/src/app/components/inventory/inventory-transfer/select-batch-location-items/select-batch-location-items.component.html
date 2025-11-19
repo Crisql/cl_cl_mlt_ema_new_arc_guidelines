@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "BIN ALLOCATION.CHOOSE ALLOCATION" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="Dismiss()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="ValidateFields()">
+                <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-item>
+        <ion-searchbar
+                [(ngModel)]="searchTerm"
+                (ionChange)="FilterLocations()"
+                placeholder="{{ 'BIN ALLOCATION.SEARCH ALLOCATION' | translate }}"
+        ></ion-searchbar>
+    </ion-item>
+    <div class="ion-padding-start ion-padding-end ion-no-margin request-items">
+        {{ 'BIN ALLOCATION.REQUEST' | translate }}: {{ requiredQuantity }}
+    </div>
+</ion-header>
+<ion-content>
+    <ion-virtual-scroll [items]="filteredLocations" approxItemHeight="60px">
+        <div
+                *virtualItem="let binAllocation"
+                class="grid-container ion-padding ion-no-margin item-border-bottom"
+                [ngClass]="{ 'background-selected': binAllocation.Quantity > 0}"
+        >
+            <div class="allocation-grid">
+                <div (click)="UpdateBinAllocation(binAllocation)" class="allocation-data">
+                    <div>{{ binAllocation.BinCode }}</div>
+                    <ion-badge color="light">{{ 'BIN ALLOCATION.STOCK' | translate }}: {{ binAllocation.Stock }}</ion-badge>
+                </div>
+                <div>
+                    <ion-input type="number" [(ngModel)]="binAllocation.Quantity" (ionChange)="ChangeData(binAllocation)" class="allocation-quantity"></ion-input>
+                </div>
+            </div>
+        </div>
+    </ion-virtual-scroll>
+</ion-content>

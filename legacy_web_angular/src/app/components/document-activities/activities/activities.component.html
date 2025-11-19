@@ -1,0 +1,560 @@
+﻿<section class="multi-bottoms">
+  <app-action-buttons [form]="documentForm" [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+
+<section class="section mobile-margin">
+<form [formGroup]="documentForm">
+  <section class="m-b">
+    <fieldset>
+      <legend>Encabezado</legend>
+
+      <section class="grid-container">
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Actividad</mat-label>
+          <mat-select formControlName="Activity" (selectionChange)="OnSelectActivity($event.value)">
+            <mat-option *ngFor="let option of optionActivities" [value]="option.Code">
+              {{ option.Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="ActivityType">
+            <mat-option *ngFor="let option of typeActivities" [value]="option.Code">
+              {{ option.Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Asunto</mat-label>
+          <mat-select formControlName="Subject">
+            <mat-option *ngFor="let option of subjectActivities" [value]="option.Code">
+              {{ option.Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Asignado a</mat-label>
+          <mat-select formControlName="HandledBy">
+            <mat-option *ngFor="let option of SAPUsers" [value]="option.UserSignature">
+              {{option.Code}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-3 col-md-12 col-sm-12">
+          <mat-label>Código cliente</mat-label>
+          <input matInput formControlName="CardCode"/>
+        </mat-form-field>
+
+        <div class="col-lg-5 col-md-12 col-sm-12">
+          <div class="flex">
+            <mat-form-field appearance="outline" class="w-100 input-group">
+              <mat-label>Nombre del cliente</mat-label>
+              <input matInput formControlName="CardName"/>
+            </mat-form-field>
+            <button matTooltip="Buscar socio de negocio" type="button" mat-flat-button color="primary" class="e-bill"
+                    (click)="ShowModalSearchBusinnesPartner()">
+              <mat-icon class="icon-display">search</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Persona de contacto</mat-label>
+          <mat-select formControlName="ContactPersonCode" (selectionChange)="SetContactPerson($event.value)">
+            <mat-option *ngFor="let option of contactPerson" [value]="option.ContactCode">
+              {{ option.Name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Número de teléfono</mat-label>
+          <input matInput formControlName="Phone"/>
+        </mat-form-field>
+
+      </section>
+
+    </fieldset>
+  </section>
+</form>
+
+
+<section>
+  <fieldset class="m-b">
+    <legend>General</legend>
+
+    <section>
+
+      <form [formGroup]="generalForm" class="grid-container">
+        <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+          <mat-label>Comentario</mat-label>
+          <input matInput formControlName="Details">
+        </mat-form-field>
+
+        <ng-container *ngIf="isNoteActivity">
+          <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="pickerStartDate" formControlName="StartDate">
+            <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStartDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-2 col-md-12 col-sm-12">
+            <mat-label>Hora</mat-label>
+            <input matInput type="time" formControlName="StartTime">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+            <mat-label>Prioridad</mat-label>
+            <mat-select formControlName="Priority">
+              <mat-option *ngFor="let option of priorityActivities" [value]="option.Id">
+                {{ option.Name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="!isNoteActivity">
+          <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+            <mat-label>Fecha de inicio</mat-label>
+            <input matInput [matDatepicker]="pickerStartDate" formControlName="StartDate"
+                   (dateChange)="CalculateDuration()">
+            <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStartDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-2 col-md-12 col-sm-12">
+            <mat-label>Hora Inicio</mat-label>
+            <input matInput type="time" formControlName="StartTime" (change)="CalculateDuration()">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+            <mat-label>Fecha de fin</mat-label>
+            <input matInput [matDatepicker]="pickerEndDate" formControlName="EndDueDate"
+                   (dateChange)="CalculateDuration()">
+            <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEndDate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-2 col-md-12 col-sm-12">
+            <mat-label>Hora fin</mat-label>
+            <input matInput type="time" formControlName="EndTime" (change)="CalculateDuration()">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+            <mat-label>Duración</mat-label>
+            <input matInput formControlName="Duration">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+            <mat-label>Prioridad</mat-label>
+            <mat-select formControlName="Priority">
+              <mat-option *ngFor="let option of priorityActivities" [value]="option.Id">
+                {{ option.Name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+            <mat-label>Localidad</mat-label>
+            <mat-select formControlName="Location"  (selectionChange)="ChangeLocation($event.value)">
+              <mat-option *ngFor="let option of locationActivities" [value]="option.Code">
+                {{ option.Name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <ng-container *ngIf="isTaskActivity">
+            <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="Status">
+                <mat-option *ngFor="let status of activityStates" [value]="status.StatusId">
+                  {{ status.Name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+
+          <fieldset *ngIf="isMeetingActivity" class="grid-container col-lg-12">
+            <legend>
+              Dirección
+            </legend>
+
+            <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12" *ngIf="isAddressSN">
+              <mat-label>Direcciones del SN</mat-label>
+              <mat-select formControlName="AddressBP" (selectionChange)="SetDirections($event.value)">
+                <mat-option *ngFor="let option of bpAddressActivities" [value]="option.AddressName">
+                  {{ option.AddressName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+              <mat-label>Calle</mat-label>
+              <input matInput formControlName="Street">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+              <mat-label>Ciudad</mat-label>
+              <input matInput formControlName="City">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+              <mat-label>Sala</mat-label>
+              <input matInput formControlName="Room">
+            </mat-form-field>
+
+            <div class="col-lg-6 col-md-12 col-sm-12">
+              <div class="flex">
+                <mat-form-field appearance="outline" class="w-100 input-group">
+                  <mat-label>País/Región</mat-label>
+                  <input matInput formControlName="Country"/>
+                </mat-form-field>
+                <button matTooltip="Buscar país" type="button" mat-flat-button color="primary" class="e-bill"
+                        (click)="ShowSearchModalCountriesActivity()">
+                  <mat-icon class="icon-display">search</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="col-lg-6 col-md-12 col-sm-12">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="State">
+                <mat-option *ngFor="let state of statesCountries" [value]="state.Code">
+                  {{ state.Name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </fieldset>
+
+          <ng-container *ngIf="!isOtherActivity">
+            <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+              <mat-label>Repetición</mat-label>
+              <mat-select formControlName="RecurrencePattern" (selectionChange)="DisplayRecurrencePattern($event.value)">
+                <mat-option *ngFor="let option of recurrenceActivities" [value]="option.Code">
+                  {{ option.Name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </ng-container>
+
+      </form>
+
+      <!--Diario-->
+      <ng-container *ngIf="rpDaily">
+        <form [formGroup]="dailyForm" class="grid-container">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="grid-container">
+              <mat-label class="col-lg-2 col-md-12 col-sm-12">Repetir cada</mat-label>
+              <div class="col-lg-10 col-md-12 col-sm-12">
+                <mat-radio-group formControlName="RepeatOption">
+                  <div class="flext-container-activities">
+                    <mat-radio-button value="roByDate"></mat-radio-button>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Día(s)</mat-label>
+                      <input matInput formControlName="Interval" type="number">
+                    </mat-form-field>
+                  </div>
+                  <mat-radio-button value="roByWeekDay">Cada dia de la semana</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+
+      <!--Semanal-->
+      <ng-container *ngIf="rpWeekly">
+        <form [formGroup]="weekForm" class="grid-container">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="grid-container">
+              <mat-label class="col-lg-2 col-md-12 col-sm-12">Repetir cada</mat-label>
+              <div class="col-lg-10 col-md-12 col-sm-12">
+                <mat-form-field appearance="outline">
+                  <input matInput formControlName="Interval" type="number">
+                </mat-form-field>
+                <mat-label>Semana(s)</mat-label>
+              </div>
+              <mat-label class="col-lg-2 col-md-12 col-sm-12">Repetir el</mat-label>
+              <div class="col-lg-10 col-md-12 col-sm-12">
+                <mat-checkbox formControlName="Monday">Lunes</mat-checkbox>
+                <mat-checkbox formControlName="Tuesday">Martes</mat-checkbox>
+                <mat-checkbox formControlName="Wednesday">Miécoles</mat-checkbox>
+                <mat-checkbox formControlName="Thursday">Jueves</mat-checkbox>
+                <mat-checkbox formControlName="Friday">Viernes</mat-checkbox>
+                <mat-checkbox formControlName="Saturday">Sábado</mat-checkbox>
+                <mat-checkbox formControlName="Sunday">Domingo</mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+
+      <!--Mensual-->
+      <ng-container *ngIf="rpMonthly">
+        <form [formGroup]="monthForm" class="grid-container">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="grid-container">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="grid-container">
+                  <mat-label class="col-lg-1 col-md-12 col-sm-12">Repetir cada</mat-label>
+                  <div class="col-lg-11 col-md-12 col-sm-12">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Mes(es)</mat-label>
+                      <input matInput formControlName="Interval" type="number">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="grid-container">
+                  <mat-label class="col-lg-1 col-md-12 col-sm-12">Repetir el</mat-label>
+                  <div class="col-lg-10 col-md-12 col-sm-12">
+                    <mat-radio-group formControlName="RepeatOption">
+                      <div class="flext-container-activities">
+                        <mat-radio-button value="roByDate"
+                                          (change)="DisableOptionMonthly($event.value)"></mat-radio-button>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Día</mat-label>
+                          <input matInput formControlName="RecurrenceDayInMonth" (change)="CalculateDay()"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="flext-container-activities">
+                        <mat-radio-button value="roByWeekDay"
+                                          (change)="DisableOptionMonthly($event.value)"></mat-radio-button>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="RecurrenceSequenceSpecifier"
+                                      (selectionChange)="CalculateDateMonthly()">
+                            <mat-option *ngFor="let option of weekActivities" [value]="option.Code">
+                              {{ option.Name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="RecurrenceDayOfWeek" (selectionChange)="CalculateDateMonthly()">
+                            <mat-option *ngFor="let option of dayOfWeekActivities" [value]="option.Code">
+                              {{ option.Name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+
+      <!--Anual-->
+      <ng-container *ngIf="rpAnnually">
+        <form [formGroup]="annuallyForm" class="grid-container">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="grid-container">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="grid-container">
+                  <mat-label class="col-lg-1 col-md-12 col-sm-12">Repetir cada</mat-label>
+                  <div class="col-lg-11 col-md-12 col-sm-12">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Año(s)</mat-label>
+                      <input matInput formControlName="Interval" type="number">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="grid-container">
+                  <mat-label class="col-lg-1 col-md-12 col-sm-12">Repetir el</mat-label>
+                  <div class="col-lg-10 col-md-12 col-sm-12">
+                    <mat-radio-group formControlName="RepeatOption">
+                      <div class="flext-container-activities">
+                        <mat-radio-button value="roByDate"
+                                          (change)="DisableOptionAnnually($event.value)"></mat-radio-button>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="RecurrenceMonth" (selectionChange)="CalculateDateInMonth()">
+                            <mat-option *ngFor="let option of monthActivities" [value]="option.Id">
+                              {{ option.Month }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <input matInput formControlName="RecurrenceDayInMonth" (change)="CalculateDateInMonth()"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="flext-container-activities">
+                        <mat-radio-button value="roByWeekDay"
+                                          (change)="DisableOptionAnnually($event.value)"></mat-radio-button>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="RecurrenceSequenceSpecifier"
+                                      (selectionChange)="CalculateDateAnnually()">
+                            <mat-option *ngFor="let option of weekActivities" [value]="option.Code">
+                              {{ option.Name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="RecurrenceDayOfWeek" (selectionChange)="CalculateDateAnnually()">
+                            <mat-option *ngFor="let option of dayOfWeekActivities" [value]="option.Code">
+                              {{ option.Name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>de</mat-label>
+                          <mat-select formControlName="RecurrenceMonthAnnually"
+                                      (selectionChange)="CalculateDateAnnually()">
+                            <mat-option *ngFor="let option of monthActivities" [value]="option.Id">
+                              {{ option.Month }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+
+      <ng-container *ngIf="!rpNone">
+        <form [formGroup]="intervalForm" class="grid-container">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="grid-container">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                Intervalo
+              </div>
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="grid-container">
+                  <mat-label class="col-lg-1 col-md-12 col-sm-12">Inicio</mat-label>
+                  <div class="col-lg-2 col-md-12 col-sm-12">
+                    <mat-form-field appearance="outline">
+                      <input matInput [matDatepicker]="pickerSeriesStartDate" formControlName="SeriesStartDate"/>
+                      <mat-datepicker-toggle matSuffix [for]="pickerSeriesStartDate"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerSeriesStartDate></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="grid-container">
+                  <mat-label class="col-lg-1 col-md-12 col-sm-12">Fin</mat-label>
+                  <div class="col-lg-11 col-md-12 col-sm-12">
+                    <mat-radio-group formControlName="EndType">
+                      <div class="flext-container-activities">
+                        <div>
+                          <mat-radio-button value="etNoEndDate" (change)="ChangeEndType($event.value)">Sin fecha final
+                          </mat-radio-button>
+                        </div>
+                      </div>
+                      <div class="flext-container-activities">
+                        <div>
+                          <mat-radio-button value="etByCounter" (change)="ChangeEndType($event.value)">Despues de
+                          </mat-radio-button>
+                        </div>
+                        <div>
+                          <mat-form-field appearance="outline">
+                            <input matInput formControlName="MaxOccurrence" type="number"/>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="flext-container-activities">
+                        <div>
+                          <mat-radio-button value="etByDate" (change)="ChangeEndType($event.value)">Antes de
+                          </mat-radio-button>
+                        </div>
+                        <div>
+                          <mat-form-field appearance="outline">
+                            <input matInput [matDatepicker]="pickerSeriesEndDate" formControlName="SeriesEndDate"/>
+                            <mat-datepicker-toggle matSuffix [for]="pickerSeriesEndDate"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerSeriesEndDate></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+
+      <br>
+      <br>
+      <br>
+
+      <form [formGroup]="footerGeneralForm" class="grid-container">
+        <div class="col-lg-1 col-md-12 col-sm-12">
+          <mat-checkbox formControlName="Reminder">Recordatorio</mat-checkbox>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12">
+          <mat-form-field appearance="outline">
+            <input matInput type="number" formControlName="ReminderPeriod">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="ReminderType">
+              <mat-option *ngFor="let types of typesActivityReminders" [value]="types.Key">
+                {{ types.Description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-2 col-md-12 col-sm-12">
+          <mat-checkbox formControlName="InactiveFlag">Inactivo</mat-checkbox>
+          <br>
+          <mat-checkbox formControlName="Closed">Cerrado</mat-checkbox>
+        </div>
+      </form>
+
+    </section>
+
+  </fieldset>
+</section>
+
+<section>
+  <fieldset>
+    <legend>Documentos vinculados</legend>
+    <form [formGroup]="docVinculateForm">
+      <div class="grid-container">
+        <div class="col-lg-3 col-md-12 col-sm-12">
+          <mat-checkbox (change)="ChangeDrafs($event.checked)" [checked]="drafSelected">Enlazar documento preliminar
+          </mat-checkbox>
+        </div>
+        <mat-form-field appearance="outline" class="col-lg-4 col-md-12 col-sm-12">
+          <mat-label>Clase de documento</mat-label>
+          <mat-select formControlName="DocType" (selectionChange)="EnableDocNum($event.value)">
+            <mat-option *ngFor="let option of objectSAPActivities" [value]="option.Id">
+              {{ option.Description }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="col-lg-5 col-md-12 col-sm-12">
+          <div class="flex">
+            <mat-form-field appearance="outline" class="w-100 input-group">
+              <mat-label>Número de documento</mat-label>
+              <input matInput formControlName="DocNum"/>
+            </mat-form-field>
+            <button matTooltip="Buscar documento" type="button" mat-flat-button color="primary" class="e-bill"
+                    [disabled]="activateSearchBtn" (click)="ShowModal()">
+              <mat-icon class="icon-display">search</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </fieldset>
+</section>
+</section>

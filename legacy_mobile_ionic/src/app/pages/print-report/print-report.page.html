@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{'REPORTS.PRINT' | translate}}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title size="small">{{ report?.DisplayName }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list [formGroup]="parametersForm">
+    <ion-list-header color="light">
+      {{'REPORTS.PARAMETERS' | translate }}
+    </ion-list-header>
+    <ion-item
+      *ngFor="let param of parameters; index as i"
+      [ngSwitch]="param.Type"
+    >
+      <ion-label position="stacked">
+        {{ param.DisplayName }} <span *ngIf="param.Required">*</span>
+      </ion-label>
+      <ion-input
+        type="text"
+        [attr.id]="'input' + i"
+        formControlName="{{ param.Name }}"
+        *ngSwitchCase="1"
+      ></ion-input>
+      <ion-input
+        type="number"
+        [attr.id]="'input' + i"
+        formControlName="{{ param.Name }}"
+        *ngSwitchCase="2"
+      ></ion-input>
+      <ion-input
+        type="date"
+        [attr.id]="'input' + i"
+        formControlName="{{ param.Name }}"
+        *ngSwitchCase="3"
+      ></ion-input>
+      <ion-checkbox
+        [attr.id]="'input' + i"
+        formControlName="{{ param.Name }}"
+        *ngSwitchCase="4"
+      >
+      </ion-checkbox>
+      <ion-select
+        [attr.id]="'input' + i"
+        formControlName="{{ param.Name }}"
+        *ngSwitchCase="5"
+      >
+        <ion-select-option
+          [value]="option.Value"
+          *ngFor="let option of param.Options"
+        >
+          {{ option.Key }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-row>
+    <ion-col size="12">
+      <ion-button
+        fill="solid"
+        expand="block"
+        (click)="OnClickPrintReport()"
+        [disabled]="parametersForm.invalid"
+        >{{'REPORTS.DOWNLOAD' | translate}}</ion-button
+      >
+    </ion-col>
+    <ion-col size="12">
+      <ion-button
+        fill="solid"
+        expand="block"
+        (click)="OnClickSendEmail()"
+        [disabled]="parametersForm.invalid"
+        >{{'REPORTS.SENDBYEMAIL' | translate}}</ion-button
+      >
+    </ion-col>
+  </ion-row>
+</ion-content>

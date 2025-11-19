@@ -1,0 +1,22 @@
+.product-grid {
+  display: grid;
+  grid-template-rows: 1;
+  grid-template-columns: 80% 20%;
+}
+
+.grid-container {
+  height: auto; /* 60px; */
+}
+
+.text-red{
+  color: #C0392B;
+}
+
+.product-data {
+  margin-top: auto;margin-bottom: auto;
+}
+
+.product-quantity {
+  display: flex;
+}
+

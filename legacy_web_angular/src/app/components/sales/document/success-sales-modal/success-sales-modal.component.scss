@@ -1,0 +1,99 @@
+.dialog-title {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.dialog-content {
+  width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.head-title {
+  font-size: 30px;
+  font-weight: 500;
+  margin-top: 15px;
+}
+
+.icon-display {
+  transform: scale(5);
+  margin-bottom: 15px;
+  color: #0082c0;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: auto;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+}
+
+.column-1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+.column-2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  text-align: right;
+}
+
+.doc-top {
+  padding-top: 20px;
+}
+
+.doc-bottom {
+  padding-bottom: 20px;
+}
+
+
+.w-1 {
+  width: 49%;
+}
+
+.num {
+  font-size: 20px;
+  text-align: center;
+}
+
+.change {
+  font-size: 35px;
+  font-weight: bolder;
+}
+
+.label {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.date {
+  text-align: center;
+}
+
+fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 20px;
+  min-inline-size: auto;
+}
+
+legend {
+  margin-top: -10px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.date-pad {
+  padding: 10px;
+}

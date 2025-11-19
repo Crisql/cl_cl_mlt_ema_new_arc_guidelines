@@ -1,0 +1,42 @@
+<section class="modal-content">
+  <header>
+    <h2 mat-dialog-title>Datos de compra</h2>
+  </header>
+  <main>
+    <section class="mb-1">
+      <div fxLayout="row wrap">
+        <span
+          class="margin-left top-bottom"><strong>Código: </strong>{{this.itemDetail && this.itemDetail.length > 0 ? this.itemDetail[0].ItemCode : ''}}</span>
+        <span
+          class="margin-left top-bottom"><strong>Precio: </strong>{{this.itemDetail && this.itemDetail.length > 0 ? this.itemDetail[0].LastPurPrc : ''}}</span>
+        <span
+          class="margin-left top-bottom"><strong>Nombre: </strong>{{this.itemDetail && this.itemDetail.length > 0 ? this.itemDetail[0].ItemDescription : ''}}</span>
+        <span
+          class="margin-left top-bottom"><strong>En stock: </strong>{{this.itemDetail && this.itemDetail.length > 0 ? this.itemDetail[0].OnHand : ''}}</span>
+        <span
+          class="margin-left top-bottom"><strong>Disponible: </strong>{{this.itemDetail && this.itemDetail.length > 0 ? this.itemDetail[0].Available : ''}}</span>
+        <span
+          class="margin-left top-bottom"><strong>Impuesto: </strong>{{this.itemDetail && this.itemDetail.length > 0 ? this.itemDetail[0].TaxCode : ''}}</span>
+      </div>
+    </section>
+    <section>
+      <cl-table
+        [Id]="ItemDetailtableId"
+        [HasStandardHeaders]="hasStandardHeaders"
+        [ShouldSplitPascal]="shouldSplitPascal"
+        [MappedColumns]="mappedColumns"
+        [Records]="itemDetail"
+        [HasItemsSelection]="hasItemsSelection"
+        [ShouldPaginateRequest]="shouldPaginateRequest"
+        [BackgroundTransparent]="true"
+        ScrollHeight="400px">
+      </cl-table>
+    </section>
+  </main>
+  <footer>
+    <app-action-buttons [isIntoMatTab]="false"
+                        [actionButtons]="actionButtons"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

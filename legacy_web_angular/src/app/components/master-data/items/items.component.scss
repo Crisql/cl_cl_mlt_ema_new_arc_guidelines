@@ -1,0 +1,130 @@
+.mat-form-field {
+  width: 100%;
+}
+
+.button-form {
+  margin-bottom: 5px;
+
+}
+
+.main-header {
+  align-items: center;
+  justify-content: space-between;
+}
+
+first-content,
+.main-header div {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.search-field {
+  width: 100%;
+}
+
+.add-button {
+  display: flex;
+  justify-content: flex-end
+}
+
+fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 20px;
+  //margin-bottom: 20px;
+  //background-color: #fff;
+}
+
+.second-content {
+  margin-top: 20px;
+}
+
+.mat-card {
+  margin-bottom: 20px;
+  // border: 1px solid #e0e0e0;
+  // background-color: transparent;
+}
+
+legend {
+  font-weight: bold;
+}
+
+.first-content {
+  margin-top: 20px;
+}
+
+.margin-left {
+  margin-left: 6px;
+}
+
+.margin-right {
+  margin-right: -15px;
+}
+
+
+.DivBtnBardCode {
+  display: flex;
+  // justify-content: space-between;
+}
+
+.BtnBarCode {
+  flex-grow: 1;
+  margin: 0 5px; /* Espacio entre los botones */
+}
+
+.text-aling {
+  text-align: center !important;
+}
+
+.barcode-buttons {
+  margin-top: 2px;
+}
+
+.w-100 {
+  width: 49%;
+}
+
+.mt-1 {
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.overflow {
+  max-height: 250px;
+  overflow-y: auto;
+}
+@media screen and (max-width: 600px) {
+  .overflow {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+
+  .mat-form-field {
+    flex-grow: 1;
+  }
+}
+
+.create-item {
+  margin-top: 20px;
+  margin-left: 15px;
+}
+
+.e-bill {
+  margin-top: -19px !important;
+  border-radius: 0 5px 5px 0;
+  background-color: #0082c0 !important;
+  color: white !important;
+  cursor: pointer;
+  height: 34px;
+}
+
+.fieldset {
+  margin: 1rem;
+  padding: 0.5rem;
+}

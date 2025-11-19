@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ 'ROUTE DETAIL MODAL.ROUTE DETAIL MODAL' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="toggleReorder()">
+        <ion-icon slot="icon-only" [name]="reorder ? 'close' : 'swap-vertical'"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="reorder" (click)="saveNewOrder()">
+        <ion-icon slot="start" name="save"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="route">
+    <ion-reorder-group
+      [disabled]="!reorder"
+      (ionItemReorder)="handleReorder($event)">
+      <ion-item-sliding
+        *ngFor="let list of route.RouteLines; let i = index"
+        #itemSliding
+        class="item-sliding-options-end item-sliding-options-start"
+        [disabled]="reorder">
+        <ion-item>
+          <ion-label>
+            <p class="ion-margin-top">{{ list.CardCode }} {{ list.CardName }}</p>
+            <p class="ion-margin-top">
+              <b>{{ 'ROUTE DETAIL MODAL.ADDRESS' | translate }}:</b> {{ list.Address }}
+            </p>
+            <p class="ion-margin-top">
+              <b>{{ 'ROUTE DETAIL MODAL.ADDRESSTYPE' | translate }}:</b>
+              {{ (list.AddressType === 1 ? 'ADDRESSTYPE.SHIPTO' : 'ADDRESSTYPE.BILLTO') | translate }}
+            </p>
+          </ion-label>
+          <ion-reorder slot="end" *ngIf="reorder"></ion-reorder>
+          <ion-icon
+            slot="end"
+            *ngIf="list.CheckStatus != -1 && !reorder"
+            [name]="list.CheckStatus == 0 ? 'close-circle' :  list.CheckStatus == 3 ? 'ban' : list.CheckStatus == 1? 'checkmark-circle': list.CheckStatus == 4 ? 'log-in': 'time'">
+          </ion-icon>
+        </ion-item>
+        <ion-item-options side="start" *ngIf="!reorder">
+          <ion-item-option color="primary" (click)="OnClickNavigationApps(list, $event, itemSliding)">
+            {{ 'BUTTONS.NAVIGATE' | translate }}
+          </ion-item-option>
+
+          <ion-item-option color="primary"
+            (click)="OnClickCreateCheck(4, 'Check in', list, itemSliding)"
+            *ngIf="((multipleChecks && (list.CheckStatus == 0 || list.CheckStatus == 1 || list.CheckStatus == 3)) || list.CheckStatus == 5) && isRouteActive">
+            {{ 'CHECKTYPE.CheckIn' | translate }}
+          </ion-item-option>
+
+          <ion-item-option color="primary"
+            (click)="OnClickDocumentCheck(list, itemSliding)"
+            *ngIf="list.CheckStatus === 4 && documentCheck && isRouteActive">
+            {{ 'CHECKTYPE.CreateDocument' | translate }}
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item-options side="end" *ngIf="isRouteActive && !reorder">
+          <ion-item-option color="danger"
+            (click)="OnClickCreateCheck(6, 'Check out', list, itemSliding)"
+            *ngIf="list.CheckStatus === 4">
+            {{ 'CHECKTYPE.CheckOut' | translate }}
+          </ion-item-option>
+
+          <ion-item-option color="danger"
+            (click)="OnClickCreateCheck(3, 'Check cancel', list, itemSliding)"
+            *ngIf="list.CheckStatus === 4">
+            {{ 'CHECKTYPE.CheckCancel' | translate }}
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-reorder-group>
+  </ion-list>
+</ion-content>

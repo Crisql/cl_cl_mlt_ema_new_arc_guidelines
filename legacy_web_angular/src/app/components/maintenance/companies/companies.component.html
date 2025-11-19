@@ -1,0 +1,3272 @@
+<div class="main-container">
+  <div *ngIf="!isEdit">
+    <app-action-buttons
+      [actionButtons]="actionButtons"
+      (onActionButtonClicked)="OnActionButtonClicked($event)"
+    >
+      <mat-tab-group
+        [selectedIndex]="companiesTabIndex"
+        (selectedIndexChange)="CompaniesTabChange($event)"
+        class="mobile-tab"
+      >
+        <mat-tab [tabIndex]="0" label="Compañías">
+          <section class="main-container">
+            <fieldset class="top-margin">
+              <section class="table-container">
+                <cl-table
+                  [Id]="companyTableId"
+                  [ShouldPaginateRequest]="false"
+                  [HasStandardHeaders]="hasStandardHeaders"
+                  [ShouldSplitPascal]="shouldSplitPascal"
+                  [MappedColumns]="mappedColumnsCompany"
+                  [Records]="companies"
+                  [RecordsCount]="companies.length"
+                  [HasItemsSelection]="hasItemsSelection"
+                  [Buttons]="buttons"
+                  [BackgroundTransparent]="true"
+                >
+                </cl-table>
+              </section>
+            </fieldset>
+          </section>
+        </mat-tab>
+        <mat-tab [tabIndex]="1" label="Objetos BD">
+          <section class="main-container">
+            <section class="main-container container">
+              <fieldset>
+                <legend>Filtros</legend>
+                <form [formGroup]="dbResourcesFormFilters">
+                  <div class="flex">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Criterio de búsqueda</mat-label>
+                        <input matInput formControlName="Criteria" />
+                      </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Tipo</mat-label>
+                        <mat-select formControlName="Type">
+                          <mat-option
+                            *ngFor="let type of dbResourceTypes"
+                            [value]="type.Type"
+                            >{{ type.Type }} -
+                            {{ type.Description }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="form-button">
+                      <app-action-buttons
+                        class="app-action-resource"
+                        [form]="formTap"
+                        [actionButtons]="actionButtonsResource"
+                        [isIntoMatTab]="false"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)"
+                      >
+                      </app-action-buttons>
+                    </div>
+                  </div>
+                </form>
+              </fieldset>
+              <fieldset class="mt-20">
+                <legend>Resultados</legend>
+                  <div class="form-button">
+                  <app-action-buttons
+                    class="app-action-resource"
+                    [form]="formTap"
+                    [actionButtons]="actionButtonsAddResource"
+                    [isIntoMatTab]="false"
+                    (onActionButtonClicked)="OnActionButtonClicked($event)"
+                  >
+                  </app-action-buttons>
+                  </div>
+                <cl-table
+                  [Id]="dbResourceTableId"
+                  [HasStandardHeaders]="hasStandardHeaders"
+                  [ShouldPaginateRequest]="shouldPaginateRequestResource"
+                  [ShouldSplitPascal]="shouldSplitPascal"
+                  [MappedColumns]="dbResourceTableMappedColumns"
+                  [Records]="filteredDbResources"
+                  [RecordsCount]="filteredDbResources.length"
+                  [HasItemsSelection]="hasItemsSelection"
+                  [Buttons]="buttons"
+                  [BackgroundTransparent]="true"
+                >
+                </cl-table>
+              </fieldset>
+            </section>
+          </section>
+        </mat-tab>
+      </mat-tab-group>
+    </app-action-buttons>
+  </div>
+
+  <div *ngIf="isEdit">
+    <app-action-buttons
+      [form]="formTap"
+      [actionButtons]="actionButtons"
+      (onActionButtonClicked)="OnActionButtonClicked($event)"
+    >
+      <mat-tab-group
+        class="mat-tab-group-company mobile-tab"
+        [selectedIndex]="compInEditionTabIndex"
+        (selectedIndexChange)="CompanyInEditionTabChange($event)"
+      >
+        <mat-tab label="Datos de compañía">
+          <div class="container">
+            <form class="row" [formGroup]="companyForm">
+              <div class="column">
+                <fieldset>
+                  <legend>Información de compañía</legend>
+                  <div class="row">
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Nombre compañía</mat-label>
+                      <input
+                        matInput
+                        placeholder="Nombre compañía"
+                        formControlName="Name"
+                      />
+                      <mat-error
+                        *ngIf="companyForm.controls['Name'].errors?.['required']"
+                      >
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Código base de datos</mat-label>
+                      <input
+                        matInput
+                        placeholder="Nombre compañía"
+                        formControlName="DatabaseCode"
+                      />
+                      <mat-error
+                        *ngIf="companyForm.controls['DatabaseCode'].errors?.['required']"
+                      >
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="column-3">
+                      <mat-label>Conexión SAP</mat-label>
+                      <mat-select matInput formControlName="ConnectionId">
+                        <mat-option
+                          *ngFor="let conection of connections"
+                          [value]="conection.Id"
+                          >{{ conection.Name }}</mat-option
+                        >
+                      </mat-select>
+                      <mat-error
+                        *ngIf="companyForm.controls['ConnectionId'].errors?.['required']"
+                      >
+                        Campo requerido
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-slide-toggle
+                      class="side-toggle"
+                      formControlName="IsActive"
+                      >Activa
+                    </mat-slide-toggle>
+                  </div>
+                </fieldset>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+
+        <mat-tab
+          [disabled]="companyId <= 0"
+          label="Formatos de Impresión"
+          [formGroup]="companyReportForm">
+          <div class="container">
+            <form class="row" [formGroup]="companyReportForm">
+              <div class="column">
+                <div class="row mb-15">
+                  <div class="column">
+                    <fieldset>
+                      <legend>Tipo de consumo de Reportes</legend>
+                      <div class="row">
+                        <mat-slide-toggle class="side-toggle" formControlName="Active">
+                          Servicio
+                        </mat-slide-toggle>
+                        <mat-form-field class="column-3" appearance="outline">
+                          <mat-label>Servidor remoto</mat-label>
+                          <input matInput placeholder="Servidor remoto" formControlName="RemoteServer" />
+                        </mat-form-field>
+                        <mat-form-field class="column-3" appearance="outline">
+                          <mat-label>Ruta en servidor</mat-label>
+                          <input matInput placeholder="Ruta en servidor" formControlName="Path" />
+                        </mat-form-field>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <div class="row mb-15">
+                  <div class="column">
+                    <fieldset>
+                      <legend>Ventas</legend>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Oferta de venta</mat-label>
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Oferta de venta"
+                                formControlName="SaleOffer"
+                              />
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 0)"
+                                #fileInputSaleOffer
+                                type="file"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button upload-button"
+                              (click)="fileInputSaleOffer.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(0)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Orden de venta</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 1)"
+                                #fileInputSaleOrder
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Orden de venta"
+                                formControlName="SaleOrder"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputSaleOrder.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(1)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Notas de crédito</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 5)"
+                                #fileInputCreditNote
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Notas de crédito"
+                                formControlName="CreditNote"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputCreditNote.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(5)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Facturas</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 3)"
+                                #fileInputInvoices
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Facturas"
+                                formControlName="Invoices"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputInvoices.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(3)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Factura anticipo</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 21)"
+                                #fileInputArDownPayment
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Facturas anticipo"
+                                formControlName="ArDownPayment"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputArDownPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(21)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Factura reserva</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 25)"
+                                #fileInputReserveInvoice
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Facturas reserva"
+                                formControlName="ReserveInvoice"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReserveInvoice.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(25)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Entrega</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 26)"
+                                #fileInputDelivery
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Documento entrega"
+                                formControlName="DeliveryNotes"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputDelivery.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(26)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Preliminar</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 27)"
+                                #fileInputPreliminary
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Documento preliminar"
+                                formControlName="Preliminary"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputPreliminary.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(27)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="column">
+                    <fieldset>
+                      <legend>Reimpresión</legend>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Facturas</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 9)"
+                                #fileInputReprintInvoices
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Reimpresión de facturas"
+                                formControlName="ReprintInvoices"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintInvoices.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(9)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Ofertas de venta</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 8)"
+                                #fileInputReprintSaleOffers
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Reimpresión Ofertas de venta"
+                                formControlName="ReprintSaleOffers"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintSaleOffers.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(8)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Órdenes de venta</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 10)"
+                                #fileInputReprintSaleOrders
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Reimpresión Ordenes de venta"
+                                formControlName="ReprintSaleOrders"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintSaleOrders.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(10)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Facturas anticipos</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 23)"
+                                #fileInputReprintArDownPayment
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Reimpresión facturas anticipos"
+                                formControlName="ReprintArDownPayment"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintArDownPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(23)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Facturas reserva</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 24)"
+                                #fileInputReprintReserveInvoice
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Reimpresión facturas reserva"
+                                formControlName="ReprintReserveInvoice"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintReserveInvoice.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(24)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Preliminar</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 28)"
+                                #fileInputReprintPreliminary
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Documento preliminar"
+                                formControlName="ReprintPreliminary"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintPreliminary.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(28)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Entrega</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 29)"
+                                #fileInputReprintDeliveryNotes
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Documento entrega"
+                                formControlName="ReprintDeliveryNotes"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintDeliveryNotes.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(29)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Anticipo compras</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 32)"
+                                #fileInputReprintApDownPayment
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Documento anticipo"
+                                formControlName="ReprintApDownPayment"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintApDownPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(32)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Notas de crédito</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 34)"
+                                #fileInputReprintCreditNotes
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Notas de crédito"
+                                formControlName="ReprintCreditNotes"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintCreditNotes.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(34)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Solicitud de traslado</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 35)"
+                                #fileInputReprintTransferRequest
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Solicitud de traslado"
+                                formControlName="ReprintTransferRequest"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintTransferRequest.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(35)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Orden de compra</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 36)"
+                                #fileInputReprintPurchaseOrder
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Orden de compra"
+                                formControlName="ReprintPurchaseOrder"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReprintPurchaseOrder.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(36)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3"></div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <br />
+                <div class="row mb-15">
+                  <div class="column">
+                    <fieldset>
+                      <legend>Inventario</legend>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Entrada inventario</mat-label>
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Entrada inventario"
+                                formControlName="GoodsReceipt"
+                              />
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 11)"
+                                #fileInputGoodsReceipt
+                                type="file"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button upload-button"
+                              (click)="fileInputGoodsReceipt.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(11)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Salida de inventario</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 12)"
+                                #fileInputGoodsIssue
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Salida de inventario"
+                                formControlName="GoodsIssue"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputGoodsIssue.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(12)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Solicitud de traslado</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 17)"
+                                #fileInputInventoryTransferRequest
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Solicitud de traslado"
+                                formControlName="InventoryTransferRequest"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="
+                                fileInputInventoryTransferRequest.click()
+                              "
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(17)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Transferencia inventario</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 18)"
+                                #fileInputInventoryTransfer
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Transferencia inventario"
+                                formControlName="InventoryTransfer"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputInventoryTransfer.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(18)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="column">
+                    <fieldset>
+                      <legend>Compras</legend>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Entrada mercancías</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 13)"
+                                #fileInputGoodsReceiptPO
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Entrada mercancías"
+                                formControlName="GoodsReceiptPO"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputGoodsReceiptPO.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(13)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Devolución mercancías</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 14)"
+                                #fileInputGoodsReturn
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Devolución mercancías"
+                                formControlName="GoodsReturn"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputGoodsReturn.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(14)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Orden de compra</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 15)"
+                                #fileInputPurchaseOrder
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Órden de compra"
+                                formControlName="PurchaseOrder"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputPurchaseOrder.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(15)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Factura proveedor</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 16)"
+                                #fileInputAPInvoicer
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Factura proveedor"
+                                formControlName="APInvoice"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputAPInvoicer.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(16)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Factura anticipo</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 30)"
+                                #fileInputApDownPayment
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Factura anticipo"
+                                formControlName="ApDownPayment"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputApDownPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(30)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3"></div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <br />
+                <div class="row mt-1">
+                  <div class="column">
+                    <fieldset>
+                      <legend>PIN Pad</legend>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Facturas PinPad</mat-label>
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Facturas PinPad"
+                                formControlName="PinPadInvoices"
+                              />
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 4)"
+                                #fileInputPinPadInvoices
+                                type="file"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputPinPadInvoices.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(4)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Anulación de vouchers</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 2)"
+                                #fileInputVoucherCancellation
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Anulación de vouchers"
+                                formControlName="VoucherCancellation"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputVoucherCancellation.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(2)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label
+                                >Facturas venta anticipos PinPad</mat-label
+                              >
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Facturas anticipo PinPad"
+                                formControlName="PinpadDownPayment"
+                              />
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 22)"
+                                #fileInputPinpadDownPayment
+                                type="file"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputPinpadDownPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(22)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label
+                                >Facturas compras anticipos PinPad</mat-label
+                              >
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Facturas compras anticipo PinPad"
+                                formControlName="PinpadApDownPayment"
+                              />
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 31)"
+                                #fileInputPinpadApDownPayment
+                                type="file"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputPinpadApDownPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(31)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Facturas proveedor PinPad</mat-label>
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Facturas proveedor PinPad"
+                                formControlName="PinpadAPInvoice"
+                              />
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 33)"
+                                #fileInputPinpadAPInvoice
+                                type="file"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputPinpadAPInvoice.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(33)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3"></div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="column">
+                    <fieldset>
+                      <legend>Otros</legend>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Pago efectuado</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 19)"
+                                #fileInputOutgoingPayment
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Pago efectuado"
+                                formControlName="OutgoingPayment"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputOutgoingPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(19)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Pago recibido</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 6)"
+                                #fileInputReceivedPayment
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Pago recibido"
+                                formControlName="ReceivedPayment"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputReceivedPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(6)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Cierre de caja</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 7)"
+                                #fileInputCashClosing
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Cierre de caja"
+                                formControlName="CashClosing"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputCashClosing.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(7)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="column-3">
+                          <div class="row-group">
+                            <mat-form-field
+                              class="column-3 input-group"
+                              appearance="outline"
+                            >
+                              <mat-label>Anular pago</mat-label>
+                              <input
+                                hidden
+                                (change)="OnAttachPrintFormat($event, 20)"
+                                #fileInputCancelPayment
+                                type="file"
+                              />
+                              <input
+                                readonly
+                                matInput
+                                placeholder="Anular pago"
+                                formControlName="CancelPayment"
+                              />
+                            </mat-form-field>
+                            <button
+                              matTooltip="Adjuntar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list upload-button ctrl-button"
+                              (click)="fileInputCancelPayment.click()"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_upload</mat-icon
+                              >
+                            </button>
+                            <button
+                              matTooltip="Descargar"
+                              mat-flat-button
+                              color="primary"
+                              class="button-list ctrl-button"
+                              (click)="DownloadPrintFormat(20)"
+                            >
+                              <mat-icon class="icon-display"
+                                >cloud_download
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column-3"></div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <br />
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+
+        <mat-tab [disabled]="companyId <= 0" label="Correo">
+          <div class="container">
+            <form class="row" [formGroup]="accountForm">
+              <div class="column">
+                <fieldset>
+                  <legend>Correo</legend>
+                  <div class="row">
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Asunto</mat-label>
+                      <input
+                        matInput
+                        placeholder="Asunto"
+                        formControlName="Subject"
+                      />
+                    </mat-form-field>
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Correo</mat-label>
+                      <input
+                        matInput
+                        type="email"
+                        formControlName="Account"
+                        placeholder="Correo electrónico"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Usuario</mat-label>
+                      <input
+                        matInput
+                        placeholder="Usuario"
+                        formControlName="User"
+                      />
+                    </mat-form-field>
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Contraseña</mat-label>
+                      <input
+                        matInput
+                        type="password"
+                        placeholder="Contraseña"
+                        formControlName="Password"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Puerto</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        placeholder="Puerto"
+                        formControlName="Port"
+                      />
+                    </mat-form-field>
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Host</mat-label>
+                      <input
+                        matInput
+                        placeholder="Host"
+                        formControlName="Host"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                    <mat-slide-toggle
+                      class="side-toggle column-3"
+                      formControlName="Ssl"
+                      >SSL
+                    </mat-slide-toggle>
+                  </div>
+                </fieldset>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+
+        <mat-tab [disabled]="companyId <= 0" label="Opciones adicionales">
+          <div class="grid-row">
+            <div class="grid-column">
+              <div class="column-content">
+                <fieldset>
+                  <legend>Facturación</legend>
+                  <div class="row"></div>
+                  <div class="row"></div>
+                  <form [formGroup]="paymentForm">
+                    <div class="row">
+                      <div class="column-3">
+                        <div class="row-1">
+                          <div class="column-3">
+                            <mat-slide-toggle
+                              formControlName="Pinpad"
+                              class="side-toggle column-3"
+                              >Usa PinPad
+                            </mat-slide-toggle>
+                            <mat-slide-toggle
+                              formControlName="ConsultFE"
+                              class="side-toggle column-3"
+                              >Consultar FE
+                            </mat-slide-toggle>
+                          </div>
+                          <div class="column-3">
+                            <mat-slide-toggle
+                              formControlName="RequiredCashAccount"
+                              class="side-toggle"
+                              >Cuenta efectivo requerida
+                            </mat-slide-toggle>
+                            <mat-slide-toggle
+                              formControlName="RequiredTransferAccount"
+                              class="side-toggle"
+                              >Cuenta transferencia requerida
+                            </mat-slide-toggle>
+                            <mat-slide-toggle
+                              formControlName="RequiredCardAccount"
+                              class="side-toggle"
+                              >Cuenta tarjeta requerida
+                            </mat-slide-toggle>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="column-3">
+                        <mat-slide-toggle
+                          formControlName="OrderLine"
+                          class="side-toggle"
+                        >
+                          Ordenar lineas
+                        </mat-slide-toggle>
+                      </div>
+                      <div class="column-3">
+                        <mat-slide-toggle formControlName="RetentionProcess" class="side-toggle">
+                          Uso de Retenciones
+                        </mat-slide-toggle>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="column-3">
+                        <mat-slide-toggle formControlName="ModalProcess" class="side-toggle">
+                          Levantar automáticamente modal de pagos
+                        </mat-slide-toggle>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Fecha válido hasta modal de pagos</mat-label>
+                        <input
+                          matInput
+                          formControlName="CardValid"
+                          placeholder="Fecha válido hasta modal de pagos"
+                        />
+                      </mat-form-field>
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Tarjeta por defecto</mat-label>
+                        <input
+                          matInput
+                          formControlName="CardNumber"
+                          placeholder="Tarjeta por defecto"
+                        />
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Direcciones</legend>
+                  <form [formGroup]="routeForm">
+                    <div class="row">
+                      <div class="column-3">
+                        <div class="row">
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label>Url servicio offline(web)</mat-label>
+                            <input
+                              matInput
+                              placeholder="Url servicio offline(web)"
+                              formControlName="PortServiceLocal"
+                            />
+                          </mat-form-field>
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label>Url servicio PinPad</mat-label>
+                            <input
+                              matInput
+                              formControlName="PortServicePinpad"
+                              placeholder="Url servicio PinPad"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="column-3">
+                        <div class="row">
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label>URL Padrón hacienda</mat-label>
+                            <input
+                              matInput
+                              placeholder="URL Padrón hacienda"
+                              formControlName="PortServiceHacienda"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="column-3">
+                        <div class="row">
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label
+                              >Mensaje de alerta para reenvío de
+                              previsualización en documentos de venta</mat-label
+                            >
+                            <input
+                              matInput
+                              placeholder="Mensaje"
+                              formControlName="MessageServiceLayer"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="colum-content">
+                <fieldset>
+                  <legend>Decimales</legend>
+                  <form [formGroup]="decimalForm">
+                    <mat-form-field class="column-3" appearance="outline">
+                      <mat-label>Cantidad decimales precio</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        placeholder="Cantidad decimales"
+                        formControlName="Price"
+                      />
+                      <mat-error
+                        *ngIf="decimalForm.controls['Price'].errors?.['required']"
+                      >
+                        Campo requerido
+                      </mat-error>
+                      <mat-error
+                        *ngIf="decimalForm.controls['Price'].errors?.['min'] || decimalForm.controls['Price'].errors?.['max']"
+                      >
+                        Decimales 1 al 6
+                      </mat-error>
+                    </mat-form-field>
+                    <div class="row">
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Cantidad decimales total línea</mat-label>
+                        <input
+                          matInput
+                          placeholder="Cantidad decimales"
+                          type="number"
+                          formControlName="TotalLine"
+                        />
+                        <mat-error
+                          *ngIf="decimalForm.controls['TotalLine'].errors?.['required']"
+                        >
+                          Campo requerido
+                        </mat-error>
+                        <mat-error
+                          *ngIf="decimalForm.controls['TotalLine'].errors?.['min'] || decimalForm.controls['TotalLine'].errors?.['max']"
+                        >
+                          Decimales 1 al 6
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label
+                          >Cantidad decimales total documento</mat-label
+                        >
+                        <input
+                          matInput
+                          placeholder="Cantidad decimales"
+                          type="number"
+                          formControlName="TotalDocument"
+                        />
+                        <mat-error
+                          *ngIf="decimalForm.controls['TotalDocument'].errors?.['required']"
+                        >
+                          Campo requerido
+                        </mat-error>
+                        <mat-error
+                          *ngIf="decimalForm.controls['TotalDocument'].errors?.['min'] || decimalForm.controls['TotalDocument'].errors?.['max']"
+                        >
+                          Decimales 1 al 6
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Facturas en memoria</legend>
+                  <form [formGroup]="memoryInvoiceForm">
+                    <div class="row">
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Nombre del documento</mat-label>
+                        <input
+                          matInput
+                          placeholder="Nombre del documento"
+                          formControlName="Name"
+                        />
+                      </mat-form-field>
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Cantidad máxima de facturas</mat-label>
+                        <input
+                          matInput
+                          placeholder="Cantidad máxima de facturas"
+                          type="number"
+                          formControlName="Quantity"
+                        />
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Validación de inventario</legend>
+                  <section class="main-container">
+                    <section class="table-container">
+                      <cl-table
+                        [Id]="validateInventoryTableId"
+                        [ShouldPaginateRequest]="false"
+                        [HasStandardHeaders]="hasStandardHeaders"
+                        [ShouldSplitPascal]="shouldSplitPascal"
+                        [MappedColumns]="vldInventoryTableMappedColumns"
+                        [Records]="validateInventoryTables"
+                        [RecordsCount]="validateInventoryTables.length"
+                        [HasItemsSelection]="hasItemsSelection"
+                        [CheckboxColumns]="vldInventoryTableCheckboxColumns"
+                        [BackgroundTransparent]="true"
+                      >
+                      </cl-table>
+                    </section>
+                  </section>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Aplicación móvil</legend>
+                  <form class="row" [formGroup]="mobileAppConfigurationsForm">
+                    <div class="column-3">
+                      <div class="row-1">
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            matTooltip="En el modo mixto la app móvil consulta información de servicios locales y online, mientras que en online requiere una conexión a internet activa todo el tiempo"
+                            formControlName="OnlineOnly"
+                            class="side-toggle column-3"
+                            >Solo online
+                          </mat-slide-toggle>
+                          <mat-slide-toggle
+                            matTooltip="Indica si la companía puede calcular fletes desde la app móvil"
+                            formControlName="UseFreight"
+                            class="side-toggle"
+                          >
+                            Utiliza fletes
+                          </mat-slide-toggle>
+                        </div>
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            matTooltip="Permite realizar descuentos a todas las líneas de un documento"
+                            formControlName="UseHeaderDiscount"
+                            class="side-toggle"
+                            >Utiliza descuento de cabecera
+                          </mat-slide-toggle>
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label>Tiempo de checks</mat-label>
+                            <input
+                              type="number"
+                              matInput
+                              placeholder="Tiempo en minutos"
+                              formControlName="CheckInTime"
+                            />
+                            <mat-icon
+                              matSuffix
+                              matTooltip="Intervalo de tiempo en minutos en el que se realiza un check de ruta automático"
+                            >
+                              help
+                            </mat-icon>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="row-1">
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            matTooltip="Permite que el usuario pueda crear documentos con una diferencia de posición de GPS no mayor al rango indicado"
+                            formControlName="UseBillingRange"
+                            class="side-toggle"
+                            >Utiliza Rango de facturación
+                          </mat-slide-toggle>
+                        </div>
+                        <div class="column-3">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Rango de facturación</mat-label>
+                            <input
+                              type="number"
+                              matInput
+                              placeholder="Rango de facturación"
+                              formControlName="BillingRange"
+                            />
+                            <mat-icon
+                              matSuffix
+                              matTooltip="Rango en metros en la cual el usuario podra crear documentos a clientes"
+                            >
+                              help
+                            </mat-icon>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="row-1">
+                        <div class="column-3">
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label
+                              >Tiempo de sincronización de historico de
+                              rutas</mat-label
+                            >
+                            <input
+                              type="number"
+                              matInput
+                              placeholder="Tiempo en minutos"
+                              formControlName="CheckSynchronizationInterval"
+                            />
+                            <mat-icon
+                              matSuffix
+                              matTooltip="Intervalo de tiempo en minutos en el que se realiza la sincronizacion del historial de rutas"
+                            >
+                              help
+                            </mat-icon>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Eventos a sincronizar</legend>
+                  <form class="row" [formGroup]="eventViewerConfigurationForm">
+                    <div class="column-3">
+                      <div class="row-1">
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            formControlName="Error"
+                            class="side-toggle column-3"
+                            >Error
+                          </mat-slide-toggle>
+                          <mat-slide-toggle
+                            formControlName="Information"
+                            class="side-toggle"
+                            >Información
+                          </mat-slide-toggle>
+                        </div>
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            formControlName="Success"
+                            class="side-toggle"
+                            >Éxito
+                          </mat-slide-toggle>
+                          <mat-slide-toggle
+                            formControlName="Warning"
+                            class="side-toggle"
+                            >Advertencia
+                          </mat-slide-toggle>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Adjuntos</legend>
+                  <div class="grid-container">
+                    <mat-form-field
+                      appearance="outline"
+                      class="col-lg-12 col-md-12 col-sm-12"
+                    >
+                      <mat-label>Ruta</mat-label>
+                      <input matInput [formControl]="rutaForm" />
+                    </mat-form-field>
+                  </div>
+                  <mat-label>Habilitar adjuntos</mat-label>
+                  <section class="main-container">
+                    <section class="table-container">
+                      <cl-table [Id]="validateAttachmentsTableId"
+                                [ShouldPaginateRequest]="false"
+                                [HasStandardHeaders]="hasStandardHeaders"
+                                [ShouldSplitPascal]="shouldSplitPascal"
+                                [MappedColumns]="vldAttachmentTableMappedColumns"
+                                [Records]="validateAttachmentsTables"
+                                [RecordsCount]="validateAttachmentsTables.length"
+                                [HasItemsSelection]="hasItemsSelection"
+                                [CheckboxColumns]="vldAttachmentsTableCheckboxColumns"
+                                [BackgroundTransparent]="true">
+                      </cl-table>
+                    </section>
+                    </section>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Campos facturación compras</legend>
+                  <div class="grid-container">
+                    <form
+                      class="row"
+                      [formGroup]="fieldsPurchaseInvoiceConfigurationForm"
+                    >
+                      <div class="column-3">
+                        <div class="row-1">
+                          <div class="column-3">
+                            <mat-slide-toggle
+                              matTooltip="Indica sí oculta el tipo de factura en creación de facturas"
+                              formControlName="DisplayTypeInvoice"
+                              class="side-toggle column-3"
+                              >Ocultar campo tipo de factura
+                            </mat-slide-toggle>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+
+            <div class="grid-column">
+              <div class="column-content">
+                <fieldset>
+                  <legend>Márgenes</legend>
+                  <section class="main-container">
+                    <section class="table-container">
+                      <cl-table
+                        [Id]="marginTableId"
+                        [ShouldPaginateRequest]="false"
+                        [HasStandardHeaders]="hasStandardHeaders"
+                        [ShouldSplitPascal]="shouldSplitPascal"
+                        [MappedColumns]="marginTableMappedColumns"
+                        [Records]="margin"
+                        [RecordsCount]="margin.length"
+                        [HasItemsSelection]="hasItemsSelection"
+                        [BackgroundTransparent]="true"
+                      >
+                      </cl-table>
+                    </section>
+                  </section>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Socios de negocios</legend>
+                  <form [formGroup]="defaultBusinessPartnerForm">
+                    <div class="row">
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Socio negocio ventas</mat-label>
+                        <input
+                          matInput
+                          placeholder="Código socio negocio ventas"
+                          formControlName="BusinessPartnerCustomer"
+                        />
+                      </mat-form-field>
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Socio negocio compras</mat-label>
+                        <input
+                          matInput
+                          placeholder="Código socio negocio compras"
+                          formControlName="BusinessPartnerSupplier"
+                        />
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Ajuste de inventario</legend>
+                  <form [formGroup]="adjustmentInventoryForm">
+                    <div class="row">
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Comentarios</mat-label>
+                        <input
+                          matInput
+                          placeholder="Comentarios"
+                          formControlName="Comments"
+                        />
+                      </mat-form-field>
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Nombre cuenta</mat-label>
+                        <input
+                          matInput
+                          placeholder="Nombre cuenta"
+                          formControlName="GoodsReceiptAccount"
+                        />
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Líneas</legend>
+                  <section class="main-container">
+                    <section class="table-container">
+                      <cl-table
+                        [Id]="vldLineTableId"
+                        [ShouldPaginateRequest]="false"
+                        [HasStandardHeaders]="hasStandardHeaders"
+                        [ShouldSplitPascal]="shouldSplitPascal"
+                        [MappedColumns]="vldLineTableMappedColumns"
+                        [Records]="vldLineTables"
+                        [RecordsCount]="vldLineTables.length"
+                        [HasItemsSelection]="hasItemsSelection"
+                        [CheckboxColumns]="vldLineTableCheckboxColumns"
+                        [BackgroundTransparent]="true"
+                      >
+                      </cl-table>
+                    </section>
+                  </section>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Typeaheads</legend>
+                  <form [formGroup]="typeaheadForm">
+                    <fieldset>
+                      <mat-chip-list aria-label="Fish selection">
+                        <div
+                          *ngFor="let pattern of typeAheadItemTag"
+                          (click)="AddTag(pattern.Tag, 'ItemPattern')"
+                        >
+                          <mat-chip class="mat-chip">
+                            {{ pattern.Tag }}
+                          </mat-chip>
+                        </div>
+                      </mat-chip-list>
+                      <mat-form-field
+                        class="column-3 margin-top"
+                        appearance="outline"
+                      >
+                        <mat-label>Artículos</mat-label>
+                        <input
+                          matInput
+                          class="margin-top"
+                          placeholder="CodBar. @BARCODE Cod. @CODE Item. @NAME"
+                          formControlName="ItemPattern"
+                        />
+                        <mat-error
+                          *ngIf="
+                            typeaheadForm.controls['ItemPattern'].hasError(
+                              'pattern'
+                            )
+                          "
+                        >
+                          tags @CODE @NAME son requeridos.
+                        </mat-error>
+                      </mat-form-field>
+                    </fieldset>
+                    <fieldset class="margin-top">
+                      <mat-chip-list aria-label="Fish selection">
+                        <div
+                          *ngFor="let pattern of typeAheadBusinessPartnersTag"
+                          (click)="AddTag(pattern.Tag, 'BusinessPattern')"
+                        >
+                          <mat-chip class="mat-chip">
+                            {{ pattern.Tag }}
+                          </mat-chip>
+                        </div>
+                      </mat-chip-list>
+                      <mat-form-field
+                        class="column-3 margin-top"
+                        appearance="outline"
+                      >
+                        <mat-label>Socio de negocio</mat-label>
+                        <input
+                          matInput
+                          placeholder="Cod.@CODE Socio.@NAME"
+                          value="Cod.@CODE Socio.@NAME"
+                          formControlName="BusinessPattern"
+                        />
+                        <mat-error
+                          *ngIf="
+                            typeaheadForm.controls['BusinessPattern'].hasError(
+                              'pattern'
+                            )
+                          "
+                        >
+                          tags @CODE @NAME son requeridos.
+                        </mat-error>
+                      </mat-form-field>
+                    </fieldset>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Report manager</legend>
+                  <form [formGroup]="reportManagerForm">
+                    <div class="row">
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Key compañía</mat-label>
+                        <input
+                          matInput
+                          formControlName="CompanyKey"
+                          type="number"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="row">
+                      <mat-form-field class="column-3" appearance="outline">
+                        <mat-label>Key aplicación</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="AppKey"
+                        />
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Calendarización</legend>
+                  <form [formGroup]="schedulingConfigurationForm">
+                    <mat-slide-toggle
+                      formControlName="UseScheduling"
+                      class="side-toggle"
+                      >Calendarización
+                    </mat-slide-toggle>
+                    <div class="row">
+                      <div class="column-3">
+                        <div class="row">
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label>Cuenta de servicio Gmail</mat-label>
+                            <input
+                              matInput
+                              placeholder="Cuenta de servicio Gmail"
+                              formControlName="GmailServiceAccount"
+                            />
+                          </mat-form-field>
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label
+                              >Contraseña de cuenta de servicio</mat-label
+                            >
+                            <input
+                              matInput
+                              type="password"
+                              placeholder="Contraseña de cuenta de servicio"
+                              formControlName="GmailServiceAccountPassword"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="column-3">
+                        <div class="row">
+                          <mat-form-field class="column-3" appearance="outline">
+                            <mat-label>URL Servicio de Outlook</mat-label>
+                            <input
+                              matInput
+                              placeholder="URL Servicio Outlook"
+                              formControlName="OutlookServiceURL"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Campos facturación ventas</legend>
+                  <form
+                    class="row"
+                    [formGroup]="fieldsInvoiceConfigurationForm"
+                  >
+                    <div class="column-3">
+                      <div class="row-1">
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            matTooltip="Indica sí oculta el tipo de factura en creación de facturas"
+                            formControlName="DisplayTypeInvoice"
+                            class="side-toggle column-3"
+                            >Ocultar campo tipo de factura
+                          </mat-slide-toggle>
+                          <mat-slide-toggle
+                            matTooltip="Indica sí guarda el número de factura o número de referencia"
+                            formControlName="NumFactura"
+                            class="side-toggle"
+                            >Guardar número de factura
+                          </mat-slide-toggle>
+                        </div>
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            matTooltip="Indica sí guarda direcciones de socios de negocios al crear factura"
+                            formControlName="SetAddressBusinessPartner"
+                            class="side-toggle"
+                            >Guardar direcciones de socio de negocio
+                          </mat-slide-toggle>
+                          <mat-slide-toggle
+                            matTooltip="Habilita edición de moneda a nivel de línea"
+                            formControlName="ChangeCurrencyLine"
+                            class="side-toggle"
+                            >Habilita edición de moneda en las líneas
+                          </mat-slide-toggle>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Notificaciones de autorizaciones</legend>
+                  <form
+                    class="row"
+                    [formGroup]="fieldsNotificationsForm"
+                  >
+                    <div class="column-3">
+                      <div class="row-1">
+                        <div class="column-3">
+                          <mat-slide-toggle
+                            matTooltip="Indica sí se envia emails en los procesos de autorizaciones"
+                            formControlName="ActiveNotifications"
+                            class="side-toggle column-3"
+                            >Activar notificaciones para autorizaciones
+                          </mat-slide-toggle>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <div class="column-content">
+                <fieldset>
+                  <legend>Impresión automática de documentos</legend>
+                  <section class="main-content">
+                    <section class="table-container">
+                      <cl-table
+                      [Id]="validateAutomaticPrintingTableId"
+                      [ShouldPaginateRequest]="false"
+                      [HasStandardHeaders]="hasStandardHeaders"
+                      [ShouldSplitPascal]="shouldSplitPascal"
+                      [MappedColumns]="vldAutomaticPrintingTableMappedColumns"
+                      [Records]="validateAutomaticPrintingTables"
+                      [RecordsCount]="validateAutomaticPrintingTables.length"
+                      [HasItemsSelection]="hasItemsSelection"
+                      [CheckboxColumns]="vlAutomaticPrintingTableCheckboxColumns"
+                      [BackgroundTransparent]="true"
+                      >
+                      </cl-table>
+                    </section>
+                  </section>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab
+          [disabled]="companyId <= 0"
+          label="Configuración nombre objetos"
+        >
+          <div class="container">
+            <fieldset>
+              <legend>Campos específicos sap</legend>
+              <mat-accordion>
+                <mat-expansion-panel class="mat-elevation-z0">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title> Socios de negocio</mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <p>
+                    <mat-checkbox [formControl]="IsCompanyDirection"
+                      >Manejo direcciones</mat-checkbox
+                    >
+                  </p>
+
+                  <cl-table
+                    [Id]="fielsBusinessPartnerTableId"
+                    [CheckboxColumns]="fieldBusinessPartnerTableCheckboxColumns"
+                    [DropdownColumns]="dropdownColumns"
+                    [DropdownList]="dropdownList"
+                    [ShouldPaginateRequest]="shouldPaginateRequestAddress"
+                    [HasStandardHeaders]="hasStandardHeaders"
+                    [ShouldSplitPascal]="shouldSplitPascal"
+                    [MappedColumns]="fieldBusinessPartnerMappedColumns"
+                    [Records]="fieldBusinessPartner"
+                    [RecordsCount]="fieldBusinessPartner.length"
+                    [HasItemsSelection]="hasItemsSelection"
+                    [BackgroundTransparent]="true"
+                  >
+                  </cl-table>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </fieldset>
+          </div>
+        </mat-tab>
+
+        <mat-tab [disabled]="companyId <= 0" label="Objetos BD">
+          <section class="main-container container">
+            <fieldset>
+              <legend>Filtros</legend>
+              <form [formGroup]="dbResourcesFormFilters">
+                <div class="flex">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Criterio de búsqueda</mat-label>
+                      <input matInput formControlName="Criteria" />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Tipo</mat-label>
+                      <mat-select formControlName="Type">
+                        <mat-option
+                          *ngFor="let type of dbResourceTypes"
+                          [value]="type.Type"
+                          >{{ type.Type }} - {{ type.Description }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-button">
+                    <app-action-buttons
+                      class="app-action-resource"
+                      [form]="formTap"
+                      [actionButtons]="actionButtonsResource"
+                      [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)"
+                    >
+                    </app-action-buttons>
+                  </div>
+                </div>
+              </form>
+            </fieldset>
+            <fieldset class="mt-20">
+              <legend>Resultados</legend>
+              <cl-table
+                [Id]="dbResourceTableId"
+                [HasStandardHeaders]="hasStandardHeaders"
+                [ShouldPaginateRequest]="shouldPaginateRequestResource"
+                [ShouldSplitPascal]="shouldSplitPascal"
+                [MappedColumns]="dbResourceTableMappedColumns"
+                [Records]="filteredDbResources"
+                [RecordsCount]="filteredDbResources.length"
+                [HasItemsSelection]="hasItemsSelection"
+                [Buttons]="buttons"
+                [BackgroundTransparent]="true"
+              >
+              </cl-table>
+            </fieldset>
+          </section>
+        </mat-tab>
+
+        <mat-tab [disabled]="companyId <= 0" label="Planes de lealtad">
+          <section class="main-container container">
+            <fieldset>
+              <legend>Planes de lealtad</legend>
+              <div class="inline-container">
+                <mat-checkbox
+                  (change)="ActiveLoyaltyPlan($event.checked)"
+                  [formControl]="loyaltyPlanActiveForm"
+                >
+                  Activar
+                </mat-checkbox>
+                <form [formGroup]="loyaltyPlanForm">
+                  <mat-radio-group
+                    formControlName="plan"
+                    (change)="SelectPlan($event.value)"
+                  >
+                    <mat-radio-button value="tapp">Tapp</mat-radio-button>
+                    <mat-radio-button value="lealto">Lealto</mat-radio-button>
+                  </mat-radio-group>
+                </form>
+              </div>
+            </fieldset>
+            <!-- LEALTO -->
+            <ng-container *ngIf="lealtoSelect">
+              <form [formGroup]="lealtoForm">
+                <fieldset class="mt-20">
+                  <legend>Datos de la tarjeta registrada</legend>
+                  <div class="lealto">
+                    <div class="grid-container">
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Id</mat-label>
+                        <input matInput type="number" formControlName="Id" />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['Id'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Número de tarjeta</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="CardNumber"
+                        />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['CardNumber'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Fecha de vencimiento</mat-label>
+                        <input
+                          matInput
+                          clcustomdatepicker="MM/YYYY"
+                          [matDatepicker]="datepicker"
+                          formControlName="Valid"
+                        />
+                        <mat-hint>MM/YYYY</mat-hint>
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="datepicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker
+                          #datepicker
+                          startView="multi-year"
+                          (monthSelected)="
+                            SetMonthAndYear($event, datepicker, 'lealto')
+                          "
+                          panelClass="example-month-picker"
+                        >
+                        </mat-datepicker>
+                        <mat-error
+                          *ngIf="tappForm.controls['Valid'].errors?.['required']"
+                          >--> El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Cuenta</mat-label>
+                        <input matInput type="text" formControlName="Account" />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['Account'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Voucher</mat-label>
+                        <input matInput type="text" formControlName="Voucher" />
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Owner</mat-label>
+                        <input matInput type="text" formControlName="Owner" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset class="mt-20">
+                  <legend>Configuración del plan</legend>
+                  <div class="lealto">
+                    <div class="grid-container">
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Api key</mat-label>
+                        <input matInput type="text" formControlName="ApiKey" />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['ApiKey'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="w-100"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Usuario</mat-label>
+                        <input matInput type="text" formControlName="User" />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['User'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Contraseña de lealto</mat-label>
+                        <input
+                          matInput
+                          [type]="passwordInputType"
+                          formControlName="Password"
+                        />
+                        <button
+                          mat-icon-button
+                          matSuffix
+                          (click)="ChangePasswordInputType()"
+                        >
+                          <mat-icon>{{ passwordBtnVisibilityIcon }}</mat-icon>
+                        </button>
+                        <mat-error
+                          *ngIf="lealtoForm.controls['Password'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Url de lealto</mat-label>
+                        <input matInput type="text" formControlName="UrlBase" />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['UrlBase'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Ambiente</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="Ambiente"
+                        />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['Ambiente'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </ng-container>
+            <!--  TAPP  -->
+            <ng-container *ngIf="tappSelect">
+              <form [formGroup]="tappForm">
+                <fieldset class="mt-20">
+                  <legend>Datos de la tarjeta registrada</legend>
+                  <div class="tapp">
+                    <div class="grid-container">
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Id</mat-label>
+                        <input matInput type="number" formControlName="Id" />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['Id'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Número de tarjeta</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="CardNumber"
+                        />
+                        <mat-error
+                          *ngIf="lealtoForm.controls['CardNumber'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Fecha de vencimiento</mat-label>
+                        <input
+                          matInput
+                          clcustomdatepicker="MM/YYYY"
+                          [matDatepicker]="datepicker"
+                          formControlName="Valid"
+                        />
+                        <mat-hint>MM/YYYY</mat-hint>
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="datepicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker
+                          #datepicker
+                          startView="multi-year"
+                          (monthSelected)="
+                            SetMonthAndYear($event, datepicker, 'tapp')
+                          "
+                          panelClass="example-month-picker"
+                        >
+                        </mat-datepicker>
+                        <mat-error
+                          *ngIf="tappForm.controls['Valid'].errors?.['required']"
+                          >--> El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Cuenta</mat-label>
+                        <input matInput type="text" formControlName="Account" />
+                        <mat-error
+                          *ngIf="tappForm.controls['Account'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Voucher</mat-label>
+                        <input matInput type="text" formControlName="Voucher" />
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Owner</mat-label>
+                        <input matInput type="text" formControlName="Owner" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset class="mt-20">
+                  <legend>Configuración del plan</legend>
+                  <div class="tapp">
+                    <div class="grid-container">
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Register Id</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="Register"
+                        />
+                        <mat-error
+                          *ngIf="tappForm.controls['Register'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Almacén</mat-label>
+                        <input matInput type="text" formControlName="Store" />
+                        <mat-error
+                          *ngIf="tappForm.controls['Store'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Url tapp</mat-label>
+                        <input matInput type="text" formControlName="Url" />
+                        <mat-error
+                          *ngIf="tappForm.controls['Url'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field
+                        appearance="outline"
+                        class="col-lg-3 col-md-6 col-sm-12"
+                      >
+                        <mat-label>Token</mat-label>
+                        <input matInput type="text" formControlName="Token" />
+                        <mat-error
+                          *ngIf="tappForm.controls['Token'].errors?.['required']"
+                        >
+                          El campo es requerido
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </ng-container>
+          </section>
+        </mat-tab>
+
+        <mat-tab [disabled]="companyId <= 0" label="Jerarquías de descuentos">
+          <section class="main-container container">
+            <app-discount-hierarchies
+              [discountHierarchies]="discountHierarchies"
+            ></app-discount-hierarchies>
+          </section>
+        </mat-tab>
+      </mat-tab-group>
+    </app-action-buttons>
+  </div>
+</div>

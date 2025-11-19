@@ -1,0 +1,15 @@
+.sig-container {
+  width: 100%;
+  height: 40vh;
+  border: 1px dashed var(--ion-color-medium);
+  border-radius: 8px;
+  overflow: hidden;
+  touch-action: none; /* evita scroll/zoom durante el trazo */
+}
+
+.sig-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #fff; /* para descartar fondo transparente */
+}

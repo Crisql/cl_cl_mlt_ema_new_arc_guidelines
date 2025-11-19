@@ -1,0 +1,267 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "BILLING.ADD PAYM" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear"
+                        (click)="CloseModal()">
+                <ion-icon slot="icon-only"
+                          name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear"
+                        (click)="CreatePayment()">
+                <ion-icon slot="icon-only"
+                          name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-segment [(ngModel)]="currentSegment">
+        <ion-segment-button value="cash">
+            <ion-label>{{ "PAYMENTS.CASH" | translate }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="card">
+            <ion-label>{{ "PAYMENTS.CARD" | translate }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="transfer">
+            <ion-label>{{ "PAYMENTS.TRANSFER" | translate }}</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <div [ngSwitch]="currentSegment">
+
+        <!--TAB DE EFECTIVO-->
+        <div *ngSwitchCase="'cash'">
+            <form [formGroup]="cashPaymForm">
+                <ion-list>
+
+                    <ion-item>
+                        <ion-label position="stacked">
+                            {{ "INCOMMINGPAYMENT.CURRENCY" | translate }}
+                        </ion-label>
+                        <ion-select formControlName="Currency" (ionChange)="CurrencyChanged($event.target.value)">
+                            <ion-select-option *ngFor="let curr of currencyList" [value]="curr.Id">
+                                {{ curr.Name }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label position="stacked">{{ "BILLING.ACCOUNT" | translate }}
+                        </ion-label>
+                        <ion-input [value]="cashAccountInput"
+                                   readonly
+                                   type="text"
+                                   (click)="ShowInputOptions(this.cashPaymForm.controls['account'], 'cashAccountInput', cashOptions, 'wallet-outline',1)"
+                                   placeholder="{{'BILLING.CHOOSE OPTION' | translate }}">
+                        </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label slot="start">{{ "BILLING.TOTAL" | translate }}
+                        </ion-label>
+                        <ion-label slot="start">{{ currencyIcon }}</ion-label>
+                        <ion-input formControlName="Amount"
+                                   type="number"
+                                   (ionBlur)="AmountChanged($event,1)"
+                                   [readonly]="!currencyInUse || !SelectCashAccount">
+                        </ion-input>
+                        <ion-button slot="end"
+                                    fill="clear"
+                                    [disabled]="!currencyInUse || !SelectCashAccount"
+                                    (click)="SetCurrentDifference(1)">
+                            <ion-icon slot="icon-only" name="clipboard"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                </ion-list>
+            </form>
+        </div>
+
+        <!--TAB DE TARJETAS-->
+        <div *ngSwitchCase="'card'">
+            <form [formGroup]="cardPaymForm">
+                <ion-list>
+                    <ion-item>
+                        <ion-label position="stacked">{{ "INCOMMINGPAYMENT.CURRENCY" | translate }}
+                        </ion-label>
+                        <ion-select formControlName="Currency"
+                                    (ionChange)="CurrencyChanged($event.target.value)">
+                            <ion-select-option *ngFor="let curr of currencyList" [value]="curr.Id">
+                                {{ curr.Name }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label position="stacked">{{ "BILLING.CARDNAME" | translate }}
+                        </ion-label>
+                        <ion-input type="text"
+                                   [value]="cardTypesInput"
+                                   readonly
+                                   (click)="ShowInputOptions(this.cardPaymForm.controls['cardName'], 'cardTypesInput', cardTypesOptions, 'card-outline',2)"
+                                   placeholder="{{'BILLING.CHOOSE OPTION' | translate }}">
+                        </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label position="stacked">{{ "BILLING.CARDNUMBER" | translate }}:
+                        </ion-label>
+                        <ion-input formControlName="cardNumber"
+                                   type="text"
+                                   pattern="[0-9]{4}"
+                                   placeholder="{{ 'BILLING.DIGITSCARDS' | translate }}">
+                        </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>{{ "BILLING.VALIDUNTIL" | translate }}</ion-label>
+                        <ion-select formControlName="validMonth"
+                                    [interfaceOptions]="monthSelectOptions">
+                            <ion-select-option *ngFor="let month of months" value="{{ month.Name }}">
+                                {{ month.Id }}
+                            </ion-select-option>
+                        </ion-select>
+                        <ion-select slot="end"
+                                    formControlName="validYear"
+                                    [interfaceOptions]="yearSelectOptions">
+                            <ion-select-option *ngFor="let year of years" value="{{ year.Year }}">
+                                {{ year.Year }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label slot="start">{{ "BILLING.AMOUNT" | translate }}
+                        </ion-label>
+                        <ion-label slot="start">
+                            {{ currencyIcon }}
+                        </ion-label>
+                        <ion-input [readonly]="!currencyInUse || !SelectCardAccount"
+                                   formControlName="Amount"
+                                   type="number"
+                                   (ionBlur)="AmountChanged($event,2)">
+                        </ion-input>
+                        <ion-button slot="end"
+                                    fill="clear"
+                                    [disabled]="!currencyInUse || !SelectCardAccount"
+                                    (click)="SetCurrentDifference(2)">
+                            <ion-icon slot="icon-only" name="clipboard"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                </ion-list>
+            </form>
+            <ion-row>
+                <ion-col size="12">
+                    <ion-button fill="solid"
+                                expand="block"
+                                color="primary"
+                                (click)="AddCard()"
+                                [disabled]="cardPaymForm.invalid">
+                        {{ "BUTTONS.ADD" | translate }}
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+
+            <ion-list>
+                <ion-list-header>
+                    <ion-label>{{ "BILLING.CARDLIST" | translate }}</ion-label>
+                </ion-list-header>
+                <ion-item-sliding #slidingItem *ngFor="let card of cards; index as i"
+                                  class="item-sliding-options-end">
+                    <ion-item>
+                        <ion-label slot="start">
+                            {{ card.CreditCardNumber }}
+                        </ion-label>
+                        <ion-label>
+                            {{ GetCurrency(card.Currency).Symbol }}{{ card.CreditSum | number:TO_FIXED_TOTALDOCUMENT }}
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item-options side="end">
+                        <ion-item-option color="danger"
+                                         (click)="DeleteCard(card, slidingItem, i)">
+                            {{ "BUTTONS.REMOVE" | translate }}
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-list>
+        </div>
+
+        <!--TAB DE TRANSFERENCIA-->
+        <div *ngSwitchCase="'transfer'">
+            <form [formGroup]="transferForm">
+                <ion-list>
+                    <ion-item>
+                        <ion-label position="stacked">
+                            {{ "INCOMMINGPAYMENT.CURRENCY" | translate }}
+                        </ion-label>
+                        <ion-select formControlName="Currency"
+                                    (ionChange)="CurrencyChanged($event.target.value)">
+                            <ion-select-option *ngFor="let curr of currencyList" [value]="curr.Id">
+                                {{ curr.Name }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">{{ "BILLING.ACCOUNT" | translate }}
+                        </ion-label>
+                        <ion-input [value]="transferAccountInput"
+                                   readonly
+                                   type="text"
+                                   (click)="ShowInputOptions(transferForm.controls['account'], 'transferAccountInput', transferOptions, 'wallet-outline',3)"
+                                   placeholder="{{'BILLING.CHOOSE OPTION' | translate }}">
+                        </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label slot="start">{{ "BILLING.REFERENCE" | translate }}
+                        </ion-label>
+                        <ion-input formControlName="reference"
+                                   type="text"
+                                   [readonly]="!currencyInUse">
+                        </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label slot="start">{{ "BILLING.TOTAL" | translate }}
+                        </ion-label>
+                        <ion-label slot="start">
+                            {{ currencyIcon }}
+                        </ion-label>
+                        <ion-input formControlName="Amount"
+                                   type="number"
+                                   (ionBlur)="AmountChanged($event, 3)"
+                                   [readonly]="!currencyInUse || !SelectTranferAccount">
+                        </ion-input>
+                        <ion-button slot="end"
+                                    fill="clear"
+                                    [disabled]="!currencyInUse || !SelectTranferAccount"
+                                    (click)="SetCurrentDifference(3)">
+                            <ion-icon slot="icon-only" name="clipboard"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                </ion-list>
+            </form>
+        </div>
+
+    </div>
+
+    <ng-container *ngIf="currencyInUse">
+        <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+            <ion-fab-button>
+                <ion-icon name="information-circle"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-list side="top">
+                <ion-button color="primary"><span>{{ "BILLING.RECEIVED" | translate }}
+                    : {{ received | number:TO_FIXED_TOTALDOCUMENT }}</span></ion-button>
+                <ion-button color="primary"><span>{{ "BILLING.MISSING" | translate }}
+                    : {{ difference | number:TO_FIXED_TOTALDOCUMENT }}</span></ion-button>
+                <ion-button color="danger"><span>{{ "BILLING.TOTAL" | translate }}:
+                    {{ GetCurrency(currencyInUse).IsLocal ? data.total : data.totalFC | number:TO_FIXED_TOTALDOCUMENT }}</span>
+                </ion-button>
+            </ion-fab-list>
+        </ion-fab>
+    </ng-container>
+</ion-content>

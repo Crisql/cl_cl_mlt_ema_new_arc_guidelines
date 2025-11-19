@@ -1,0 +1,202 @@
+<div class="main-container">
+  <div class="main-header">
+    <app-action-buttons [form]="itemForm" [actionButtons]="actionButtons" [isIntoMatTab]="true"
+                        (onActionButtonClicked)="OnActionButtonClicked($event)">
+      <mat-tab-group (selectedIndexChange)="TabChange($event)" [selectedIndex]="TabIndex" class="mobile-tab">
+        <mat-tab label="Edición/Creación de artículos">
+          <form [formGroup]="opcionesMenuForm">
+            <mat-radio-group aria-label="Select an option" (change)="OpcionMenu($event.value)"
+                             formControlName="Opcion">
+              <mat-radio-button value="2" class="create-item">Buscar artículo</mat-radio-button>
+              <mat-radio-button value="1" class="create-item">Crear artículos</mat-radio-button>
+            </mat-radio-group>
+          </form>
+          <fieldset class="first-content" *ngIf="opcionesMenuForm.controls['Opcion'].value !== '1'">
+            <legend>
+              Búsqueda
+            </legend>
+            <div class="flex">
+              <mat-form-field class="w-100 input-group" appearance="outline">
+                <input readonly placeholder="Buscar ítem" [formControl]="itemFormControl" type="text"
+                       matInput>
+              </mat-form-field>
+              <button matTooltip="Buscar ítem"
+                      type="button"
+                      mat-flat-button color="primary"
+                      class="e-bill"
+                      (click)="ShowModalSearchItems()">
+                <mat-icon class="icon-display">search</mat-icon>
+              </button>
+            </div>
+          </fieldset>
+          <fieldset class="first-content">
+            <legend>
+              Datos de ítem
+            </legend>
+            <form class="grid-container" [formGroup]="itemForm">
+
+              <ng-container *ngIf="!IsSerial && opcionesMenuForm.controls['Opcion'].value === '1'">
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                  <mat-form-field appearance="outline" class="form-field" style="margin-bottom: -0.5em;">
+                    <mat-label>Código Artículo</mat-label>
+                    <input matInput formControlName="ItemCode">
+                  </mat-form-field>
+                </div>
+              </ng-container>
+
+              <div
+                [ngClass]="!IsSerial && TabIndex === 1 ? 'col-lg-4 col-md-12 col-sm-12' : 'col-lg-6 col-md-12 col-sm-12'">
+                <mat-form-field appearance="outline" class="form-field" style="margin-bottom: -1.5em;">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput formControlName="ItemName" [readonly]="EnableOrDisableFields()">
+                </mat-form-field>
+              </div>
+
+              <div
+                [ngClass]="!IsSerial && TabIndex === 1 ? 'col-lg-4 col-md-12 col-sm-12' : 'col-lg-6 col-md-12 col-sm-12'">
+                <mat-form-field appearance="outline" class="form-field" style="margin-bottom: -1.5em;">
+                  <mat-label>Nombre foráneo</mat-label>
+                  <input matInput formControlName="ForeignName" [readonly]="EnableOrDisableFields()">
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="outline" class="form-field" style="margin-bottom: -1.5em;">
+                  <mat-label>Impuesto</mat-label>
+                  <mat-select matInput formControlName="U_IVA" (selectionChange)="updatePrice()"
+                              [disabled]="EnableOrDisableFields()">
+                    <mat-option *ngFor="let tax of taxes" [value]="tax.TaxRate">
+                      {{tax.TaxCode}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="outline" class="form-field" style="margin-bottom: -1.5em;">
+                  <mat-label>Lista de precios</mat-label>
+                  <mat-select matInput [formControl]="price" (selectionChange)="GetItemPrices($event.value)"
+                              [disabled]="EnableOrDisableFields()">
+                    <mat-option *ngFor="let price of priceList" [value]="price">
+                      {{price.ListName}}
+                    </mat-option>
+                  </mat-select>
+
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-6 col-md-12 col-sm-12">
+
+                <mat-form-field appearance="outline" class="form-field" style="margin-bottom: -1.5em;">
+                  <mat-label>Precio unitario</mat-label>
+                  <input matInput type="number" formControlName="UnitPrice" (keyup)="updatePrice()"
+                         [readonly]="!hasPermission() || EnableOrDisableFields()">
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="outline" class="form-field" style="margin-bottom: -1.5em;">
+                  <mat-label>P. unitario con impuesto</mat-label>
+                  <input matInput formControlName="PriceImp" (keyup)="updatePriceImp()"
+                         [readonly]="!hasPermission() || EnableOrDisableFields()">
+                </mat-form-field>
+              </div>
+
+
+            </form>
+          </fieldset>
+
+          <ng-container *ngIf="isVisible">
+            <fieldset class="mt-1">
+              <legend>
+                {{Title}}
+              </legend>
+
+              <cl-dynamics-udfs-presentation
+                [Id]="UdfsId"
+                [ApiUrl]="ApiUrl"
+                [UdfsCategory]="DBODataEndPoint">
+              </cl-dynamics-udfs-presentation>
+            </fieldset>
+          </ng-container>
+
+          <fieldset class="second-content">
+            <legend>
+              Código de barras
+            </legend>
+            <div fxLayout="row wrap" fxLayoutAlign="space-between">
+
+              <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.gt-sm="33" fxFlex.gt-md="33">
+                <mat-form-field appearance="outline" style="margin-bottom: -0.8em;">
+                  <mat-label>Código de barras</mat-label>
+                  <input [readonly]="IsonUpdate || EnableOrDisableFields()" placeholder="Código de barras"
+                         [formControl]="bcdCodeFormControl" type="text"
+                         matInput>
+                </mat-form-field>
+              </div>
+
+              <div fxflex="100" fxFlex.xs="100" fxFlex.sm="49" fxFlex.gt-sm="33" fxFlex.gt-md="33">
+                <mat-form-field appearance="outline" style="margin-bottom: -0.8em;">
+                  <mat-label>Descripción</mat-label>
+                  <input placeholder="Descripción" [formControl]="bcdNameFormControl" type="text" matInput
+                         [readonly]="EnableOrDisableFields()">
+                </mat-form-field>
+              </div>
+
+              <div div fxflex="100" fxFlex.xs="100" fxFlex.sm="100" fxFlex.gt-sm="33" fxFlex.gt-md="33">
+                <div fxLayout="row wrap" fxLayoutAlign="end">
+                  <button ngClass.gt-sm="barcode-buttons" ngClass.sm="w-100" mat-flat-button color="primary"
+                          [disabled]="!this.bcdCodeFormControl.value" (click)="AddBardCode()">
+                    <mat-icon>{{iconAction}}</mat-icon>
+                    {{textAction}}
+                  </button>
+                  <button ngClass.gt-sm="barcode-buttons margin-left margin-right" ngClass.sm="w-100 margin-left"
+                          mat-flat-button color="primary"
+                          [disabled]="!this.bcdCodeFormControl.value" (click)="CleanBardCode()">
+            <span class="material-symbols-outlined">
+              mop
+            </span>
+                    Limpiar
+                  </button>
+                </div>
+              </div>
+              <div class="overflow" style="width: 100%;">
+                <cl-table class="mat-elevation-z" style="width: 100%;"
+                          [Id]="barcodetableId"
+                          [HasStandardHeaders]="hasStandardHeaders"
+                          [ShouldSplitPascal]="shouldSplitPascal"
+                          [MappedColumns]="mappedColumns"
+                          [Records]="bardcode"
+                          [RecordsCount]="bardcode.length"
+                          [Buttons]="buttons"
+                          [ShouldPaginateRequest]="shouldPaginateRequest"
+                          [BackgroundTransparent]="true">
+                </cl-table>
+              </div>
+            </div>
+          </fieldset>
+        </mat-tab>
+        <mat-tab label="Detalles de Inventario" [disabled]="!currentItem || opcionesMenuForm.value === '2'">
+          <fieldset class="fieldset">
+            <section>
+              <cl-table
+                [Id]="inventoryDetailsTableId"
+                [HasStandardHeaders]="hasStandardHeadersInventoryDetails"
+                [ShouldSplitPascal]="shouldSplitPascalInventoryDetails"
+                [MappedColumns]="mappedColumnsInventoryDetails"
+                [ShouldPaginateRequest]="shouldPaginateRequestInventoryDetails"
+                [Records]="inventoryDetails"
+                [ItemsPeerPage]="10"
+                [RecordsCount]="inventoryDetails.length"
+                ScrollHeight="150px"
+              >
+              </cl-table>
+            </section>
+          </fieldset>
+        </mat-tab>
+      </mat-tab-group>
+    </app-action-buttons>
+  </div>
+
+
+</div>

@@ -1,0 +1,38 @@
+<section>
+
+  <div class="modal-header row">
+    <h4 class="modal-title" id="modal-basic-title">Detalles de check</h4>
+    <button mat-icon-button [mat-dialog-close]="false">
+      <mat-icon>
+        close
+      </mat-icon>
+    </button>
+  </div>
+  <mat-divider class="spacer"></mat-divider>
+  <div class="modal-body ">
+    <div class="row">
+      <div class="col-12">
+        <div class="mb-2">
+          <b>Comentarios:</b>
+          {{routeHistory.Comments}}
+        </div>
+        <mat-divider *ngIf="routeHistory.Photos" class="spacer"></mat-divider>
+        <div class="img-height">
+            <angular-image-viewer  [src]="[routeHistory.Photos]" [screenHeightOccupied]='0'
+              *ngIf="routeHistory.Photos"
+              [config]="{btnShow: { next: false, prev: false, zoomIn: true, zoomOut: true},  containerBackgroundColor: 'white' }">
+            </angular-image-viewer>
+        </div>
+        <div class="mt-3" *ngIf="!routeHistory.Photos">
+          <h5 class="text-center">
+            Sin adjuntos
+            <mat-icon>
+              question
+            </mat-icon>
+          </h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

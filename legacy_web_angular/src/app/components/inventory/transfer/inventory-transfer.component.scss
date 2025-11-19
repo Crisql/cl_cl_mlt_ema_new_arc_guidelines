@@ -1,0 +1,52 @@
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+
+  div {
+    width: calc(100% - 10px);
+  }
+}
+
+.section{
+  margin-bottom: 1rem;
+}
+
+
+.section-title {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 600px) {
+  .multi-bottoms {
+    flex-direction: column;
+    padding-top: 10px;
+    position: fixed;
+    background-color: #fafafa !important;
+    z-index: 9996;
+    width: 100%;
+  }
+}
+
+.w-100{
+  width: 100%;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  column-gap: 0;
+
+  .mat-form-field {
+    flex-grow: 1;
+  }
+}
+
+.e-bill {
+  border-radius: 0 5px 5px 0;
+  background-color: #0082c0 !important;
+  color: white !important;
+  cursor: pointer;
+  height: 34px;
+}

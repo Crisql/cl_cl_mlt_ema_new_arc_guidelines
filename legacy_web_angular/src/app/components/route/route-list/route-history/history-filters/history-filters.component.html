@@ -1,0 +1,89 @@
+<section>
+
+  <div class="row">
+    <div class="modal-title">
+      Filtros
+    </div>
+    <button mat-icon-button [mat-dialog-close]="false">
+      <mat-icon>
+        close
+      </mat-icon>
+    </button>
+  </div>
+
+
+  <div class="visible-checks">
+    <div>
+      Check visibles
+    </div>
+    <div>
+      <mat-chip-list>
+        <mat-chip *ngFor="let check of routeChecks" style="{{check.Prop2}}">
+          {{check.Description}}
+          <mat-checkbox matChipTrailingIcon [checked]="IsChecked(check)" (click)="ToggleCheck(check)"></mat-checkbox>
+
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+  <fieldset>
+    <legend>
+      Búsqueda
+    </legend>
+    <form [formGroup]="filtersForm">
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="example-form-field w-100" appearance="outline">
+            <mat-label>Rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="campaignOnePicker">
+              <input matStartDate placeholder="Fecha inicial" formControlName="DateFrom">
+              <input matEndDate placeholder="Fecha final" formControlName="DateTo">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-full-width w-100" appearance="outline">
+            <mat-label>Usuarios asignados</mat-label>
+            <input type="text" placeholder="Escribe para buscar" matInput formControlName="UserAssign"
+              [matAutocomplete]="users">
+            <mat-autocomplete autoActiveFirstOption #users="matAutocomplete"
+              [displayWith]="UserAssingAutocompleteDisplayWith">
+              <mat-option *ngFor="let user of filteredRouteUsers" [value]="user">
+                {{user.Id}} - {{user.Name}} {{user.LastName}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="col">
+          <mat-form-field class="example-full-width w-100" appearance="outline">
+            <mat-label>Clientes de ruta</mat-label>
+            <input type="text" placeholder="Escribe para buscar" matInput formControlName="Customer"
+              [matAutocomplete]="customers">
+            <mat-autocomplete autoActiveFirstOption #customers="matAutocomplete"
+              [displayWith]="CustomerAutocompleteDisplayWith">
+              <mat-option *ngFor="let customer of filteredRouteCustomers" [value]="customer">
+                {{customer.CardCode}} - {{customer.CardName}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+
+        <div class="btn-search">
+          <button mat-flat-button (click)="Search()">
+            <mat-icon>search</mat-icon>
+            Buscar
+          </button>
+        </div>
+
+
+      </div>
+
+
+
+    </form>
+  </fieldset>
+</section>

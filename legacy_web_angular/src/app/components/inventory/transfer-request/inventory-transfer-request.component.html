@@ -1,0 +1,182 @@
+<section class="multi-bottoms">
+  <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)">
+  </app-action-buttons>
+</section>
+
+<section class="section mobile-margin">
+  <fieldset>
+    <legend>Encabezado</legend>
+    <form [formGroup]="documentForm" class="grid-container">
+
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="flex">
+          <mat-form-field appearance="outline" style="margin-bottom: -1em">
+            <mat-label>Almacén origen</mat-label>
+            <input readonly placeholder="Buscar almacén de origen" type="text" formControlName="FromWarehouse"
+                   type="text" matInput>
+          </mat-form-field>
+          <button matTooltip="Buscar almacén de origen"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill-search"
+                  (click)="ShowModalSearchWarehouses(true)">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="flex">
+          <mat-form-field appearance="outline" style="margin-bottom: -1em">
+            <mat-label>Almacén destino</mat-label>
+            <input readonly placeholder="Buscar Almacén de destino" type="text" formControlName="ToWarehouse"
+                   type="text" matInput>
+          </mat-form-field>
+          <button matTooltip="Buscar almacén de destino"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill-search"
+                  (click)="ShowModalSearchWarehouses(false)">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+      </div>
+
+
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-4 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Encargado de compras</mat-label>
+        <mat-select formControlName="SalesPersonCode">
+          <mat-option *ngFor="let option of salesPersons" [value]="option.SlpCode">
+            {{ option.SlpName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-4 col-sm-12">
+        <mat-label>Fecha de contabilización</mat-label>
+        <input matInput [matDatepicker]="pickerDocDate" formControlName="DocDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerDocDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDocDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-4  col-md-4 col-sm-12">
+        <mat-label>Fecha de vencimiento</mat-label>
+        <input matInput [matDatepicker]="pickerDocDueDate" formControlName="DueDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerDocDueDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDocDueDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-4 col-md-4 col-sm-12">
+        <mat-label>Fecha del documento</mat-label>
+        <input matInput [matDatepicker]="pickerTaxDate" formControlName="TaxDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerTaxDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerTaxDate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: -1em">
+        <mat-label>Comentario</mat-label>
+        <input type="text" matInput formControlName="Comments">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-lg-1 col-lt-lg-1 col-gt-md-1 col-md-1 col-sm-12"
+                      style="margin-bottom: -1em">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" min="1" formControlName="Quantity">
+        <mat-error *ngIf="documentForm.controls['Quantity'].errors?.['min']">
+          Cantidad permitida mayor a 0
+        </mat-error>
+      </mat-form-field>
+      <div class="col-lg-11 col-lt-lg-11 col-gt-md-11 col-md-11 col-sm-12">
+        <div class="flex">
+          <mat-form-field class="w-100 input-group" appearance="outline" style="margin-bottom: -1em">
+            <mat-label>Artículo</mat-label>
+            <input type="text"
+                   matInput
+                   formControlName="Item"
+                   [matAutocomplete]="auto"
+                   (focus)="onItemControlFocused$.next('')"
+                   (keyup)="FindItem($event)">
+            <mat-autocomplete #auto="matAutocomplete"
+                              [displayWith]="DisplayFnItem"
+                              (optionSelected)="OnSelectItem($event.option.value)">
+              <mat-option *ngFor="let itm of items$ | async" [value]="itm">
+                {{ itm.Typehead }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <button matTooltip="Buscar ítems"
+                  type="button"
+                  mat-flat-button color="primary"
+                  class="e-bill"
+                  (click)="ShowModalSearchItem()"
+                  [disabled]="isButtonModalDisabled">
+            <mat-icon class="icon-display">search</mat-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </fieldset>
+</section>
+
+<fieldset class="top-margin udf-fieldset" *ngIf="isVisible || this.IsVisibleAttachTable">
+  <mat-tab-group>
+    <mat-tab *ngIf="isVisible" label="Udfs">
+      <cl-dynamics-udfs-presentation
+        [Id]="UdfsId"
+        [ApiUrl]="ApiUrl"
+        [UdfsCategory]="DBODataEndPoint"
+        [UdfsGroup]="'null'"
+      >
+      </cl-dynamics-udfs-presentation>
+    </mat-tab>
+
+    <mat-tab label="Adjuntos" *ngIf="this.IsVisibleAttachTable">
+
+      <div style="display: flex; justify-content: flex-end; align-content: center; padding: 5px;">
+        <button mat-flat-button color="primary" (click)="attach_file.click()">
+          <mat-icon>
+            attach_file
+          </mat-icon>
+          Adjuntar
+        </button>
+      </div>
+
+      <input multiple style="display: none;" #attach_file type="file"
+             accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xls,.ppt,.xlsx,.pptx" (change)="OnAttachFile($event)">
+      <cl-table [Id]="attachmentTableId"
+                [ShouldPaginateRequest]="false"
+                [HasStandardHeaders]="true"
+                [ShouldSplitPascal]="false"
+                [MappedColumns]="attachmentLineMappedColumns"
+                [Records]="documentAttachment.Attachments2_Lines"
+                [RecordsCount]="documentAttachment.Attachments2_Lines.length"
+                [Buttons]="attachmentTableButtons"
+                [ItemsPeerPage]="5"
+                [PageSizeOptions]="[5, 10, 20]"
+                [BackgroundTransparent]="true"
+                ScrollHeight="400px">
+      </cl-table>
+    </mat-tab>
+  </mat-tab-group>
+</fieldset>
+
+<section class="section">
+  <fieldset>
+    <legend>Documento</legend>
+
+    <cl-table [Id]="lineTableId"
+              [ShouldPaginateRequest]="shouldPaginateRequest"
+              [HasStandardHeaders]="true"
+              [ShouldSplitPascal]="false"
+              [MappedColumns]="lineMappedColumns"
+              [Records]="lines"
+              [RecordsCount]="lines.length"
+              [HasItemsSelection]="false"
+              [Buttons]="tableButtons"
+              [DropdownColumns]="dropdownColumns"
+              [DropdownDiffBy]="dropdownDiffBy"
+              [DropdownDiffList]="dropdownDiffList"
+              [DisableDragAndDrop]="disableDragAndDrop"
+              [BackgroundTransparent]="true">
+    </cl-table>
+  </fieldset>
+</section>
+
+

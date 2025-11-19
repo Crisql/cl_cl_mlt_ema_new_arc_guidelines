@@ -1,0 +1,90 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>{{ "PRODUCT DETAIL.PRODUCT DETAIL" | translate }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="Dismiss()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="ValidateFields()">
+                <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="itemForm">
+        <ion-item>
+            <ion-label position="stacked">
+                {{ "PRODUCT DETAIL.CODE" | translate }}
+            </ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="ItemCode">
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">{{
+                    "PRODUCT DETAIL.NAME" | translate
+                }}</ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="ItemDescription">
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked"
+            >{{ "PRODUCT DETAIL.QUANTITY" | translate }}
+            </ion-label>
+            <ion-input
+                    type="number"
+                    (ionChange)="ChangeData()"
+                    formControlName="Quantity"
+            >
+            </ion-input>
+        </ion-item>
+
+        <ion-item >
+            <ion-label position="floating">{{
+                    "INVENTORY.ORIGIN WAREHOUSE" | translate
+                }}</ion-label>
+            <ion-input type="text" formControlName="FromNameWhsCode" [readonly]="true" >
+            </ion-input>
+        </ion-item>
+        
+        <ion-item (click)="SearchBinLocationOrigin()">
+            <ion-label position="floating">{{
+                    "INVENTORY.LOCATION ORIGIN" | translate
+                }}</ion-label>
+            <ion-input formControlName="BinAbsNameOrigin"  type="text" [readonly]="true" >
+            </ion-input>
+            <ion-badge  style="background-color: transparent; color: rgb(9, 9, 9); font-size: 10px; font-weight: 400;" slot="end">
+                {{"PRODUCT DETAIL.AVAILABLE" | translate}}: {{ itemEdit.Stock || 0 }}
+            </ion-badge>
+        </ion-item>
+        
+
+        <ion-item>
+            <ion-label position="floating">{{
+                    "INVENTORY.DESTINATION WAREHOUSE" | translate
+                }}</ion-label>
+            <ion-input formControlName="ToNameWarehouse"  type="text" [readonly]="true" >
+            </ion-input>
+        </ion-item>
+
+        <ion-item (click)="SearchBinLocationDestination()">
+            <ion-label position="floating">{{
+                    "INVENTORY.DESTINATION LOCATION" | translate
+                }}</ion-label>
+            <ion-input formControlName="BinAbsNameDestino"  type="text" [readonly]="true" >
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">{{
+                    "INVENTORY.SERIES" | translate
+                }}</ion-label>
+            <ion-input type="text" [readonly]="true" formControlName="DistNumber">
+            </ion-input>
+        </ion-item>
+
+    </form>
+</ion-content>

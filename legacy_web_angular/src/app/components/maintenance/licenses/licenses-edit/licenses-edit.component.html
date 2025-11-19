@@ -1,0 +1,49 @@
+<section class="content">
+  <header>
+    <h2 mat-dialog-title>{{modalTitle}}</h2>
+  </header>
+  <main>
+    <form class="grid-container" [formGroup]="licenseForm">
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Usuario</mat-label>
+        <input matInput placeholder="" formControlName="User">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="passwordInputType" placeholder="" formControlName="Password">
+        <button mat-icon-button matSuffix (click)="ChangePasswordInputType()">
+          <mat-icon>{{passwordBtnVisibilityIcon}}</mat-icon>
+        </button>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline" class="col-lg-12 col-md-12 col-sm-12">
+        <mat-label>Compañía para prueba</mat-label>
+        <mat-select formControlName="CompanyId" name="food">
+          <mat-option *ngFor="let company of companies" [value]="company.Id">
+            {{company.Name}}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix
+                  matTooltip="Compañía que se usará para validar la licencia"
+                  matTooltipPosition="above">
+          help
+        </mat-icon>
+      </mat-form-field>
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <mat-checkbox class="example-margin" formControlName="IsActive">Activa</mat-checkbox>
+      </div>
+    </form>
+  </main>
+  <footer>
+    <app-action-buttons
+      [isIntoMatTab]="false"
+      [form]="licenseForm"
+      [actionButtons]="actionButtons"
+      (onActionButtonClicked)="OnActionButtonClicked($event)">
+    </app-action-buttons>
+  </footer>
+</section>

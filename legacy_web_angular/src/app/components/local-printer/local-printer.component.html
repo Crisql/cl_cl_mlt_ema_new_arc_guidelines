@@ -1,0 +1,28 @@
+<section class="main-container">
+  <app-action-buttons [actionButtons]="actionButtons" [isIntoMatTab]="false"
+                      (onActionButtonClicked)="OnActionButtonClicked($event)"></app-action-buttons>
+
+  <fieldset class="main-container">
+    <legend>
+      Impresoras
+    </legend>
+  <div class="row" *ngIf="userAssingLocalPrinter?.UseLocalPrint">
+    <div class="grid-container-printer" style="margin-bottom: 1rem">
+      <div class="col-lg-6 col-md-12 col-sm-12">
+        <section class="main-container">
+          <cl-table [Id]="printerWorkerTableId" [ShouldPaginateRequest]="false"
+                    [CheckboxColumns]="printerWorkerCheckboxColumns"
+                    [HasStandardHeaders]="hasStandardHeaders"
+                    [ShouldSplitPascal]="shouldSplitPascal"
+                    [MappedColumns]="printerWorkerMappedColumns"
+                    [Records]="printerWorkers" [RecordsCount]="printerWorkers.length"
+                    [ShouldEmitRows]="hasItemsSelectionPrintWorker"
+                    [HasItemsSelection]="hasItemsSelectionPrintWorker" [BackgroundTransparent]="true">
+          </cl-table>
+        </section>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+</section>
+

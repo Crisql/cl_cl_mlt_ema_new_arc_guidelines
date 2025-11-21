@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <description>$description$</description>
+    <copyright>$copyright$</copyright>
+    <readme>.\README.md</readme>
+    <icon>.\icon.png</icon>
+  </metadata>
+  <files>
+    <file src=".\README.md" target="\" />
+    <file src=".\icon.png" target="\" />
+  </files>
+</package>
